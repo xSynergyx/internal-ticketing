@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Notifications"
+        android:id="@+id/notifications"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:icon="@drawable/notifications"/>
+
+    <item android:title="Account"
+        android:id="@+id/account"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:icon="@drawable/account"/>
+
+    <item android:title="Info"
+        android:id="@+id/info"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:icon="@drawable/info"/>
+
+    <item android:title="Update"
+        android:id="@+id/update"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:icon="@drawable/update"/>
+
+    <item android:title="Logout"
+        android:id="@+id/logout"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:icon="@drawable/logout"/>
+
+</menu>
