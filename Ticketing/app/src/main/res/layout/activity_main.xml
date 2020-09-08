@@ -6,7 +6,8 @@ it for tickets -->
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background_gradient">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,7 +25,8 @@ it for tickets -->
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Open Tickets" />
+            android:text="Open Tickets"
+            android:background="@drawable/background_gradient"/>
 
         <Button
             android:layout_weight="1"
