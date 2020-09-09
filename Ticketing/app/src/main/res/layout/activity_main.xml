@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- change parent view to relative or linear layout. have scroll view within
-it for tickets
+<!-- Todo:
 
-Make the status bar black. Change action bar to lighter green. Darker green for the gradient start color-->
+-->
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
