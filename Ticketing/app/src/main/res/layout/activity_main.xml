@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- change parent view to relative or linear layout. have scroll view within
-it for tickets -->
+it for tickets
+
+Make the status bar black. Change action bar to lighter green. Darker green for the gradient start color-->
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,8 +27,7 @@ it for tickets -->
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Open Tickets"
-            android:background="@drawable/background_gradient"/>
+            android:text="Open Tickets" />
 
         <Button
             android:layout_weight="1"
