@@ -6,12 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,13 +29,33 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Libix");
         //actionBar.setSubtitle("Welcome to the app");
-
         centerTitle();
-
         //Display logo
         actionBar.setIcon(R.drawable.templogo);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
+
+        //Setting up OnClickListeners
+        //OnClickListener for SearchActivity
+        final TextView search = (TextView) findViewById(R.id.search);
+
+        search.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(searchIntent);
+            }
+        });
+
+        //OnClickListener for NotesActivity
+        final TextView notes = (TextView) findViewById(R.id.notes);
+        notes.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent notesIntent = new Intent(MainActivity.this, NotesActivity.class);
+                startActivity(notesIntent);
+            }
+        });
 
     }
 

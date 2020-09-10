@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Libix</string>
+
+    <string name="open">Open Tix</string>
+    <string name="closed">Closed Tix</string>
+    <string name="notes">Notes</string>
 </resources>
