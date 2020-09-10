@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#009688</item>
         <item name="colorPrimaryDark">#00796B</item>
-        <item name="colorAccent">#80DEEA</item>
+        <item name="colorAccent">#8BC34A</item> //#80DEEA
     </style>
 
     <style name="bottomButtons">

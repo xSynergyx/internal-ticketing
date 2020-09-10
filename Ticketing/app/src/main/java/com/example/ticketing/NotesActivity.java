@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class NotesActivity extends AppCompatActivity {
+public class NotesActivity extends MainActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
