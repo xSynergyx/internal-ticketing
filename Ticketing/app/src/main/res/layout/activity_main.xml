@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Todo:
 Create a bunch of example tickets
+Used ArrayList for ticket objects
+Create the techsupport hotmail on outlook
+Read about RecyclerView
 -->
 
 <LinearLayout
