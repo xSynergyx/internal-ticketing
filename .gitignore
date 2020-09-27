@@ -89,5 +89,5 @@ lint/tmp/
 # Android Profiling
 *.hprof
 
-#JavaMail java file (Temporary)
-JavaMail.java
+#Config java file
+Config.java
