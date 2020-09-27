@@ -4,4 +4,6 @@
     <string name="open">Open Tix</string>
     <string name="closed">Closed Tix</string>
     <string name="notes">Notes</string>
+
+    <string name="fab_content_desc">Send new support ticket</string>
 </resources>
