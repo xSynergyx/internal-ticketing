@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        JavaMail sending = new JavaMail();
+//        sending.sendMail();
+
     }
 
     //Displays the action bar created in main.xml
