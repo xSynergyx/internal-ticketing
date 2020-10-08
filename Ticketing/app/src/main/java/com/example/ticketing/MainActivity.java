@@ -72,10 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(notesIntent);
             }
         });
-    }
+    } //end of onCrate method
 
     //Displays the action bar created in main.xml
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    //Specifies what each item does when clicked
+    //Specifies what each item in the action bar does when clicked
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 

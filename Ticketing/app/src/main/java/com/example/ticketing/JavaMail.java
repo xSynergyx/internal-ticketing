@@ -1,5 +1,8 @@
 package com.example.ticketing;
-
+/*
+https://www.tutorialspoint.com/how-to-send-email-on-android-using-javamail-api
+Need INTERNET permissions in AndroidManifest
+ */
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,13 +17,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class JavaMail extends AsyncTask<Void,Void,Void>  {
-
-    //Add those line in dependencies
-    //implementation files('libs/activation.jar')
-    //implementation files('libs/additionnal.jar')
-    //implementation files('libs/mail.jar')
-
-    //Need INTERNET permission
 
     //Variables
     private Context mContext;
