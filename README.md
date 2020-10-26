@@ -3,7 +3,8 @@ Working on a technical support ticket app to keep track of open issues and impro
 
 ## Purpose
 The main purpose of this project is to practice multiple skills while improving the workplace.
-* Improve my overall app development skills
+* Increase productivity and communication internally
+* Improve overall app development skills
 * Build upon Java knowledge 
-* Increase productivity internally
+* Explore database design and management
 * Practice Git commands
