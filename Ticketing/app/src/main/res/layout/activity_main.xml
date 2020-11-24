@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Todo:
+Set up virtual machine so I can finish setting up the database
 Define the ticket object then see how i want to call the JavaMail methods.
 Will use ArrayList to store the ticket objects:
     Need to create a ticket object
