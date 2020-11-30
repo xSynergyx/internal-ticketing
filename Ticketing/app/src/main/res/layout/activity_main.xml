@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Todo:
+Might have to set up the VM before registering with Microsoft, need return URI
+Register my app with Microsoft's Azure app registration portal
 Set up virtual machine so I can finish setting up the database
-Define the ticket object then see how i want to call the JavaMail methods.
+Define the ticket object
 Will use ArrayList to store the ticket objects:
     Need to create a ticket object
     Then need to make an TicketAdapter class
