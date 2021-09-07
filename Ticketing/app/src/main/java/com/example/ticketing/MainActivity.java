@@ -1,22 +1,33 @@
 package com.example.ticketing;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.gson.JsonObject;
+
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
+import android.util.Log;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -28,12 +39,63 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.microsoft.graph.authentication.IAuthenticationProvider; //Imports the Graph sdk Auth interface
+import com.microsoft.graph.concurrency.ICallback;
+import com.microsoft.graph.core.ClientException;
+import com.microsoft.graph.http.IHttpRequest;
+import com.microsoft.graph.models.extensions.*;
+import com.microsoft.graph.requests.extensions.GraphServiceClient;
+import com.microsoft.graph.requests.extensions.IMessageCollectionPage;
+import com.microsoft.identity.client.AuthenticationCallback; // Imports MSAL auth methods
+import com.microsoft.identity.client.*;
+import com.microsoft.identity.client.exception.*;
+
+/**
+ * TODO:
+ * update UI. Authenticate with Microsoft then display tickets and everything else
+ *      Analyze what sign out does.
+ * parse data to get subject and body (text only)
+ **/
+
 public class MainActivity extends AppCompatActivity {
+
+    private final static String[] SCOPES = {"Mail.ReadWrite"};
+    /* Azure AD v2 Configs */
+    final static String AUTHORITY = "https://login.microsoftonline.com/common";
+    private ISingleAccountPublicClientApplication mSingleAccountApp;
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    /* UI & Debugging Variables */
+    Button signInButton;
+    Button signOutButton;
+    Button callGraphApiInteractiveButton;
+    Button callGraphApiSilentButton;
+    TextView logTextView;
+    TextView currentUserTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*
+        // Add code to print out the key hash
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.example.ticketing",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+         */
 
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
@@ -41,6 +103,22 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
+        initializeUI();
+
+        PublicClientApplication.createSingleAccountPublicClientApplication(getApplicationContext(),
+                R.raw.auth_config, new IPublicClientApplication.ISingleAccountApplicationCreatedListener() {
+                    @Override
+                    public void onCreated(ISingleAccountPublicClientApplication application) {
+                        mSingleAccountApp = application;
+                        loadAccount();
+                    }
+                    @Override
+                    public void onError(MsalException exception) {
+                        displayError(exception);
+                    }
+                });
+        /*
+        //OLD MAINACTIVITY ONCREATE CONTENTS
         //Action bar setup
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Libix");
@@ -71,8 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent notesIntent = new Intent(MainActivity.this, NotesActivity.class);
                 startActivity(notesIntent);
             }
-        });
-    } //end of onCrate method
+        });*/
+    } //end of onCreate method
 
     //Displays the action bar created in main.xml
     @Override
@@ -141,5 +219,223 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //MSAL methods
+    //When app comes to the foreground, load existing account to determine if user is signed in
+    private void loadAccount() {
+        if (mSingleAccountApp == null) {
+            return;
+        }
+
+        mSingleAccountApp.getCurrentAccountAsync(new ISingleAccountPublicClientApplication.CurrentAccountCallback() {
+            @Override
+            public void onAccountLoaded(@Nullable IAccount activeAccount) {
+                // You can use the account data to update your UI or your app database.
+                updateUI(activeAccount);
+            }
+
+            @Override
+            public void onAccountChanged(@Nullable IAccount priorAccount, @Nullable IAccount currentAccount) {
+                if (currentAccount == null) {
+                    // Perform a cleanup task as the signed-in account changed.
+                    performOperationOnSignOut();
+                }
+            }
+
+            @Override
+            public void onError(@NonNull MsalException exception) {
+                displayError(exception);
+            }
+        });
+    }
+
+    private void initializeUI(){
+        signInButton = findViewById(R.id.signIn);
+        callGraphApiSilentButton = findViewById(R.id.callGraphSilent);
+        callGraphApiInteractiveButton = findViewById(R.id.callGraphInteractive);
+        signOutButton = findViewById(R.id.clearCache);
+        logTextView = findViewById(R.id.txt_log);
+        currentUserTextView = findViewById(R.id.current_user);
+
+        //Sign in user
+        signInButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                if (mSingleAccountApp == null) {
+                    return;
+                }
+                mSingleAccountApp.signIn(MainActivity.this, null, SCOPES, getAuthInteractiveCallback());
+            }
+        });
+
+        //Sign out user
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSingleAccountApp == null){
+                    return;
+                }
+                mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
+                    @Override
+                    public void onSignOut() {
+                        updateUI(null);
+                        performOperationOnSignOut();
+                    }
+                    @Override
+                    public void onError(@NonNull MsalException exception){
+                        displayError(exception);
+                    }
+                });
+            }
+        });
+
+        //Interactive
+        callGraphApiInteractiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSingleAccountApp == null) {
+                    return;
+                }
+                mSingleAccountApp.acquireToken(MainActivity.this, SCOPES, getAuthInteractiveCallback());
+            }
+        });
+
+        //Silent
+        callGraphApiSilentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSingleAccountApp == null){
+                    return;
+                }
+                mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback());
+            }
+        });
+    }
+
+    private AuthenticationCallback getAuthInteractiveCallback() {
+        return new AuthenticationCallback() {
+            @Override
+            public void onSuccess(IAuthenticationResult authenticationResult) {
+                /* Successfully got a token, use it to call a protected resource - MSGraph */
+                Log.d(TAG, "Successfully authenticated");
+                /* Update UI */
+                updateUI(authenticationResult.getAccount());
+                /* call graph */
+                callGraphAPI(authenticationResult);
+            }
+
+            @Override
+            public void onError(MsalException exception) {
+                /* Failed to acquireToken */
+                Log.d(TAG, "Authentication failed: " + exception.toString());
+                displayError(exception);
+            }
+            @Override
+            public void onCancel() {
+                /* User canceled the authentication */
+                Log.d(TAG, "User cancelled login.");
+            }
+        };
+    }
+
+    private SilentAuthenticationCallback getAuthSilentCallback() {
+        return new SilentAuthenticationCallback() {
+            @Override
+            public void onSuccess(IAuthenticationResult authenticationResult) {
+                Log.d(TAG, "Successfully authenticated");
+                callGraphAPI(authenticationResult);
+            }
+            @Override
+            public void onError(MsalException exception) {
+                Log.d(TAG, "Authentication failed: " + exception.toString());
+                displayError(exception);
+            }
+        };
+    }
+
+    private void callGraphAPI(IAuthenticationResult authenticationResult) {
+
+        final String accessToken = authenticationResult.getAccessToken();
+
+        IGraphServiceClient graphClient =
+                GraphServiceClient
+                        .builder()
+                        .authenticationProvider(new IAuthenticationProvider() {
+                            @Override
+                            public void authenticateRequest(IHttpRequest request) {
+                                Log.d(TAG, "Authenticating request," + request.getRequestUrl());
+                                request.addHeader("Authorization", "Bearer " + accessToken);
+                            }
+                        })
+                        .buildClient();
+        /*
+        graphClient
+                .me()
+                .drive()
+                .buildRequest()
+                .get(new ICallback<Drive>() {
+                    @Override
+                    public void success(final Drive drive) {
+                        Log.d(TAG, "Found Drive " + drive.id);
+                        displayGraphResult(drive.getRawObject());
+                    }
+
+                    @Override
+                    public void failure(ClientException ex) {
+                        displayError(ex);
+                    }
+                });
+        */
+
+        // Changed app permissions on Azure active directory. TEST IT OUT
+        graphClient
+                .me()
+                .messages()
+                .buildRequest()
+                .select("subject")
+                .get(new ICallback<IMessageCollectionPage>() {
+                    @Override
+                    public void success(IMessageCollectionPage iMessageCollectionPage) {
+                        displayGraphResult(iMessageCollectionPage.getRawObject());
+                    }
+
+                    @Override
+                    public void failure(ClientException ex) {
+                        displayError(ex);
+                    }
+                });
+    }
+
+    private void updateUI(@Nullable final IAccount account) {
+        if (account != null) {
+            signInButton.setEnabled(false);
+            signOutButton.setEnabled(true);
+            callGraphApiInteractiveButton.setEnabled(true);
+            callGraphApiSilentButton.setEnabled(true);
+            currentUserTextView.setText(account.getUsername());
+        } else {
+            signInButton.setEnabled(true);
+            signOutButton.setEnabled(false);
+            callGraphApiInteractiveButton.setEnabled(false);
+            callGraphApiSilentButton.setEnabled(false);
+            currentUserTextView.setText("");
+            logTextView.setText("");
+        }
+    }
+
+    private void displayError(@NonNull final Exception exception) {
+        logTextView.setText(exception.toString());
+    }
+
+    private void displayGraphResult(@NonNull final JsonObject graphResponse) {
+        logTextView.setText(graphResponse.toString());
+    }
+
+    private void performOperationOnSignOut() {
+        final String signOutText = "Signed Out.";
+        currentUserTextView.setText("");
+        Toast.makeText(getApplicationContext(), signOutText, Toast.LENGTH_SHORT)
+                .show();
     }
 }
