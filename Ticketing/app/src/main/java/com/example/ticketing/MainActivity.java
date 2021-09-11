@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import android.content.Intent;
@@ -29,6 +31,7 @@ import android.util.Log;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -50,11 +53,16 @@ import com.microsoft.identity.client.AuthenticationCallback; // Imports MSAL aut
 import com.microsoft.identity.client.*;
 import com.microsoft.identity.client.exception.*;
 
+import org.json.JSONObject;
+
 /**
  * TODO:
+ * Break down the "Update UI" section below
  * update UI. Authenticate with Microsoft then display tickets and everything else
  *      Analyze what sign out does.
  * parse data to get subject and body (text only)
+ *
+ * NOTE: Emails received are from all folders (inbox, sent, deleted, etc)
  **/
 
 public class MainActivity extends AppCompatActivity {
@@ -117,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                         displayError(exception);
                     }
                 });
-        /*
+
         //OLD MAINACTIVITY ONCREATE CONTENTS
         //Action bar setup
         ActionBar actionBar = getSupportActionBar();
@@ -149,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent notesIntent = new Intent(MainActivity.this, NotesActivity.class);
                 startActivity(notesIntent);
             }
-        });*/
+        });
+        // end of Old onCreate
     } //end of onCreate method
 
     //Displays the action bar created in main.xml
@@ -393,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
                 .me()
                 .messages()
                 .buildRequest()
-                .select("subject")
+                .select("subject, body, from")
                 .get(new ICallback<IMessageCollectionPage>() {
                     @Override
                     public void success(IMessageCollectionPage iMessageCollectionPage) {
@@ -429,7 +438,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayGraphResult(@NonNull final JsonObject graphResponse) {
-        logTextView.setText(graphResponse.toString());
+
+        ArrayList<String> textToDisplay = new ArrayList();
+        JsonArray myJsonArray = graphResponse.getAsJsonArray("value");
+
+        // loop through myJsonArray and get just the subject
+        for(JsonElement message: myJsonArray){
+            if ( message instanceof JsonElement ) {
+                //String text = message.getAsJsonObject().get("subject").toString();
+                // Add the subject
+                textToDisplay.add(message.getAsJsonObject().get("subject").toString());
+
+                // Add the body
+                String body = message.getAsJsonObject().get("body").getAsJsonObject().get("content").toString();
+                body = removeHtmlTags(body);
+                textToDisplay.add(body);
+
+                // There has to be a better way to do this
+                textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from
+            }
+        }
+
+        //logTextView.setText(graphResponse.toString());
+
+        logTextView.setText(textToDisplay.toString());
     }
 
     private void performOperationOnSignOut() {
@@ -437,5 +469,16 @@ public class MainActivity extends AppCompatActivity {
         currentUserTextView.setText("");
         Toast.makeText(getApplicationContext(), signOutText, Toast.LENGTH_SHORT)
                 .show();
+    }
+
+    private String removeHtmlTags(String body){
+        // remove all html tags using regex matching pattern
+        body = body.replaceAll("\\<.*?\\>", "");
+
+        // using plain text matching to replace new line characters
+        body = body.replace("\\r", "");
+        body = body.replace("\\n", "\n");
+
+        return body;
     }
 }

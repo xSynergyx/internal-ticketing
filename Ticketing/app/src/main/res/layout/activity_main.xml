@@ -5,18 +5,105 @@ Will use ArrayList to store the ticket objects:
     Need to create a ticket object
     Then need to make aa TicketAdapter class
 -->
-<!-- OLD LAYOUTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background_gradient">
+    android:background="@drawable/background_gradient"
+    android:weightSum="10">
+
+    <!-- NEW LAYOUTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="6">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:weightSum="10">
+
+            <Button
+                android:id="@+id/signIn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:gravity="center"
+                android:text="Sign In"/>
+
+            <Button
+                android:id="@+id/clearCache"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="Sign Out"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/callGraphSilent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Silent"
+                android:enabled="false"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/callGraphInteractive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get Graph Data Interactively"
+                android:enabled="false"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:text="Getting Graph Data..."
+            android:textColor="#3f3f3f"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/graphData"
+            android:visibility="invisible"/>
+
+        <TextView
+            android:id="@+id/current_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Account info goes here..." />
+
+        <TextView
+            android:id="@+id/txt_log"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="0.8"
+            android:text="Output goes here..." />
+
+    </LinearLayout>
+
+    <!-- END OF NEW LAYOUTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9">
+        android:layout_weight="3">
 
         //Example tickets
 
@@ -110,7 +197,7 @@ this ticket closed"
 
             </RelativeLayout>
 
-            Ticket #3
+            //Ticket #3
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -151,6 +238,7 @@ hear back from th..."
 
             </RelativeLayout>
 
+            //Ticket #4
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -233,8 +321,9 @@ on and they are. Tha..."
     </LinearLayout>
 </LinearLayout>
 
--->
+<!-- END OF OLD LAYOUUTTTTTTTTTTTTTT-->
 
+<!-- MSAL LAYOUTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
@@ -256,7 +345,7 @@ on and they are. Tha..."
             android:id="@+id/signIn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="4"
             android:gravity="center"
             android:text="Sign In"/>
 
@@ -264,9 +353,17 @@ on and they are. Tha..."
             android:id="@+id/clearCache"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="3"
             android:gravity="center"
             android:text="Sign Out"
+            android:enabled="false"/>
+
+        <Button
+            android:id="@+id/callGraphSilent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="Silent"
             android:enabled="false"/>
 
     </LinearLayout>
@@ -278,19 +375,11 @@ on and they are. Tha..."
 
         <Button
             android:id="@+id/callGraphInteractive"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
             android:text="Get Graph Data Interactively"
             android:enabled="false"/>
 
-        <Button
-            android:id="@+id/callGraphSilent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:text="Get Graph Data Silently"
-            android:enabled="false"/>
     </LinearLayout>
 
     <TextView
@@ -305,9 +394,8 @@ on and they are. Tha..."
     <TextView
         android:id="@+id/current_user"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_weight="0.8"
         android:text="Account info goes here..." />
 
     <TextView
@@ -318,3 +406,5 @@ on and they are. Tha..."
         android:layout_weight="0.8"
         android:text="Output goes here..." />
 </LinearLayout>
+
+-->
