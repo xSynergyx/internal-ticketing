@@ -3,6 +3,8 @@
     package="com.example.ticketing">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,6 +19,18 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--Intent filter to capture System Browser or Authenticator calling back to our app after sign-in-->
+        <activity
+            android:name="com.microsoft.identity.client.BrowserTabActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="msauth"
+                    android:host="com.example.ticketing"
+                    android:path="/eJ0vi3stExIoGkuiRzoG7yuBqWA=" /> <!-- Signature hash (not URL encoded) -->
             </intent-filter>
         </activity>
     </application>
