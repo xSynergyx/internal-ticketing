@@ -445,7 +445,8 @@ public class MainActivity extends AppCompatActivity {
         // loop through myJsonArray and get just the subject
         for(JsonElement message: myJsonArray){
             if ( message instanceof JsonElement ) {
-                //String text = message.getAsJsonObject().get("subject").toString();
+                //temporary
+                String text = message.getAsJsonObject().get("subject").toString();
                 // Add the subject
                 textToDisplay.add(message.getAsJsonObject().get("subject").toString());
 
@@ -454,8 +455,14 @@ public class MainActivity extends AppCompatActivity {
                 body = removeHtmlTags(body);
                 textToDisplay.add(body);
 
+                //temporary
+                String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();
                 // There has to be a better way to do this
-                textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from
+                textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from address
+
+                //temporarily created a trouble ticket object and logged it.
+                TroubleTicket sampleTicket = new TroubleTicket(text, body, from, "open");
+                Log.d("Tickets", sampleTicket.toString());
             }
         }
 
