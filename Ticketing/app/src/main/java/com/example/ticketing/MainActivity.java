@@ -87,24 +87,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-        // Add code to print out the key hash
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.example.ticketing",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-         */
-
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -126,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        //OLD MAINACTIVITY ONCREATE CONTENTS
         //Action bar setup
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Libix");
@@ -137,8 +118,11 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        //Setting up OnClickListeners
-        //OnClickListener for SearchActivity
+        /*
+         * Setting up OnClickListeners
+         */
+
+        // OnClickListener for SearchActivity
         final TextView search = (TextView) findViewById(R.id.search);
 
         search.setOnClickListener(new View.OnClickListener(){
@@ -149,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //OnClickListener for NotesActivity
+        // OnClickListener for NotesActivity
         final TextView notes = (TextView) findViewById(R.id.notes);
         notes.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -158,10 +142,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(notesIntent);
             }
         });
-        // end of Old onCreate
-    } //end of onCreate method
+    } // End of onCreate method
 
-    //Displays the action bar created in main.xml
+    // Displays the action bar created in main.xml
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -170,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    //Specifies what each item in the action bar does when clicked
+    // Specifies what each item in the action bar does when clicked
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -200,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //method for centering title without creating a custom action bar. Thanks THEPATEL on stackoverflow
+    // Method for centering title without creating a custom action bar. Thanks THEPATEL on stackoverflow
     private void centerTitle() {
         ArrayList<View> textViews = new ArrayList<>();
 
@@ -231,8 +214,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
-    //MSAL methods
-    //When app comes to the foreground, load existing account to determine if user is signed in
+    // MSAL methods
+    // When app comes to the foreground, load existing account to determine if user is signed in
     private void loadAccount() {
         if (mSingleAccountApp == null) {
             return;
@@ -378,26 +361,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         })
                         .buildClient();
-        /*
-        graphClient
-                .me()
-                .drive()
-                .buildRequest()
-                .get(new ICallback<Drive>() {
-                    @Override
-                    public void success(final Drive drive) {
-                        Log.d(TAG, "Found Drive " + drive.id);
-                        displayGraphResult(drive.getRawObject());
-                    }
 
-                    @Override
-                    public void failure(ClientException ex) {
-                        displayError(ex);
-                    }
-                });
-        */
-
-        // Changed app permissions on Azure active directory. TEST IT OUT
         graphClient
                 .me()
                 .messages()
@@ -442,10 +406,10 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> textToDisplay = new ArrayList();
         JsonArray myJsonArray = graphResponse.getAsJsonArray("value");
 
-        // loop through myJsonArray and get just the subject
+        // Loop through myJsonArray get the subject, body, and from address
         for(JsonElement message: myJsonArray){
             if ( message instanceof JsonElement ) {
-                //temporary
+                // Temporary
                 String text = message.getAsJsonObject().get("subject").toString();
                 // Add the subject
                 textToDisplay.add(message.getAsJsonObject().get("subject").toString());
@@ -455,12 +419,12 @@ public class MainActivity extends AppCompatActivity {
                 body = removeHtmlTags(body);
                 textToDisplay.add(body);
 
-                //temporary
+                // Temporary
                 String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();
                 // There has to be a better way to do this
                 textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from address
 
-                //temporarily created a trouble ticket object and logged it.
+                // Temporarily created a trouble ticket object and logged it.
                 TroubleTicket sampleTicket = new TroubleTicket(text, body, from, "open");
                 Log.d("Tickets", sampleTicket.toString());
             }
@@ -479,10 +443,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String removeHtmlTags(String body){
-        // remove all html tags using regex matching pattern
+        // Remove all html tags using regex matching pattern
         body = body.replaceAll("\\<.*?\\>", "");
 
-        // using plain text matching to replace new line characters
+        // Using plain text matching to replace new line characters
         body = body.replace("\\r", "");
         body = body.replace("\\n", "\n");
 
