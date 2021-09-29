@@ -95,3 +95,6 @@ Config.java
 
 # MSAL config file
 auth_config.json
+
+# credentials
+credentials.txt
