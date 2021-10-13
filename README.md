@@ -13,10 +13,14 @@ The main purpose of this project is to practice multiple skills while improving 
 1. Android Studio
 2. openssl
 3. keytool
+4. PostgreSQL
+5. Node.js
+6. Express.js
 
 ## Libraries and APIs
 * Microsoft Graph API
 * Microsoft Authentication Library
+
 
 ## Getting SHA-1 Certificate Fingerprint
 * In Android Studio go into the gradle tab
@@ -40,4 +44,23 @@ The main purpose of this project is to practice multiple skills while improving 
 * We'll need the auth config json file, the browser tab activity in our Android Manifest file, and the microsoft authentication library dependency
 * All of the code needed to connect and make a Graph API call is in the tutorial
 
+## Setting up a cloud server
+If you're following along to set up this project from start to finish you may select any server and RDBMS to work with your app.
+For simplicity and to get the project going quickly, I've decided to go with Digital Ocean's cloud services for now.
+They have some great and easy-to-follow tutorials
+* I chose to connect to the server using SSH. I used [this tutorial](https://docs.digitalocean.com/products/droplets/how-to/connect-with-ssh/putty/) to create the key with PuTTY. You may also connect using [OpenSSH](https://docs.digitalocean.com/products/droplets/how-to/connect-with-ssh/openssh/)
+* [This tutorial](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04) shows how to quickly set up your server, create a user and set up a firewall
+* Finally, [this tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-20-04) shows you how to install PostgreSQL and use some of the basic commands in the terminal
+
 ## Set up the database
+Note: If you followed the tutorial on seting up a server with DigitalOcean and have a firewall up, you'll have to open a port to receive HTTP requests
+* Set up [Express.js](http://expressjs.com/en/starter/installing.html)
+* Connect [Express to PostgreSQL](https://expressjs.com/en/guide/database-integration.html#postgresql)
+
+<details>
+<summary>RESTful Web Service</summary>
+* <code>curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt install nodejs</code>
+* ```npm install pg-promise```
+* ```npm install dotenv```
+</details>
