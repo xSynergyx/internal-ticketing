@@ -59,8 +59,15 @@ Note: If you followed the tutorial on seting up a server with DigitalOcean and h
 
 <details>
 <summary>RESTful Web Service</summary>
-* <code>curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt install nodejs</code>
-* ```npm install pg-promise```
-* ```npm install dotenv```
+<code>
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -<br>
+sudo apt install nodejs<br>
+npm install pg-promise<br>
+npm install dotenv<br>
+</code>
 </details>
+
+<!-- 
+Video on promises https://www.youtube.com/watch?v=Y-aWVUAul9w&list=PLVvjrrRCBy2JSPVPlRmdiWnZ-c6PlzEVA>
+
+-->
