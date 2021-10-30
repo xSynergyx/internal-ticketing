@@ -6,6 +6,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -23,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
@@ -81,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
     Button callGraphApiSilentButton;
     TextView logTextView;
     TextView currentUserTextView;
+    RecyclerView ticketsRecyclerView;
+
+    ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +148,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(notesIntent);
             }
         });
+
+        ticketsRecyclerView = findViewById(R.id.ticketrecyclerview);
+
+        TicketAdapter myTicketAdapter = new TicketAdapter(this, ticketArrayList);
+        ticketsRecyclerView.setAdapter(myTicketAdapter);
+        ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     } // End of onCreate method
 
     // Displays the action bar created in main.xml
@@ -398,12 +410,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayError(@NonNull final Exception exception) {
-        logTextView.setText(exception.toString());
+
+        runOnUiThread(new Runnable(){
+
+            @Override
+            public void run(){
+                logTextView.setText(exception.toString());
+            }
+        });
+        //logTextView.setText(exception.toString());
     }
 
     private void displayGraphResult(@NonNull final JsonObject graphResponse) {
 
-        ArrayList<String> textToDisplay = new ArrayList();
+        final ArrayList<String> textToDisplay = new ArrayList();
         JsonArray myJsonArray = graphResponse.getAsJsonArray("value");
 
         // Loop through myJsonArray get the subject, body, and from address
@@ -420,19 +440,30 @@ public class MainActivity extends AppCompatActivity {
                 textToDisplay.add(body);
 
                 // Temporary
+                //Drafts result in null from address (that could be the issue). INVESTIGATE (not necessary now because won't be saving drafts)
                 String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();
                 // There has to be a better way to do this
                 textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from address
 
                 // Temporarily created a trouble ticket object and logged it.
-                TroubleTicket sampleTicket = new TroubleTicket(text, body, from, "open");
+                TroubleTicket sampleTicket = new TroubleTicket(text, body, from, "Open");
                 Log.d("Tickets", sampleTicket.toString());
+
+                //ADD|SAMPLETICKET TO TICKET ARRAYLIST
+                ticketArrayList.add(sampleTicket);
             }
         }
 
         //logTextView.setText(graphResponse.toString());
 
-        logTextView.setText(textToDisplay.toString());
+        runOnUiThread(new Runnable(){
+
+            @Override
+            public void run() {
+                logTextView.setText(textToDisplay.toString());
+            }
+        });
+        //logTextView.setText(textToDisplay.toString());
     }
 
     private void performOperationOnSignOut() {
@@ -448,7 +479,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Using plain text matching to replace new line characters
         body = body.replace("\\r", "");
-        body = body.replace("\\n", "\n");
+        body = body.replace("\\n", " ");
 
         return body;
     }

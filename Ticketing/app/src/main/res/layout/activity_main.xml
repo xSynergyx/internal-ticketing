@@ -19,7 +19,7 @@ Will use ArrayList to store the ticket objects:
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="6">
+        android:layout_weight="9">
 
 
         <LinearLayout
@@ -88,201 +88,33 @@ Will use ArrayList to store the ticket objects:
             android:layout_marginTop="20dp"
             android:text="Account info goes here..." />
 
-        <TextView
-            android:id="@+id/txt_log"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="0.8"
-            android:text="Output goes here..." />
+            android:fillViewport="false"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/txt_log"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Output goes here..." />
+
+        </ScrollView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ticketrecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 
     <!-- END OF NEW LAYOUTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3">
-
-        //Example tickets
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="16dp">
-
-            //should not hardcode values in the future.
-            //figure out how to distribute scrollview real estate
-            //Ticket #1
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/ticket_border">
-
-                <TextView
-                    android:id="@+id/ticket_subject"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="Print failed message"
-                    android:textSize="24sp"
-                    android:textStyle="italic"
-                    android:textColor="@android:color/black"/>
-
-                <TextView
-                    android:id="@+id/ticket_status"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="12dp"
-                    android:text="Open"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/holo_red_dark"/>
-
-
-                <TextView
-                    android:id="@+id/ticket_description"
-                    android:layout_below="@+id/ticket_subject"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="Hey, When a patron tries to print the print dialog that
-pops up says that printing failed. I checked to see if all the print release stations are
-on and they are. Tha..."
-                    android:textSize="14dp" />
-
-            </RelativeLayout>
-
-            //Ticket #2
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/ticket_border">
-
-                <TextView
-                    android:id="@+id/ticket_subject2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="Jamex bypass keys"
-                    android:textSize="24sp"
-                    android:textStyle="italic"
-                    android:textColor="@android:color/black"/>
-
-                <TextView
-                    android:id="@+id/ticket_status2"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="12dp"
-                    android:text="Closed"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/holo_green_light"/>
-
-
-                <TextView
-                    android:id="@+id/ticket_description2"
-                    android:layout_below="@+id/ticket_subject2"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="Hey, I talked with the guy from Jamex and he said
-there's no way for us to bypass the machine without the key. Consider
-this ticket closed"
-                    android:textSize="14dp" />
-
-            </RelativeLayout>
-
-            //Ticket #3
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/ticket_border">
-
-                <TextView
-                    android:id="@+id/ticket_subject3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="Red X on PDF's"
-                    android:textSize="24sp"
-                    android:textStyle="italic"
-                    android:textColor="@android:color/black"/>
-
-                <TextView
-                    android:id="@+id/ticket_status3"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="12dp"
-                    android:text="Ongoing"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/holo_blue_dark"/>
-
-
-                <TextView
-                    android:id="@+id/ticket_description3"
-                    android:layout_below="@+id/ticket_subject3"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="Hey, we've opened a ticket with comprise in order to
-solve the issue with the red x appearing on the print release station.we're waiting to
-hear back from th..."
-                    android:textSize="14dp" />
-
-            </RelativeLayout>
-
-            //Ticket #4
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/ticket_border">
-
-                <TextView
-                    android:id="@+id/ticket_subject4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="Print failed message"
-                    android:textSize="24sp"
-                    android:textStyle="italic"
-                    android:textColor="@android:color/black"/>
-
-                <TextView
-                    android:id="@+id/ticket_status4"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="12dp"
-                    android:text="Open"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/holo_red_dark"/>
-
-
-                <TextView
-                    android:id="@+id/ticket_description4"
-                    android:layout_below="@+id/ticket_subject4"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="Hey, When a patron tries to print the print dialog that
-pops up says that printing failed. I checked to see if all the print release stations are
-on and they are. Tha..."
-                    android:textSize="14dp" />
-
-            </RelativeLayout>
-        </LinearLayout>
-
-        //end of example Tickets
-
-    </ScrollView>
 
     <TextView
         android:layout_width="match_parent"
