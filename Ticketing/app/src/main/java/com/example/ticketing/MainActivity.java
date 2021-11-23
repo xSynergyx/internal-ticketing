@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     TicketAdapter myTicketAdapter;
 
     ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>();
+    ArrayList<TroubleTicket> graphDataArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -519,8 +520,9 @@ public class MainActivity extends AppCompatActivity {
         final ArrayList<String> textToDisplay = new ArrayList();
         JsonArray myJsonArray = graphResponse.getAsJsonArray("value");
 
-        // Clearing the ArrayList before putting in new tickets (avoid duplicate tickets)
+        // Clearing the both Array Lists before putting in new tickets (avoid duplicate tickets)
         ticketArrayList.clear();
+        graphDataArrayList.clear();
         // Loop through myJsonArray get the subject, body, and from address
         for(JsonElement message: myJsonArray){
             if ( message instanceof JsonElement ) {
@@ -548,16 +550,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Tickets", troubleTicket.toString());
 
                 //Add troubleTicket to ArrayList for loading on to RecyclerView and converting to json
-                //ticketArrayList.add(troubleTicket);
+                graphDataArrayList.add(troubleTicket);
             }
         }
 
         ticketGetRequest();
-        // Convert the ArrayList of ticket objects into a JSON String
-        //String json = new Gson().toJson(ticketArrayList);
-        //Log.d("JSON", json);
-        //Log.d("URLRequest", "About to send url request to DO droplet server");
-        //ticketPostRequest(json);
+        // Convert the ArrayList of ticket objects received from the Graph API into a JSON String
+        String json = new Gson().toJson(graphDataArrayList);
+        Log.d("JSON", json);
+        Log.d("URLRequest", "About to send url request to DO droplet server");
+        ticketPostRequest(json);
 
         //logTextView.setText(graphResponse.toString());
 
