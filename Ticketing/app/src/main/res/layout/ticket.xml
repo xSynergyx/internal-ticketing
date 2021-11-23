@@ -40,13 +40,33 @@
             android:textStyle="bold" />
 
 
-        <TextView
-            android:id="@+id/ticket_description"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="65dp"
-            android:layout_below="@+id/ticket_subject"
+            android:layout_below="@id/ticket_status"
             android:layout_marginLeft="8dp"
-            android:textSize="14dp" />
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/ticket_description"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:textSize="14dp"
+                android:layout_weight="7.9"/>
+
+            <Button
+                android:id="@+id/close_button"
+                android:layout_marginTop="16dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.1"
+                android:text="@string/close_button"
+                android:textStyle="bold"
+                android:backgroundTint="@android:color/holo_red_dark" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

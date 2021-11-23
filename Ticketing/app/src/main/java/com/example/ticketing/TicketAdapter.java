@@ -5,6 +5,7 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         TextView subjectView;
         TextView statusView;
         TextView descriptionView;
+        Button closeButton;
 
         public TicketViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,6 +61,21 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             subjectView = itemView.findViewById(R.id.ticket_subject);
             statusView = itemView.findViewById(R.id.ticket_status);
             descriptionView = itemView.findViewById(R.id.ticket_description);
+            closeButton = itemView.findViewById(R.id.close_button);
+
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeItem(getAdapterPosition());
+                }
+            });
+
         }
+    }
+
+    private void removeItem(int position) {
+        tickets.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, tickets.size());
     }
 }
