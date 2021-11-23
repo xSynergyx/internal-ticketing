@@ -52,7 +52,7 @@ Will use ArrayList to store the ticket objects:
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Silent"
+                android:text="Sync"
                 android:enabled="false"/>
 
         </LinearLayout>
@@ -92,7 +92,7 @@ Will use ArrayList to store the ticket objects:
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="false"
-            android:layout_weight="2">
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/txt_log"

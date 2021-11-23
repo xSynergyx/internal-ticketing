@@ -9,10 +9,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -56,6 +65,8 @@ import com.microsoft.identity.client.AuthenticationCallback; // Imports MSAL aut
 import com.microsoft.identity.client.*;
 import com.microsoft.identity.client.exception.*;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -85,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
     TextView logTextView;
     TextView currentUserTextView;
     RecyclerView ticketsRecyclerView;
+    TicketAdapter myTicketAdapter;
 
     ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>();
 
@@ -151,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
         ticketsRecyclerView = findViewById(R.id.ticketrecyclerview);
 
-        TicketAdapter myTicketAdapter = new TicketAdapter(this, ticketArrayList);
+        myTicketAdapter = new TicketAdapter(this, ticketArrayList);
         ticketsRecyclerView.setAdapter(myTicketAdapter);
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     } // End of onCreate method
@@ -313,6 +325,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback());
+                //testPost
             }
         });
     }
@@ -356,6 +369,86 @@ public class MainActivity extends AppCompatActivity {
                 displayError(exception);
             }
         };
+    }
+
+    /**
+     * Sends a POST request to the server in order to add tickets to the open_tickets table
+     *
+     * @param json JSON string of the tickets objects created after calling
+     *             the Microsoft Graph API
+     */
+    private void ticketPostRequest(String json){
+        String url = Config.ADDTICKETSURL;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        
+        try {
+            Log.d("URLRequest", "building the json object");
+            JSONArray postData = new JSONArray(json);
+
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                    (Request.Method.POST, url, postData, new Response.Listener<JSONArray>() {
+
+                @Override
+                public void onResponse(JSONArray res) {
+
+                    if (res != null) {
+                        Log.d("URLResponse", res.toString());
+                    }
+                }
+            }, new Response.ErrorListener(){
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // TODO: Make a toast "sync failed" message
+                    Log.d("URLRequest", "Unable to receive JSON response from server");
+                    Log.d("URLRequest", error.toString());
+                }
+            });
+
+            queue.add(jsonArrayRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+    TODO: Finished implementing get request to load tickets from DB
+          Have to call method from somewhere that makes sense
+     */
+    private void ticketGetRequest(){
+        String url = Config.GETTICKETSURL;
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        try {
+            Log.d("URLGetRequest", "loading tickets from DB");
+
+            final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                        @Override
+                        public void onResponse(JSONArray res) {
+
+                            if (res != null) {
+                                Log.d("URLGetResponse", res.toString());
+                                jsonArrayToArrayList(res);
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Make a toast "sync failed" message
+                            Log.d("URLGetRequest", "Unable to receive JSON response from server");
+                            Log.d("URLGetRequest", error.toString());
+                        }
+                    });
+
+            queue.add(jsonArrayRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void callGraphAPI(IAuthenticationResult authenticationResult) {
@@ -426,33 +519,45 @@ public class MainActivity extends AppCompatActivity {
         final ArrayList<String> textToDisplay = new ArrayList();
         JsonArray myJsonArray = graphResponse.getAsJsonArray("value");
 
+        // Clearing the ArrayList before putting in new tickets (avoid duplicate tickets)
+        ticketArrayList.clear();
         // Loop through myJsonArray get the subject, body, and from address
         for(JsonElement message: myJsonArray){
             if ( message instanceof JsonElement ) {
                 // Temporary
-                String text = message.getAsJsonObject().get("subject").toString();
+                String subject = message.getAsJsonObject().get("subject").toString();
+                subject = removeQuotations(subject);
                 // Add the subject
                 textToDisplay.add(message.getAsJsonObject().get("subject").toString());
 
                 // Add the body
                 String body = message.getAsJsonObject().get("body").getAsJsonObject().get("content").toString();
                 body = removeHtmlTags(body);
+                body = removeQuotations(body);
                 textToDisplay.add(body);
 
                 // Temporary
                 //Drafts result in null from address (that could be the issue). INVESTIGATE (not necessary now because won't be saving drafts)
                 String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();
+                from = removeQuotations(from);
                 // There has to be a better way to do this
                 textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from address
 
                 // Temporarily created a trouble ticket object and logged it.
-                TroubleTicket sampleTicket = new TroubleTicket(text, body, from, "Open");
-                Log.d("Tickets", sampleTicket.toString());
+                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, "Open");
+                Log.d("Tickets", troubleTicket.toString());
 
-                //ADD|SAMPLETICKET TO TICKET ARRAYLIST
-                ticketArrayList.add(sampleTicket);
+                //Add troubleTicket to ArrayList for loading on to RecyclerView and converting to json
+                //ticketArrayList.add(troubleTicket);
             }
         }
+
+        ticketGetRequest();
+        // Convert the ArrayList of ticket objects into a JSON String
+        //String json = new Gson().toJson(ticketArrayList);
+        //Log.d("JSON", json);
+        //Log.d("URLRequest", "About to send url request to DO droplet server");
+        //ticketPostRequest(json);
 
         //logTextView.setText(graphResponse.toString());
 
@@ -482,5 +587,33 @@ public class MainActivity extends AppCompatActivity {
         body = body.replace("\\n", " ");
 
         return body;
+    }
+
+    private String removeQuotations(String text){
+
+        text = text.replaceAll("^\"|\"$", "");
+        return text;
+    }
+
+    private void jsonArrayToArrayList(JSONArray jsonArr){
+
+        if (jsonArr != null) {
+            for (int i = 0; i<jsonArr.length(); i++){
+                try {
+                JSONObject ticket = jsonArr.getJSONObject(i);
+                String subject = ticket.get("subject").toString();
+                String body = ticket.get("body").toString();
+                String from = ticket.get("from_address").toString();
+                String status = ticket.get("status").toString();
+                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, status);
+                ticketArrayList.add(troubleTicket);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("JsonToArrayList", "Conversion error");
+                }
+            }
+            Log.d("TicketArrList", ticketArrayList.toString());
+            myTicketAdapter.notifyDataSetChanged();
+        }
     }
 }
