@@ -71,7 +71,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/space"
+        android:id="@+id/spacing"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:text=" "

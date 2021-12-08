@@ -79,7 +79,7 @@ import org.json.JSONObject;
  * NOTE: Emails received are from all folders (inbox, sent, deleted, etc)
  **/
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnTicketCloseClick {
 
     private final static String[] SCOPES = {"Mail.ReadWrite"};
     /* Azure AD v2 Configs */
@@ -100,6 +100,17 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>();
     ArrayList<TroubleTicket> graphDataArrayList = new ArrayList<>();
+
+    /*
+        TODO: OnClick interface working
+              Need to use the data to call the API with the subject
+              name to delete it from the DB.
+    */
+    @Override
+    public void onTicketCloseClick(String subject){
+        Log.d("Close", "Subject now in main activity");
+        Log.d("Close", "Subject in MainActivity: " + subject);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
         ticketsRecyclerView = findViewById(R.id.ticketrecyclerview);
 
-        myTicketAdapter = new TicketAdapter(this, ticketArrayList);
+        myTicketAdapter = new TicketAdapter(this, ticketArrayList, this);
         ticketsRecyclerView.setAdapter(myTicketAdapter);
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     } // End of onCreate method
@@ -413,16 +424,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    TODO: Finished implementing get request to load tickets from DB
-          Have to call method from somewhere that makes sense
-     */
     private void ticketGetRequest(){
         String url = Config.GETTICKETSURL;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         try {
-            Log.d("URLGetRequest", "loading tickets from DB");
+            Log.d("URLGetRequest", "Loading tickets from DB");
 
             final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -450,6 +457,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    protected void ticketDeleteRequest(){
+        String url = Config.DELETETICKETURL;
     }
 
     private void callGraphAPI(IAuthenticationResult authenticationResult) {
