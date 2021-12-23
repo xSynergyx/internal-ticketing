@@ -70,13 +70,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * TODO:
- * Break down the "Update UI" section below
- * update UI. Authenticate with Microsoft then display tickets and everything else
- *      Analyze what sign out does.
- * parse data to get subject and body (text only)
  *
  * NOTE: Emails received are from all folders (inbox, sent, deleted, etc)
+ *
  **/
 
 public class MainActivity extends AppCompatActivity implements OnTicketCloseClick {
@@ -110,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
     public void onTicketCloseClick(String subject){
         Log.d("Close", "Subject now in main activity");
         Log.d("Close", "Subject in MainActivity: " + subject);
+        ticketDeleteRequest(subject);
     }
 
     @Override
@@ -384,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
     }
 
     /**
-     * Sends a POST request to the server in order to add tickets to the open_tickets table
+     * Sends a POST request to the server in order to add tickets to the open tickets table
      *
      * @param json JSON string of the tickets objects created after calling
      *             the Microsoft Graph API
@@ -459,8 +456,42 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         }
     }
 
-    protected void ticketDeleteRequest(){
+    protected void ticketDeleteRequest(String subject){
+
         String url = Config.DELETETICKETURL;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JSONObject subjectJson = new JSONObject();
+
+        try {
+            Log.d("URLDeleteRequest", "making the json object");
+            subjectJson.put("subject", subject);
+
+            Log.d("URLDeleteRequest", subjectJson.toString());
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, subjectJson, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject res) {
+                            if (res != null) {
+                                Log.d("URLDeleteResponse", res.toString());
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Make a toast "sync failed" message
+                            Log.d("URLDeleteRequest", "Unable to receive JSON response from server");
+                            Log.d("URLDeleteRequest", error.toString());
+                        }
+                    });
+
+            queue.add(jsonObjectRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void callGraphAPI(IAuthenticationResult authenticationResult) {
