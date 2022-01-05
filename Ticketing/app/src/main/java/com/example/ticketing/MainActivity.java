@@ -94,19 +94,22 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
     RecyclerView ticketsRecyclerView;
     TicketAdapter myTicketAdapter;
 
-    ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>();
-    ArrayList<TroubleTicket> graphDataArrayList = new ArrayList<>();
+    ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>(); // This one is used to load tickets from the server database
+    ArrayList<TroubleTicket> graphDataArrayList = new ArrayList<>(); // This one is used to update the database with the information from the GraphAPI call
 
-    /*
-        TODO: OnClick interface working
-              Need to use the data to call the API with the subject
-              name to delete it from the DB.
-    */
+    /**
+     * Receive subject from the interface and pass it on to the
+     * ticketDeleteRequest method
+     *
+     * @param subject The subject of the ticket/email
+     */
     @Override
     public void onTicketCloseClick(String subject){
         Log.d("Close", "Subject now in main activity");
         Log.d("Close", "Subject in MainActivity: " + subject);
         ticketDeleteRequest(subject);
+
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete"));
     }
 
     @Override
@@ -333,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 if (mSingleAccountApp == null){
                     return;
                 }
-                mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback());
+                mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get"));
                 //testPost
             }
         });
@@ -348,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 /* Update UI */
                 updateUI(authenticationResult.getAccount());
                 /* call graph */
-                callGraphAPI(authenticationResult);
+                callGraphAPI(authenticationResult, "get");
             }
 
             @Override
@@ -365,12 +368,12 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         };
     }
 
-    private SilentAuthenticationCallback getAuthSilentCallback() {
+    private SilentAuthenticationCallback getAuthSilentCallback(final String caseString) {
         return new SilentAuthenticationCallback() {
             @Override
             public void onSuccess(IAuthenticationResult authenticationResult) {
                 Log.d(TAG, "Successfully authenticated");
-                callGraphAPI(authenticationResult);
+                callGraphAPI(authenticationResult, caseString);
             }
             @Override
             public void onError(MsalException exception) {
@@ -381,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
     }
 
     /**
-     * Sends a POST request to the server in order to add tickets to the open tickets table
+     * Sends a POST request to the server in order to add tickets to the open-tickets table
      *
      * @param json JSON string of the tickets objects created after calling
      *             the Microsoft Graph API
@@ -402,6 +405,8 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
 
                     if (res != null) {
                         Log.d("URLResponse", res.toString());
+                        // Calling the database to update the tickets ArrayList
+                        ticketGetRequest();
                     }
                 }
             }, new Response.ErrorListener(){
@@ -419,6 +424,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
     private void ticketGetRequest(){
@@ -494,7 +500,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         }
     }
 
-    private void callGraphAPI(IAuthenticationResult authenticationResult) {
+    private void callGraphAPI(IAuthenticationResult authenticationResult, String caseString) {
 
         final String accessToken = authenticationResult.getAccessToken();
 
@@ -510,22 +516,33 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                         })
                         .buildClient();
 
-        graphClient
-                .me()
-                .messages()
-                .buildRequest()
-                .select("subject, body, from")
-                .get(new ICallback<IMessageCollectionPage>() {
-                    @Override
-                    public void success(IMessageCollectionPage iMessageCollectionPage) {
-                        displayGraphResult(iMessageCollectionPage.getRawObject());
-                    }
+        switch(caseString) {
+            case "get":
+                graphClient
+                        .me()
+                        .messages()
+                        .buildRequest()
+                        .select("id, subject, body, from")
+                        .get(new ICallback<IMessageCollectionPage>() {
+                            @Override
+                            public void success(IMessageCollectionPage iMessageCollectionPage) {
+                                displayGraphResult(iMessageCollectionPage.getRawObject());
+                            }
 
-                    @Override
-                    public void failure(ClientException ex) {
-                        displayError(ex);
-                    }
-                });
+                            @Override
+                            public void failure(ClientException ex) {
+                                displayError(ex);
+                            }
+                        });
+                break;
+            case "delete":
+                // TODO: Call graphapi with delete email command
+                Toast.makeText(this, "Deleting Email with API", Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Toast.makeText(this, "Graph API not called", Toast.LENGTH_LONG).show();
+                break;
+        }
     }
 
     private void updateUI(@Nullable final IAccount account) {
@@ -568,11 +585,24 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         // Loop through myJsonArray get the subject, body, and from address
         for(JsonElement message: myJsonArray){
             if ( message instanceof JsonElement ) {
+
                 // Temporary
                 String subject = message.getAsJsonObject().get("subject").toString();
                 subject = removeQuotations(subject);
                 // Add the subject
                 textToDisplay.add(message.getAsJsonObject().get("subject").toString());
+
+                String graphId = message.getAsJsonObject().get("id").toString();
+
+                // TODO: FIRST see how to weed out replies.
+
+
+                /**
+                 * TODO: Add an id attribute to tickets.
+                 *      Update ticket classes
+                 *      Update open ticket table
+                 *      Possibly update arrayadapter?
+                 */
 
                 // Add the body
                 String body = message.getAsJsonObject().get("body").getAsJsonObject().get("content").toString();
@@ -596,7 +626,6 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
             }
         }
 
-        ticketGetRequest();
         // Convert the ArrayList of ticket objects received from the Graph API into a JSON String
         String json = new Gson().toJson(graphDataArrayList);
         Log.d("JSON", json);
