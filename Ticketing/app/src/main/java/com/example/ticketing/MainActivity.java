@@ -98,18 +98,18 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
     ArrayList<TroubleTicket> graphDataArrayList = new ArrayList<>(); // This one is used to update the database with the information from the GraphAPI call
 
     /**
-     * Receive subject from the interface and pass it on to the
+     * Receive subject from the OnTicketCloseClick interface and pass it on to the
      * ticketDeleteRequest method
      *
-     * @param subject The subject of the ticket/email
+     * @param subject The subject of the ticket/email to be deleted
      */
     @Override
     public void onTicketCloseClick(String subject){
         Log.d("Close", "Subject now in main activity");
         Log.d("Close", "Subject in MainActivity: " + subject);
-        ticketDeleteRequest(subject);
+        ticketDeleteRequest(subject); // Delete from database
 
-        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete"));
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete")); // Delete email from graphAPI
     }
 
     @Override
@@ -523,6 +523,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                         .messages()
                         .buildRequest()
                         .select("id, subject, body, from")
+                        .top(50) //TODO: Replace 50 with a global var
                         .get(new ICallback<IMessageCollectionPage>() {
                             @Override
                             public void success(IMessageCollectionPage iMessageCollectionPage) {
@@ -589,26 +590,27 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 // Temporary
                 String subject = message.getAsJsonObject().get("subject").toString();
                 subject = removeQuotations(subject);
+
+                // Ignoring replies to an email
+                // TODO: add a method that cleans up replies
+                // TODO: Create a "recently deleted" table. So I can restore the ticket if needed.
+                if (subject.contains("Re:")){
+                    continue;
+                }
+
                 // Add the subject
                 textToDisplay.add(message.getAsJsonObject().get("subject").toString());
 
                 String graphId = message.getAsJsonObject().get("id").toString();
-
-                // TODO: FIRST see how to weed out replies.
-
-
-                /**
-                 * TODO: Add an id attribute to tickets.
-                 *      Update ticket classes
-                 *      Update open ticket table
-                 *      Possibly update arrayadapter?
-                 */
+                Log.d("GraphID", "Subject: " + subject + "Graph ID: " + graphId);
 
                 // Add the body
                 String body = message.getAsJsonObject().get("body").getAsJsonObject().get("content").toString();
                 body = removeHtmlTags(body);
                 body = removeQuotations(body);
                 textToDisplay.add(body);
+
+                //TODO: Figure out why It's not getting all emails
 
                 // Temporary
                 //Drafts result in null from address (that could be the issue). INVESTIGATE (not necessary now because won't be saving drafts)
@@ -618,7 +620,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from address
 
                 // Temporarily created a trouble ticket object and logged it.
-                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, "Open");
+                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, "Open", graphId);
                 Log.d("Tickets", troubleTicket.toString());
 
                 //Add troubleTicket to ArrayList for loading on to RecyclerView and converting to json
@@ -678,7 +680,8 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 String body = ticket.get("body").toString();
                 String from = ticket.get("from_address").toString();
                 String status = ticket.get("status").toString();
-                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, status);
+                String graphId = ticket.get("graph_id").toString();
+                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, status, graphId);
                 ticketArrayList.add(troubleTicket);
                 } catch (JSONException e) {
                     e.printStackTrace();
