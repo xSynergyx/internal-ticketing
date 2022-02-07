@@ -2,10 +2,13 @@ package com.example.ticketing;
 
 import android.content.Context;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,10 +19,12 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
 
     ArrayList <TroubleTicket> tickets = new ArrayList<TroubleTicket>();
     Context context;
+    private OnTicketCloseClick onTicketCloseClick;
 
-    public TicketAdapter(Context context, ArrayList<TroubleTicket> tickets){
+    public TicketAdapter(Context context, ArrayList<TroubleTicket> tickets, OnTicketCloseClick onTicketCloseClick){
         this.context = context;
         this.tickets = tickets;
+        this.onTicketCloseClick = onTicketCloseClick;
     }
     @NonNull
     @Override
@@ -52,6 +57,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         TextView subjectView;
         TextView statusView;
         TextView descriptionView;
+        Button closeButton;
 
         public TicketViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,6 +65,28 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             subjectView = itemView.findViewById(R.id.ticket_subject);
             statusView = itemView.findViewById(R.id.ticket_status);
             descriptionView = itemView.findViewById(R.id.ticket_description);
+            closeButton = itemView.findViewById(R.id.close_button);
+
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    String clickedSubject = tickets.get(position).subject;
+                    String clickedGraphId = tickets.get(position).graph_id;
+                    Log.d("Close", clickedSubject);
+                    Log.d("Close", "About to send subject callback");
+                    onTicketCloseClick.onTicketCloseClick(clickedSubject, clickedGraphId);
+                    Log.d("Close", "Subject callback sent");
+                    removeItem(position);
+                }
+            });
+
         }
+    }
+
+    private void removeItem(int position) {
+        tickets.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, tickets.size());
     }
 }

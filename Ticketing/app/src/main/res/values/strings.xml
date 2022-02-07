@@ -5,5 +5,7 @@
     <string name="closed">Closed Tix</string>
     <string name="notes">Notes</string>
 
+    <string name="close_button">Close</string>
+
     <string name="fab_content_desc">Send new support ticket</string>
 </resources>

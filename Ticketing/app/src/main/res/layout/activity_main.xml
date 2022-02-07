@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Todo:
-Define the ticket object
-Will use ArrayList to store the ticket objects:
-    Need to create a ticket object
-    Then need to make aa TicketAdapter class
--->
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
