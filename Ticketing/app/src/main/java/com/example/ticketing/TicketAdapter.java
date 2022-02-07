@@ -72,9 +72,10 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     String clickedSubject = tickets.get(position).subject;
+                    String clickedGraphId = tickets.get(position).graph_id;
                     Log.d("Close", clickedSubject);
                     Log.d("Close", "About to send subject callback");
-                    onTicketCloseClick.onTicketCloseClick(clickedSubject);
+                    onTicketCloseClick.onTicketCloseClick(clickedSubject, clickedGraphId);
                     Log.d("Close", "Subject callback sent");
                     removeItem(position);
                 }

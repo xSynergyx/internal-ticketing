@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -104,12 +103,13 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
      * @param subject The subject of the ticket/email to be deleted
      */
     @Override
-    public void onTicketCloseClick(String subject){
+    public void onTicketCloseClick(String subject, String graph_id){
         Log.d("Close", "Subject now in main activity");
         Log.d("Close", "Subject in MainActivity: " + subject);
         ticketDeleteRequest(subject); // Delete from database
+        //Log.d("CloseGraphID", "graph_id: " + graph_id);
 
-        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete")); // Delete email from graphAPI
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graph_id)); // Delete email from graphAPI
     }
 
     @Override
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 if (mSingleAccountApp == null){
                     return;
                 }
-                mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get"));
+                mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get", ""));
                 //testPost
             }
         });
@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 /* Update UI */
                 updateUI(authenticationResult.getAccount());
                 /* call graph */
-                callGraphAPI(authenticationResult, "get");
+                callGraphAPI(authenticationResult, "get", "");
             }
 
             @Override
@@ -368,12 +368,12 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         };
     }
 
-    private SilentAuthenticationCallback getAuthSilentCallback(final String caseString) {
+    private SilentAuthenticationCallback getAuthSilentCallback(final String caseString, final String graph_id) {
         return new SilentAuthenticationCallback() {
             @Override
             public void onSuccess(IAuthenticationResult authenticationResult) {
                 Log.d(TAG, "Successfully authenticated");
-                callGraphAPI(authenticationResult, caseString);
+                callGraphAPI(authenticationResult, caseString, graph_id);
             }
             @Override
             public void onError(MsalException exception) {
@@ -500,7 +500,8 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         }
     }
 
-    private void callGraphAPI(IAuthenticationResult authenticationResult, String caseString) {
+    // Use method overloading?
+    private void callGraphAPI(IAuthenticationResult authenticationResult, String caseString, String graph_id) {
 
         final String accessToken = authenticationResult.getAccessToken();
 
@@ -537,8 +538,26 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                         });
                 break;
             case "delete":
-                // TODO: Call graphapi with delete email command
                 Toast.makeText(this, "Deleting Email with API", Toast.LENGTH_LONG).show();
+                Log.d("DeleteAPI", "Graph_ID: " + graph_id);
+
+                // TODO: Find out why API delete call fails. So far failure doesn't crash the app
+                graphClient
+                        .me()
+                        .messages(graph_id)
+                        .buildRequest()
+                        .delete(new ICallback<Message>() {
+                            @Override
+                            public void success(Message message) {
+                                Log.d("DeleteAPI", "Successfully deleted!");
+                            }
+
+                            @Override
+                            public void failure(ClientException ex) {
+                                Log.d("DeleteAPIError", "Well, there's an error.");
+                                displayError(ex);
+                            }
+                        });
                 break;
             default:
                 Toast.makeText(this, "Graph API not called", Toast.LENGTH_LONG).show();
@@ -591,9 +610,9 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 String subject = message.getAsJsonObject().get("subject").toString();
                 subject = removeQuotations(subject);
 
-                // Ignoring replies to an email
-                // TODO: add a method that cleans up replies
+
                 // TODO: Create a "recently deleted" table. So I can restore the ticket if needed.
+                // Ignoring replies to an email
                 if (subject.contains("Re:")){
                     continue;
                 }
@@ -610,18 +629,15 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 body = removeQuotations(body);
                 textToDisplay.add(body);
 
-                //TODO: Figure out why It's not getting all emails
-
                 // Temporary
-                //Drafts result in null from address (that could be the issue). INVESTIGATE (not necessary now because won't be saving drafts)
+                //Drafts result in null from address (that could be the issue). INVESTIGATE (not necessary now because I won't be saving drafts).
                 String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();
                 from = removeQuotations(from);
                 // There has to be a better way to do this
                 textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from address
 
-                // Temporarily created a trouble ticket object and logged it.
                 TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, "Open", graphId);
-                Log.d("Tickets", troubleTicket.toString());
+                //Log.d("Tickets", troubleTicket.toString());
 
                 //Add troubleTicket to ArrayList for loading on to RecyclerView and converting to json
                 graphDataArrayList.add(troubleTicket);
