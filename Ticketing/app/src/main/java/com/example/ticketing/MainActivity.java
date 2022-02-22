@@ -112,6 +112,12 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graph_id)); // Delete email from graphAPI
     }
 
+    public void onTicketStatusClick(String subject){
+
+        Toast.makeText(this, "Status Update" + subject, Toast.LENGTH_LONG).show();
+        ticketStatusRequest(subject);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -500,7 +506,44 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         }
     }
 
-    // Use method overloading?
+    private void ticketStatusRequest(String subject){
+
+        String url = Config.UPDATETICKETURL;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JSONObject subjectJson = new JSONObject();
+
+        try {
+            subjectJson.put("subject", subject);
+
+            Log.d("URLUpdateRequest", subjectJson.toString());
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, subjectJson, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject res) {
+                            if (res != null) {
+                                Log.d("URLUpdateResponse", res.toString());
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Make a toast "ticket update failed" message
+                            Log.d("URLUpdateRequest", "Unable to receive JSON response from server");
+                            Log.d("URLUpdateRequest", error.toString());
+                        }
+                    });
+
+            queue.add(jsonObjectRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // TODO: Consider using method overloading?
     private void callGraphAPI(IAuthenticationResult authenticationResult, String caseString, String graph_id) {
 
         final String accessToken = authenticationResult.getAccessToken();
