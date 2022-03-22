@@ -8,11 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.apache.commons.math3.geometry.euclidean.twod.Line;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -42,10 +46,10 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
     @Override
     public void onBindViewHolder(@NonNull TicketAdapter.TicketViewHolder holder, int position) {
 
-        // Reset the buttons to visible and text color to red
+        // Reset the buttons visibility and text color back to default
         holder.statusButton.setVisibility(View.VISIBLE);
         holder.statusButton.setClickable(true);
-        holder.statusView.setTextColor(Color.parseColor("#ffcc0000"));
+        holder.statusView.setTextColor(Color.parseColor("#ffcc0000")); //TODO: Make a "textColor" var
 
         holder.subjectView.setText(tickets.get(position).subject);
         holder.statusView.setText(tickets.get(position).status);
@@ -53,7 +57,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
 
 
         if (tickets.get(position).status.equalsIgnoreCase("ongoing")) {
-            Log.d("STATUSBUTTON ", tickets.get(position).subject + " " + tickets.get(position).status);
+            //Log.d("STATUSBUTTON", tickets.get(position).subject + " " + tickets.get(position).status);
             holder.statusButton.setVisibility(View.INVISIBLE);
             holder.statusButton.setClickable(false);
             holder.statusView.setTextColor(Color.parseColor("#3bb3db"));
@@ -78,6 +82,11 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         Button closeButton;
         Button statusButton;
 
+        LinearLayout ticketControls;
+        LinearLayout solutionView;
+        Button solutionButton;
+        EditText solutionEditText;
+
         public TicketViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -87,17 +96,37 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             closeButton = itemView.findViewById(R.id.close_button);
             statusButton = itemView.findViewById(R.id.update_status_button);
 
+            ticketControls = itemView.findViewById(R.id.ticket_controls_view);
+            solutionView = itemView.findViewById(R.id.solution_view);
+            solutionButton = itemView.findViewById(R.id.solution_button);
+            solutionEditText = itemView.findViewById(R.id.solution_edit_text_view);
+
+
+
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    /*
                     int position = getAdapterPosition();
                     String clickedSubject = tickets.get(position).subject;
                     String clickedGraphId = tickets.get(position).graph_id;
+                     */
+
+                    // Hide the close and status buttons and make them unclickable and display the solution button and edit textview
+                    ticketControls.setVisibility(View.INVISIBLE);
+                    closeButton.setClickable(false);
+                    statusButton.setClickable(false);
+
+                    solutionView.setVisibility(View.VISIBLE);
+                    solutionButton.setClickable(true);
+
+                    /*
                     Log.d("Close", clickedSubject);
-                    Log.d("Close", "About to send subject callback");
                     onTicketCloseClick.onTicketCloseClick(clickedSubject, clickedGraphId);
-                    Log.d("Close", "Subject callback sent");
-                    removeItem(position);
+                    Log.d("Close", "Subject sent");
+                    //removeItem(position);
+
+                     */
                 }
             });
 
@@ -116,6 +145,32 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
 
                 }
             });
+
+            solutionButton.setOnClickListener((new View.OnClickListener() {
+                @Override
+                public void onClick(View v){
+                    int position = getAdapterPosition();
+                    String clickedSubject = tickets.get(position).subject;
+                    String clickedGraphId = tickets.get(position).graph_id;
+
+                    String solutionText = solutionEditText.getText().toString().trim();
+                    solutionEditText.getText().clear();
+                    Log.d("SOLUTION VIEW", "Solution view was clicked\n Here's the solution text: " + solutionText);
+
+                    Log.d("Close", clickedSubject);
+                    onTicketCloseClick.onTicketCloseClick(clickedSubject, clickedGraphId, solutionText);
+                    Log.d("Close", "Subject sent");
+
+                    //Resetting the item in this list in case sync is called after deleting/closing a ticket
+                    ticketControls.setVisibility(View.VISIBLE);
+                    closeButton.setClickable(true);
+                    statusButton.setClickable(true);
+
+                    solutionView.setVisibility(View.INVISIBLE);
+                    solutionButton.setClickable(false);
+                    removeItem(position);
+                }
+            }));
 
         }
     }

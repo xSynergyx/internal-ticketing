@@ -5,8 +5,10 @@
     <string name="closed">Closed Tix</string>
     <string name="new_tix">New Tix</string>
 
+    <!-- Buttons -->
     <string name="close_button">Close</string>
     <string name="update_status_button">Resolving</string>
+    <string name="solution_button_text">Submit</string>
 
     <string name="fab_content_desc">Send new support ticket</string>
 </resources>

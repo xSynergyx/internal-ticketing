@@ -4,9 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +36,7 @@ public class SearchActivity extends MainActivity {
         listView = (ListView) findViewById(R.id.closed_tickets_list_view);
         downloadJSON(Config.CLOSEDTICKETSSCRIPT);
     }
+
 
     private void downloadJSON(final String urlWebService){
 
@@ -71,6 +80,7 @@ public class SearchActivity extends MainActivity {
         getJSON.execute();
     }
 
+
     private void loadIntoListView(String json) throws JSONException {
         JSONArray jsonArray = new JSONArray(json);
         String[] closed_tickets = new String[jsonArray.length()];
@@ -81,5 +91,64 @@ public class SearchActivity extends MainActivity {
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, closed_tickets);
         listView.setAdapter(arrayAdapter);
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void ticketGetRequest(){
+        String url = Config.GETTICKETSURL;
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        try {
+            Log.d("URLGetRequest", "Loading tickets from DB");
+
+            final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                        @Override
+                        public void onResponse(JSONArray res) {
+
+                            if (res != null) {
+                                Log.d("URLGetResponse", res.toString());
+                                jsonArrayToArrayList(res);
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Make a toast "sync failed" message
+                            Log.d("URLGetRequest", "Unable to receive JSON response from server");
+                            Log.d("URLGetRequest", error.toString());
+                        }
+                    });
+
+            queue.add(jsonArrayRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void jsonArrayToArrayList(JSONArray jsonArr){
+
+        if (jsonArr != null) {
+            for (int i = 0; i<jsonArr.length(); i++){
+                try {
+                    JSONObject ticket = jsonArr.getJSONObject(i);
+                    String subject = ticket.get("subject").toString();
+                    String body = ticket.get("body").toString();
+                    String from = ticket.get("from_address").toString();
+                    String status = ticket.get("status").toString();
+                    String graphId = ticket.get("graph_id").toString();
+                    String solutionText = ticket.get("solution_text_").toString();
+                    TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, status, graphId, solutionText);
+                    ticketArrayList.add(troubleTicket);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("JsonToArrayList", "Conversion error");
+                }
+            }
+            Log.d("TicketArrList", ticketArrayList.toString());
+            myTicketAdapter.notifyDataSetChanged();
+        }
     }
 }
