@@ -4,14 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,15 +23,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class SearchActivity extends MainActivity {
 
-    //ListView listView;
     ClosedTicketAdapter closedTicketAdapter;
     RecyclerView closedTicketsRecyclerView;
     ArrayList<TroubleTicket> closedTicketArrayList = new ArrayList<TroubleTicket>();
@@ -44,8 +37,6 @@ public class SearchActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-        //downloadJSON(Config.CLOSEDTICKETSSCRIPT);
 
         closedTicketsRecyclerView = findViewById(R.id.closed_tickets_recycler_view);
         searchButton = findViewById(R.id.search_button);
@@ -58,7 +49,6 @@ public class SearchActivity extends MainActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Handle empty string case
                 closedTicketArrayList.clear();
                 String searchText = searchEditText.getText().toString().trim();
                 searchEditText.getText().clear();
@@ -67,65 +57,6 @@ public class SearchActivity extends MainActivity {
         });
     }
 
-    /*
-    * OLD STUFF
-    private void downloadJSON(final String urlWebService){
-
-        class DownloadJSON extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected void onPostExecute(String s){
-                super.onPostExecute(s);
-                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-                try {
-                    loadIntoListView(s);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    URL url = new URL(urlWebService);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    StringBuilder sb = new StringBuilder();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    String json;
-                    while ((json = bufferedReader.readLine()) != null){
-                        sb.append(json + "\n");
-                    }
-                    return sb.toString().trim();
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        }
-
-        DownloadJSON getJSON = new DownloadJSON();
-        getJSON.execute();
-    }
-
-
-    private void loadIntoListView(String json) throws JSONException {
-        JSONArray jsonArray = new JSONArray(json);
-        String[] closed_tickets = new String[jsonArray.length()];
-        for (int i = 0; i < jsonArray.length(); i++){
-            JSONObject obj = jsonArray.getJSONObject(i);
-            closed_tickets[i] = obj.getString("subject") + " " + obj.getString("solution");
-        }
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, closed_tickets);
-        listView.setAdapter(arrayAdapter);
-    }
-
-     */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void closedTicketGetRequest(String searchText){
         String url = Config.SEARCHTICKETSURL;
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -137,7 +68,7 @@ public class SearchActivity extends MainActivity {
             searchTermJsonArray.put(searchTextObj);
             Log.d("jsonArray", searchTermJsonArray.toString());
             Log.d("URLSearchRequest", "Loading tickets from DB");
-            //TODO: Handle no search results case
+            
             final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                     (Request.Method.POST, url, searchTermJsonArray, new Response.Listener<JSONArray>() {
 
@@ -154,13 +85,13 @@ public class SearchActivity extends MainActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // TODO: Make a toast "sync failed" message
-                            Log.d("URLGetRequest", "Unable to receive JSON response from server");
-                            Log.d("URLGetRequest", error.toString());
+                            Log.d("URLSearchResponse", "Unable to receive JSON response from server");
+                            Toast.makeText(SearchActivity.this, "No results found for \"" + searchText + "\"", Toast.LENGTH_LONG).show();
+                            Log.d("URLSearchResponse", error.toString());
                         }
                     });
 
             queue.add(jsonArrayRequest);
-            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
 
     public void onTicketStatusClick(String subject){
 
-        Toast.makeText(this, "Status Update" + subject, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Status Updated" + subject, Toast.LENGTH_LONG).show();
         ticketStatusRequest(subject);
     }
 
