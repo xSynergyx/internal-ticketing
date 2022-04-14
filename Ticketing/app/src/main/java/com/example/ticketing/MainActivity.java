@@ -9,10 +9,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -37,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -56,19 +64,17 @@ import com.microsoft.identity.client.AuthenticationCallback; // Imports MSAL aut
 import com.microsoft.identity.client.*;
 import com.microsoft.identity.client.exception.*;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * TODO:
- * Break down the "Update UI" section below
- * update UI. Authenticate with Microsoft then display tickets and everything else
- *      Analyze what sign out does.
- * parse data to get subject and body (text only)
  *
  * NOTE: Emails received are from all folders (inbox, sent, deleted, etc)
+ *
  **/
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnTicketCloseClick {
 
     private final static String[] SCOPES = {"Mail.ReadWrite"};
     /* Azure AD v2 Configs */
@@ -85,8 +91,32 @@ public class MainActivity extends AppCompatActivity {
     TextView logTextView;
     TextView currentUserTextView;
     RecyclerView ticketsRecyclerView;
+    TicketAdapter myTicketAdapter;
 
-    ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>();
+    ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>(); // This one is used to load tickets from the server database
+    ArrayList<TroubleTicket> graphDataArrayList = new ArrayList<>(); // This one is used to update the database with the information from the GraphAPI call
+
+    /**
+     * Receive subject from the OnTicketCloseClick interface and pass it on to the
+     * ticketDeleteRequest method
+     *
+     * @param subject The subject of the ticket/email to be deleted
+     */
+    @Override
+    public void onTicketCloseClick(String subject, String graph_id, String solution){
+        Log.d("Close", "Subject now in main activity");
+        Log.d("Close", "Subject in MainActivity: " + subject);
+        ticketDeleteRequest(subject, solution); // Delete from database
+        //Log.d("CloseGraphID", "graph_id: " + graph_id);
+
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graph_id)); // Delete email from graphAPI
+    }
+
+    public void onTicketStatusClick(String subject){
+
+        Toast.makeText(this, "Status Updated" + subject, Toast.LENGTH_LONG).show();
+        ticketStatusRequest(subject);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,9 +179,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ticketsRecyclerView = findViewById(R.id.ticketrecyclerview);
+        ticketsRecyclerView = findViewById(R.id.ticket_recycler_view);
 
-        TicketAdapter myTicketAdapter = new TicketAdapter(this, ticketArrayList);
+        myTicketAdapter = new TicketAdapter(this, ticketArrayList, this);
         ticketsRecyclerView.setAdapter(myTicketAdapter);
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     } // End of onCreate method
@@ -312,7 +342,8 @@ public class MainActivity extends AppCompatActivity {
                 if (mSingleAccountApp == null){
                     return;
                 }
-                mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback());
+                mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get", ""));
+                //testPost
             }
         });
     }
@@ -326,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
                 /* Update UI */
                 updateUI(authenticationResult.getAccount());
                 /* call graph */
-                callGraphAPI(authenticationResult);
+                callGraphAPI(authenticationResult, "get", "");
             }
 
             @Override
@@ -343,12 +374,12 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private SilentAuthenticationCallback getAuthSilentCallback() {
+    private SilentAuthenticationCallback getAuthSilentCallback(final String caseString, final String graph_id) {
         return new SilentAuthenticationCallback() {
             @Override
             public void onSuccess(IAuthenticationResult authenticationResult) {
                 Log.d(TAG, "Successfully authenticated");
-                callGraphAPI(authenticationResult);
+                callGraphAPI(authenticationResult, caseString, graph_id);
             }
             @Override
             public void onError(MsalException exception) {
@@ -358,7 +389,163 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private void callGraphAPI(IAuthenticationResult authenticationResult) {
+    /**
+     * Sends a POST request to the server in order to add tickets to the open-tickets table
+     *
+     * @param json JSON string of the tickets objects created after calling
+     *             the Microsoft Graph API
+     */
+    private void ticketPostRequest(String json){
+        String url = Config.ADDTICKETSURL;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        
+        try {
+            Log.d("URLRequest", "building the json object");
+            JSONArray postData = new JSONArray(json);
+
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                    (Request.Method.POST, url, postData, new Response.Listener<JSONArray>() {
+
+                @Override
+                public void onResponse(JSONArray res) {
+
+                    if (res != null) {
+                        Log.d("URLResponse", res.toString());
+                        // Calling the database to update the tickets ArrayList
+                        ticketGetRequest();
+                    }
+                }
+            }, new Response.ErrorListener(){
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // TODO: Make a toast "sync failed" message
+                    Log.d("URLRequest", "Unable to receive JSON response from server");
+                    Log.d("URLRequest", error.toString());
+                }
+            });
+
+            queue.add(jsonArrayRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void ticketGetRequest(){
+        String url = Config.GETTICKETSURL;
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        try {
+            Log.d("URLGetRequest", "Loading tickets from DB");
+
+            final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                        @Override
+                        public void onResponse(JSONArray res) {
+
+                            if (res != null) {
+                                Log.d("URLGetResponse", res.toString());
+                                jsonArrayToArrayList(res);
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Make a toast "sync failed" message
+                            Log.d("URLGetRequest", "Unable to receive JSON response from server");
+                            Log.d("URLGetRequest", error.toString());
+                        }
+                    });
+
+            queue.add(jsonArrayRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void ticketDeleteRequest(String subject, String solution){
+
+        String url = Config.DELETETICKETURL;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JSONObject subjectJson = new JSONObject();
+
+        try {
+            Log.d("URLDeleteRequest", "making the json object");
+            subjectJson.put("subject", subject);
+            subjectJson.put("solution", solution); //TODO: put solution into insert statement in the libixapi
+
+            Log.d("URLDeleteRequest", subjectJson.toString());
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, subjectJson, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject res) {
+                            if (res != null) {
+                                Log.d("URLDeleteResponse", res.toString());
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Make a toast "sync failed" message
+                            Log.d("URLDeleteRequest", "Unable to receive JSON response from server");
+                            Log.d("URLDeleteRequest", error.toString());
+                        }
+                    });
+
+            queue.add(jsonObjectRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ticketStatusRequest(String subject){
+
+        String url = Config.UPDATETICKETURL;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JSONObject subjectJson = new JSONObject();
+
+        try {
+            subjectJson.put("subject", subject);
+
+            Log.d("URLUpdateRequest", subjectJson.toString());
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, subjectJson, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject res) {
+                            if (res != null) {
+                                Log.d("URLUpdateResponse", res.toString());
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Make a toast "ticket update failed" message
+                            Log.d("URLUpdateRequest", "Unable to receive JSON response from server");
+                            Log.d("URLUpdateRequest", error.toString());
+                        }
+                    });
+
+            queue.add(jsonObjectRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // TODO: Consider using method overloading?
+    private void callGraphAPI(IAuthenticationResult authenticationResult, String caseString, String graph_id) {
 
         final String accessToken = authenticationResult.getAccessToken();
 
@@ -374,22 +561,52 @@ public class MainActivity extends AppCompatActivity {
                         })
                         .buildClient();
 
-        graphClient
-                .me()
-                .messages()
-                .buildRequest()
-                .select("subject, body, from")
-                .get(new ICallback<IMessageCollectionPage>() {
-                    @Override
-                    public void success(IMessageCollectionPage iMessageCollectionPage) {
-                        displayGraphResult(iMessageCollectionPage.getRawObject());
-                    }
+        switch(caseString) {
+            case "get":
+                graphClient
+                        .me()
+                        .messages()
+                        .buildRequest()
+                        .select("id, subject, body, from")
+                        .top(50) //TODO: Replace 50 with a global var
+                        .get(new ICallback<IMessageCollectionPage>() {
+                            @Override
+                            public void success(IMessageCollectionPage iMessageCollectionPage) {
+                                displayGraphResult(iMessageCollectionPage.getRawObject());
+                            }
 
-                    @Override
-                    public void failure(ClientException ex) {
-                        displayError(ex);
-                    }
-                });
+                            @Override
+                            public void failure(ClientException ex) {
+                                displayError(ex);
+                            }
+                        });
+                break;
+            case "delete":
+                Toast.makeText(this, "Deleting Email with API", Toast.LENGTH_LONG).show();
+                Log.d("DeleteAPI", "Graph_ID: " + graph_id);
+
+                // TODO: Find out why API delete call fails. So far failure doesn't crash the app
+                graphClient
+                        .me()
+                        .messages(graph_id)
+                        .buildRequest()
+                        .delete(new ICallback<Message>() {
+                            @Override
+                            public void success(Message message) {
+                                Log.d("DeleteAPI", "Successfully deleted!");
+                            }
+
+                            @Override
+                            public void failure(ClientException ex) {
+                                Log.d("DeleteAPIError", "Well, there's an error.");
+                                displayError(ex);
+                            }
+                        });
+                break;
+            default:
+                Toast.makeText(this, "Graph API not called", Toast.LENGTH_LONG).show();
+                break;
+        }
     }
 
     private void updateUI(@Nullable final IAccount account) {
@@ -426,33 +643,56 @@ public class MainActivity extends AppCompatActivity {
         final ArrayList<String> textToDisplay = new ArrayList();
         JsonArray myJsonArray = graphResponse.getAsJsonArray("value");
 
+        // Clearing the both Array Lists before putting in new tickets (avoid duplicate tickets)
+        ticketArrayList.clear();
+        graphDataArrayList.clear();
         // Loop through myJsonArray get the subject, body, and from address
         for(JsonElement message: myJsonArray){
             if ( message instanceof JsonElement ) {
+
                 // Temporary
-                String text = message.getAsJsonObject().get("subject").toString();
+                String subject = message.getAsJsonObject().get("subject").toString();
+                subject = removeQuotations(subject);
+
+
+                // TODO: Create a "recently deleted" table. So I can restore the ticket if needed.
+                // Ignoring replies to an email
+                if (subject.contains("Re:")){
+                    continue;
+                }
+
                 // Add the subject
                 textToDisplay.add(message.getAsJsonObject().get("subject").toString());
+
+                String graphId = message.getAsJsonObject().get("id").toString();
+                Log.d("GraphID", "Subject: " + subject + "Graph ID: " + graphId);
 
                 // Add the body
                 String body = message.getAsJsonObject().get("body").getAsJsonObject().get("content").toString();
                 body = removeHtmlTags(body);
+                body = removeQuotations(body);
                 textToDisplay.add(body);
 
                 // Temporary
-                //Drafts result in null from address (that could be the issue). INVESTIGATE (not necessary now because won't be saving drafts)
+                //Drafts result in null from address (that could be the issue). INVESTIGATE (not necessary now because I won't be saving drafts).
                 String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();
+                from = removeQuotations(from);
                 // There has to be a better way to do this
                 textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from address
 
-                // Temporarily created a trouble ticket object and logged it.
-                TroubleTicket sampleTicket = new TroubleTicket(text, body, from, "Open");
-                Log.d("Tickets", sampleTicket.toString());
+                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, "Open", graphId, "");
+                //Log.d("Tickets", troubleTicket.toString());
 
-                //ADD|SAMPLETICKET TO TICKET ARRAYLIST
-                ticketArrayList.add(sampleTicket);
+                //Add troubleTicket to ArrayList for loading on to RecyclerView and converting to json
+                graphDataArrayList.add(troubleTicket);
             }
         }
+
+        // Convert the ArrayList of ticket objects received from the Graph API into a JSON String
+        String json = new Gson().toJson(graphDataArrayList);
+        Log.d("JSON", json);
+        Log.d("URLRequest", "About to send url request to DO droplet server");
+        ticketPostRequest(json);
 
         //logTextView.setText(graphResponse.toString());
 
@@ -482,5 +722,35 @@ public class MainActivity extends AppCompatActivity {
         body = body.replace("\\n", " ");
 
         return body;
+    }
+
+    private String removeQuotations(String text){
+
+        text = text.replaceAll("^\"|\"$", "");
+        return text;
+    }
+
+    private void jsonArrayToArrayList(JSONArray jsonArr){
+
+        if (jsonArr != null) {
+            for (int i = 0; i<jsonArr.length(); i++){
+                try {
+                JSONObject ticket = jsonArr.getJSONObject(i);
+                String subject = ticket.get("subject").toString();
+                String body = ticket.get("body").toString();
+                String from = ticket.get("from_address").toString();
+                String status = ticket.get("status").toString();
+                String graphId = ticket.get("graph_id").toString();
+                String solutionText = ticket.get("solution").toString();
+                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, status, graphId, solutionText);
+                ticketArrayList.add(troubleTicket);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("JsonToArrayList", "Conversion error");
+                }
+            }
+            Log.d("TicketArrList", ticketArrayList.toString());
+            myTicketAdapter.notifyDataSetChanged();
+        }
     }
 }

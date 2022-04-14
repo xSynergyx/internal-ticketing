@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Todo:
-Define the ticket object
-Will use ArrayList to store the ticket objects:
-    Need to create a ticket object
-    Then need to make aa TicketAdapter class
--->
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -52,7 +46,7 @@ Will use ArrayList to store the ticket objects:
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Silent"
+                android:text="Sync"
                 android:enabled="false"/>
 
         </LinearLayout>
@@ -92,7 +86,7 @@ Will use ArrayList to store the ticket objects:
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="false"
-            android:layout_weight="2">
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/txt_log"
@@ -104,7 +98,7 @@ Will use ArrayList to store the ticket objects:
         </ScrollView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ticketrecyclerview"
+            android:id="@+id/ticket_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="5">
@@ -147,7 +141,7 @@ Will use ArrayList to store the ticket objects:
         <TextView
             android:id="@+id/notes"
             style="@style/bottomButtons"
-            android:text="@string/notes"/>
+            android:text="@string/new_tix"/>
 
 
     </LinearLayout>

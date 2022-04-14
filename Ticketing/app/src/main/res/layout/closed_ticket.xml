@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!--
+    <TextView
+        android:id="@+id/ticket_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+        -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/ticket_border"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/closed_ticket_subject"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginLeft="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/closed_ticket_status"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/closed_ticket_description"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_alignParentBottom="true"
+            android:textSize="14dp"
+            android:layout_weight="4.8"/>
+
+        <TextView
+            android:id="@+id/closed_ticket_solution"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="italic" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/spacing"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:text=" "
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
