@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
             }
         });
 
-        ticketsRecyclerView = findViewById(R.id.ticketrecyclerview);
+        ticketsRecyclerView = findViewById(R.id.ticket_recycler_view);
 
         myTicketAdapter = new TicketAdapter(this, ticketArrayList, this);
         ticketsRecyclerView.setAdapter(myTicketAdapter);

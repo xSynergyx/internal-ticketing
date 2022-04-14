@@ -1,11 +1,16 @@
 package com.example.ticketing;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,20 +29,46 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class SearchActivity extends MainActivity {
 
-    ListView listView;
+    //ListView listView;
+    ClosedTicketAdapter closedTicketAdapter;
+    RecyclerView closedTicketsRecyclerView;
+    ArrayList<TroubleTicket> closedTicketArrayList = new ArrayList<TroubleTicket>();
+    Button searchButton;
+    EditText searchEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        listView = (ListView) findViewById(R.id.closed_tickets_list_view);
-        downloadJSON(Config.CLOSEDTICKETSSCRIPT);
+        //downloadJSON(Config.CLOSEDTICKETSSCRIPT);
+
+        closedTicketsRecyclerView = findViewById(R.id.closed_tickets_recycler_view);
+        searchButton = findViewById(R.id.search_button);
+        searchEditText = (EditText)findViewById(R.id.search_edit_text_view);
+
+        closedTicketAdapter = new ClosedTicketAdapter(this, closedTicketArrayList);
+        closedTicketsRecyclerView.setAdapter(closedTicketAdapter);
+        closedTicketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: Handle empty string case
+                closedTicketArrayList.clear();
+                String searchText = searchEditText.getText().toString().trim();
+                searchEditText.getText().clear();
+                closedTicketGetRequest(searchText);
+            }
+        });
     }
 
-
+    /*
+    * OLD STUFF
     private void downloadJSON(final String urlWebService){
 
         class DownloadJSON extends AsyncTask<Void, Void, String> {
@@ -92,22 +123,29 @@ public class SearchActivity extends MainActivity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, closed_tickets);
         listView.setAdapter(arrayAdapter);
     }
+
+     */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void ticketGetRequest(){
-        String url = Config.GETTICKETSURL;
+    private void closedTicketGetRequest(String searchText){
+        String url = Config.SEARCHTICKETSURL;
         RequestQueue queue = Volley.newRequestQueue(this);
+        JSONArray searchTermJsonArray = new JSONArray();
+        JSONObject searchTextObj = new JSONObject();
 
         try {
-            Log.d("URLGetRequest", "Loading tickets from DB");
-
+            searchTextObj.put("search", searchText);
+            searchTermJsonArray.put(searchTextObj);
+            Log.d("jsonArray", searchTermJsonArray.toString());
+            Log.d("URLSearchRequest", "Loading tickets from DB");
+            //TODO: Handle no search results case
             final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                    (Request.Method.POST, url, searchTermJsonArray, new Response.Listener<JSONArray>() {
 
                         @Override
                         public void onResponse(JSONArray res) {
 
                             if (res != null) {
-                                Log.d("URLGetResponse", res.toString());
+                                Log.d("URLSearchResponse", res.toString());
                                 jsonArrayToArrayList(res);
                             }
                         }
@@ -128,6 +166,7 @@ public class SearchActivity extends MainActivity {
         }
     }
 
+
     private void jsonArrayToArrayList(JSONArray jsonArr){
 
         if (jsonArr != null) {
@@ -139,16 +178,16 @@ public class SearchActivity extends MainActivity {
                     String from = ticket.get("from_address").toString();
                     String status = ticket.get("status").toString();
                     String graphId = ticket.get("graph_id").toString();
-                    String solutionText = ticket.get("solution_text_").toString();
+                    String solutionText = ticket.get("solution").toString();
                     TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, status, graphId, solutionText);
-                    ticketArrayList.add(troubleTicket);
+                    closedTicketArrayList.add(troubleTicket);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("JsonToArrayList", "Conversion error");
                 }
             }
-            Log.d("TicketArrList", ticketArrayList.toString());
-            myTicketAdapter.notifyDataSetChanged();
+            Log.d("TicketArrList", closedTicketArrayList.toString());
+            closedTicketAdapter.notifyDataSetChanged();
         }
     }
 }
