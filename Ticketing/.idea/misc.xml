@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/activity_main.xml" value="0.1140625" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/activity_notes.xml" value="0.1" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/activity_search.xml" value="0.1" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/closed_ticket.xml" value="0.1171875" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/ticket.xml" value="0.1" />
       </map>
     </option>

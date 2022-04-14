@@ -103,10 +103,10 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
      * @param subject The subject of the ticket/email to be deleted
      */
     @Override
-    public void onTicketCloseClick(String subject, String graph_id){
+    public void onTicketCloseClick(String subject, String graph_id, String solution){
         Log.d("Close", "Subject now in main activity");
         Log.d("Close", "Subject in MainActivity: " + subject);
-        ticketDeleteRequest(subject); // Delete from database
+        ticketDeleteRequest(subject, solution); // Delete from database
         //Log.d("CloseGraphID", "graph_id: " + graph_id);
 
         mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graph_id)); // Delete email from graphAPI
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
 
     public void onTicketStatusClick(String subject){
 
-        Toast.makeText(this, "Status Update" + subject, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Status Updated" + subject, Toast.LENGTH_LONG).show();
         ticketStatusRequest(subject);
     }
 
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
             }
         });
 
-        ticketsRecyclerView = findViewById(R.id.ticketrecyclerview);
+        ticketsRecyclerView = findViewById(R.id.ticket_recycler_view);
 
         myTicketAdapter = new TicketAdapter(this, ticketArrayList, this);
         ticketsRecyclerView.setAdapter(myTicketAdapter);
@@ -468,7 +468,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         }
     }
 
-    protected void ticketDeleteRequest(String subject){
+    protected void ticketDeleteRequest(String subject, String solution){
 
         String url = Config.DELETETICKETURL;
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -477,6 +477,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         try {
             Log.d("URLDeleteRequest", "making the json object");
             subjectJson.put("subject", subject);
+            subjectJson.put("solution", solution); //TODO: put solution into insert statement in the libixapi
 
             Log.d("URLDeleteRequest", subjectJson.toString());
 
@@ -679,7 +680,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 // There has to be a better way to do this
                 textToDisplay.add(message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString()); //added from address
 
-                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, "Open", graphId);
+                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, "Open", graphId, "");
                 //Log.d("Tickets", troubleTicket.toString());
 
                 //Add troubleTicket to ArrayList for loading on to RecyclerView and converting to json
@@ -740,7 +741,8 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 String from = ticket.get("from_address").toString();
                 String status = ticket.get("status").toString();
                 String graphId = ticket.get("graph_id").toString();
-                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, status, graphId);
+                String solutionText = ticket.get("solution").toString();
+                TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, status, graphId, solutionText);
                 ticketArrayList.add(troubleTicket);
                 } catch (JSONException e) {
                     e.printStackTrace();
