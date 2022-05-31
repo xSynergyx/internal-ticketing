@@ -16,6 +16,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -106,6 +108,17 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
     public void onTicketCloseClick(String subject, String graph_id, String solution){
         Log.d("Close", "Subject now in main activity");
         Log.d("Close", "Subject in MainActivity: " + subject);
+
+        Log.d("Notifications", "About to send notification");
+        String title = "Ticket: \"" + subject + "\" has been closed";
+        PushNotificationSender notificationSender = new PushNotificationSender("/topics/all",
+                title,
+                solution,
+                getApplicationContext(),
+                MainActivity.this
+        );
+        notificationSender.sendNotifications();
+
         ticketDeleteRequest(subject, solution); // Delete from database
         //Log.d("CloseGraphID", "graph_id: " + graph_id);
 
@@ -184,6 +197,8 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         myTicketAdapter = new TicketAdapter(this, ticketArrayList, this);
         ticketsRecyclerView.setAdapter(myTicketAdapter);
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
     } // End of onCreate method
 
     // Displays the action bar created in main.xml
