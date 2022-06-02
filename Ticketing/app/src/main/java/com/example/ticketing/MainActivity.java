@@ -157,13 +157,28 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                     }
                 });
 
+        /**
+         * v2
+         */
+        //TODO: Change font style of title. Maybe try to center it too (or leave that for v2 refinement).
+        //TODO: Add shadow to action bar
+        //TODO: Add progress bar when syncing tickets
+        //TODO: Animate buttons
+        //TODO: Re-add options menu (check some nice stlyes). add notification on/off functionality there
+
+        /**
+         * v1
+         */
+        //DONE: Increase ticket description bottom margin. See how to ellipsize text (3 periods if too long).
+        //TODO: Add shadow to buttons
+        //DONE: See if I can spice up the bottom menu
         //Action bar setup
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Libix");
-        //actionBar.setSubtitle("Welcome to the app");
         centerTitle();
         //Display logo
-        actionBar.setIcon(R.drawable.templogo);
+        actionBar.setIcon(R.mipmap.ic_launcher);
+        actionBar.setElevation(4);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
@@ -201,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         FirebaseMessaging.getInstance().subscribeToTopic("all");
     } // End of onCreate method
 
+    /*
     // Displays the action bar created in main.xml
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -239,6 +255,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
 
         return super.onOptionsItemSelected(item);
     }
+     */
 
     // Method for centering title without creating a custom action bar. Thanks THEPATEL on stackoverflow
     private void centerTitle() {
@@ -303,10 +320,10 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
     private void initializeUI(){
         signInButton = findViewById(R.id.signIn);
         callGraphApiSilentButton = findViewById(R.id.callGraphSilent);
-        callGraphApiInteractiveButton = findViewById(R.id.callGraphInteractive);
+        //callGraphApiInteractiveButton = findViewById(R.id.callGraphInteractive);
         signOutButton = findViewById(R.id.clearCache);
         logTextView = findViewById(R.id.txt_log);
-        currentUserTextView = findViewById(R.id.current_user);
+        //currentUserTextView = findViewById(R.id.current_user);
 
         //Sign in user
         signInButton.setOnClickListener(new View.OnClickListener(){
@@ -339,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
             }
         });
 
+        /*
         //Interactive
         callGraphApiInteractiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,6 +367,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                 mSingleAccountApp.acquireToken(MainActivity.this, SCOPES, getAuthInteractiveCallback());
             }
         });
+         */
 
         //Silent
         callGraphApiSilentButton.setOnClickListener(new View.OnClickListener() {
@@ -628,15 +647,15 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         if (account != null) {
             signInButton.setEnabled(false);
             signOutButton.setEnabled(true);
-            callGraphApiInteractiveButton.setEnabled(true);
+            //callGraphApiInteractiveButton.setEnabled(true);
             callGraphApiSilentButton.setEnabled(true);
-            currentUserTextView.setText(account.getUsername());
+            //currentUserTextView.setText(account.getUsername());
         } else {
             signInButton.setEnabled(true);
             signOutButton.setEnabled(false);
-            callGraphApiInteractiveButton.setEnabled(false);
+            //callGraphApiInteractiveButton.setEnabled(false);
             callGraphApiSilentButton.setEnabled(false);
-            currentUserTextView.setText("");
+            //currentUserTextView.setText("");
             logTextView.setText("");
         }
     }
@@ -723,7 +742,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
 
     private void performOperationOnSignOut() {
         final String signOutText = "Signed Out.";
-        currentUserTextView.setText("");
+        //currentUserTextView.setText("");
         Toast.makeText(getApplicationContext(), signOutText, Toast.LENGTH_SHORT)
                 .show();
     }
