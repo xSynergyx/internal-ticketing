@@ -3,11 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/activity_main.xml" value="0.1140625" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable/background_gradient.xml" value="0.128" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable/ticket_border.xml" value="0.128" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/activity_main.xml" value="0.12" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/activity_notes.xml" value="0.1" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/activity_search.xml" value="0.1" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/button_shadow.xml" value="0.23550724637681159" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/closed_ticket.xml" value="0.1171875" />
-        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/ticket.xml" value="0.1" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/ticket.xml" value="0.264" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/menu/main.xml" value="0.1171875" />
       </map>
     </option>
   </component>
