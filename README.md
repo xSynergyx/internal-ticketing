@@ -10,16 +10,16 @@ The main purpose of this project is to practice multiple skills while improving 
 * Practice Git commands
 
 ## Requirements
-1. Android Studio
-2. openssl
-3. keytool
-4. PostgreSQL
-5. Node.js
-6. Express.js
+1. openssl
+2. keytool
+3. PostgreSQL
+4. Node.js
+5. Express.js
 
 ## Libraries and APIs
 * Microsoft Graph API
 * Microsoft Authentication Library
+* Firebase
 
 
 ## Getting SHA-1 Certificate Fingerprint
@@ -66,6 +66,9 @@ npm install pg-promise<br>
 npm install dotenv<br>
 </code>
 </details>
+
+## Connect to Firebase
+* Set up [firebase](https://firebase.google.com/docs/cloud-messaging/android/client)
 
 <!-- 
 Video on promises https://www.youtube.com/watch?v=Y-aWVUAul9w&list=PLVvjrrRCBy2JSPVPlRmdiWnZ-c6PlzEVA>

@@ -15,18 +15,23 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="8dp"
+        android:padding="4dp"
         android:background="@drawable/ticket_border"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/closed_ticket_subject"
-            android:layout_width="wrap_content"
+            android:layout_width="280dp"
             android:layout_height="35dp"
             android:layout_marginLeft="8dp"
             android:textColor="@android:color/black"
             android:textSize="24sp"
-            android:textStyle="italic" />
+            android:textStyle="bold|italic"
+            android:ellipsize="end"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/closed_ticket_status"
@@ -40,11 +45,15 @@
 
         <TextView
             android:id="@+id/closed_ticket_description"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="65dp"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@id/closed_ticket_subject"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="1dp"
             android:textSize="14dp"
-            android:layout_weight="4.8"/>
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="2" />
 
         <TextView
             android:id="@+id/closed_ticket_solution"
@@ -52,19 +61,12 @@
             android:layout_height="35dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="8dp"
-            android:textColor="@android:color/black"
+            android:layout_marginHorizontal="8dp"
+            android:textColor="#00796B"
             android:textSize="24sp"
-            android:textStyle="italic" />
+            android:textStyle="bold" />
 
 
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/spacing"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:text=" "
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
