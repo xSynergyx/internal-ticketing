@@ -76,6 +76,15 @@ import org.json.JSONObject;
  *
  **/
 
+//TODO: In notes activity, clear out the EditText views after submitting a ticket
+//TODO: Change font style of title. Maybe try to center it too (or leave that for v2 refinement).
+//TODO: Add shadow to action bar
+//TODO: Add progress bar when syncing tickets
+//TODO: Animate buttons
+//TODO: Re-add options menu (check some nice stlyes). add notification on/off functionality there
+//TODO: Add shadow to ticket close buttons
+
+
 public class MainActivity extends AppCompatActivity implements OnTicketCloseClick {
 
     private final static String[] SCOPES = {"Mail.ReadWrite"};
@@ -157,21 +166,6 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                     }
                 });
 
-        /**
-         * v2
-         */
-        //TODO: Change font style of title. Maybe try to center it too (or leave that for v2 refinement).
-        //TODO: Add shadow to action bar
-        //TODO: Add progress bar when syncing tickets
-        //TODO: Animate buttons
-        //TODO: Re-add options menu (check some nice stlyes). add notification on/off functionality there
-
-        /**
-         * v1
-         */
-        //DONE: Increase ticket description bottom margin. See how to ellipsize text (3 periods if too long).
-        //TODO: Add shadow to buttons
-        //DONE: See if I can spice up the bottom menu
         //Action bar setup
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Libix");
@@ -287,8 +281,6 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////
-    // MSAL methods
     // When app comes to the foreground, load existing account to determine if user is signed in
     private void loadAccount() {
         if (mSingleAccountApp == null) {
@@ -377,7 +369,6 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
                     return;
                 }
                 mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get", ""));
-                //testPost
             }
         });
     }
@@ -426,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
     /**
      * Sends a POST request to the server in order to add tickets to the open-tickets table
      *
-     * @param json JSON string of the tickets objects created after calling
+     * @param json JSON string of the ticket objects created after calling
      *             the Microsoft Graph API
      */
     private void ticketPostRequest(String json){
@@ -511,7 +502,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
         try {
             Log.d("URLDeleteRequest", "making the json object");
             subjectJson.put("subject", subject);
-            subjectJson.put("solution", solution); //TODO: put solution into insert statement in the libixapi
+            subjectJson.put("solution", solution);
 
             Log.d("URLDeleteRequest", subjectJson.toString());
 

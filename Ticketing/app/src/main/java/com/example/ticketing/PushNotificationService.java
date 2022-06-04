@@ -52,7 +52,7 @@ public class PushNotificationService extends FirebaseMessagingService {
         Notification.Builder deleteTixNotification = new Notification.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setSmallIcon(R.drawable.notifications)
+                .setSmallIcon(R.drawable.ic_stat_ic_notification)
                 .setAutoCancel(true);
         NotificationManagerCompat.from(this).notify(1, deleteTixNotification.build());
         super.onMessageReceived(remoteMessage);

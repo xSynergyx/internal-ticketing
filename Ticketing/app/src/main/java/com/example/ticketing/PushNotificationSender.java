@@ -48,7 +48,7 @@ public class PushNotificationSender  {
             JSONObject notificationObject = new JSONObject();
             notificationObject.put("title", title);
             notificationObject.put("body", body);
-            notificationObject.put("icon", R.drawable.notifications);
+            notificationObject.put("icon", R.drawable.ic_stat_ic_notification);
 
             mainObj.put("notification", notificationObject);
 

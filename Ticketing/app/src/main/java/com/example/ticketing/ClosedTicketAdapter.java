@@ -36,7 +36,7 @@ public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ClosedTicketAdapter.ClosedTicketViewHolder holder, int position) {
-        //TODO: Finish this ClosedTicketAdapter so I can get the recyclerview working in SearchActivity
+
         holder.subjectView.setText(tickets.get(position).subject);
         holder.statusView.setText(tickets.get(position).status);
         holder.descriptionView.setText(tickets.get(position).body);
@@ -44,8 +44,8 @@ public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapte
 
 
 
+        // Make ticket status green if they're closed
         if (tickets.get(position).status.equalsIgnoreCase("closed")) {
-
             holder.statusView.setTextColor(Color.parseColor("#0ac917"));
         }
 

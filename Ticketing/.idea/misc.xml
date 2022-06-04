@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable-anydpi-v24/ic_stat_ic_notification.xml" value="0.1245" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1245" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable/background_gradient.xml" value="0.128" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable/ticket_border.xml" value="0.128" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/activity_main.xml" value="0.12" />
@@ -12,6 +14,8 @@
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/closed_ticket.xml" value="0.1" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/layout/ticket.xml" value="0.1" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/menu/main.xml" value="0.1171875" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1245" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1245" />
       </map>
     </option>
   </component>
