@@ -2,7 +2,6 @@ package com.example.ticketing;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.apache.commons.math3.geometry.euclidean.twod.Line;
-
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketViewHolder> {
 

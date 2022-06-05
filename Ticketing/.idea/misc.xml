@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable-anydpi-v24/ic_stat_ic_notification.xml" value="0.1245" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable-anydpi/account.xml" value="0.241" />
+        <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable-anydpi/notifications.xml" value="0.241" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1245" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable/background_gradient.xml" value="0.128" />
         <entry key="..\:/Users/Chris/projects/internal-ticketing/Ticketing/app/src/main/res/drawable/ticket_border.xml" value="0.128" />

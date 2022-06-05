@@ -12,9 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NotesActivity"></activity>
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".MainActivity"
+        <activity android:name="com.example.ticketing.NotesActivity"></activity>
+        <activity android:name="com.example.ticketing.SearchActivity" />
+        <activity android:name="com.example.ticketing.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +37,7 @@
         </activity>
 
         <service
-            android:name=".PushNotificationService"
+            android:name="com.example.ticketing.PushNotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

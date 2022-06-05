@@ -17,43 +17,23 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Base64;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
 import android.util.Log;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
-
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import com.microsoft.graph.authentication.IAuthenticationProvider; //Imports the Graph sdk Auth interface
 import com.microsoft.graph.concurrency.ICallback;
@@ -81,7 +61,7 @@ import org.json.JSONObject;
 //TODO: Add shadow to action bar
 //TODO: Add progress bar when syncing tickets
 //TODO: Animate buttons
-//TODO: Re-add options menu (check some nice stlyes). add notification on/off functionality there
+//TODO: Re-add options menu (check some nice styles). add notification on/off functionality there
 //TODO: Add shadow to ticket close buttons
 
 
@@ -136,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
 
     public void onTicketStatusClick(String subject){
 
-        Toast.makeText(this, "Status Updated" + subject, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Status updated for ticket: " + subject, Toast.LENGTH_LONG).show();
         ticketStatusRequest(subject);
     }
 
