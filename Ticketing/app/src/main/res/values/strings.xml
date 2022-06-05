@@ -7,7 +7,7 @@
 
     <!-- Buttons -->
     <string name="close_button">Close</string>
-    <string name="update_status_button">Resolving</string>
+    <string name="update_status_button">Solving</string>
     <string name="solution_button_text">Submit</string>
     <string name="search_button">Search</string>
 
