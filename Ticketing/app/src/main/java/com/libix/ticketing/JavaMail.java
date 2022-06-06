@@ -1,4 +1,4 @@
-package com.example.ticketing;
+package com.libix.ticketing;
 /*
 https://www.tutorialspoint.com/how-to-send-email-on-android-using-javamail-api
 Need INTERNET permissions in AndroidManifest

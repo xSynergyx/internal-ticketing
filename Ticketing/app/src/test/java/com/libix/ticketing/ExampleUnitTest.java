@@ -1,4 +1,4 @@
-package com.example.ticketing;
+package com.libix.ticketing;
 
 import org.junit.Test;
 

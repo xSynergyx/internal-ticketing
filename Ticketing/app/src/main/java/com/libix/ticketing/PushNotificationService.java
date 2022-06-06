@@ -1,4 +1,4 @@
-package com.example.ticketing;
+package com.libix.ticketing;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

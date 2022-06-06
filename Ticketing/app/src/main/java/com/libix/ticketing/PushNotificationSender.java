@@ -1,4 +1,4 @@
-package com.example.ticketing;
+package com.libix.ticketing;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.example.ticketing;
+package com.libix.ticketing;
 
 import android.os.Bundle;
 import android.view.View;

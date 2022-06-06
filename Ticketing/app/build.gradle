@@ -25,7 +25,7 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "com.example.ticketing"
+        applicationId "com.libix.ticketing"
         minSdkVersion 26  // Increased from 16 to 19 for firebase analytics; Increased from 19 to 26 for notification channels
         targetSdkVersion 31
         versionCode 1

@@ -1,4 +1,4 @@
-package com.example.ticketing;
+package com.libix.ticketing;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
