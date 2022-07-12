@@ -1,6 +1,5 @@
-https://img.shields.io/github/issues/xsynergyx/internal-ticketing
-
 # Internal Ticketing
+![GitHub issues](https://img.shields.io/github/issues/xsynergyx/internal-ticketing?logo=GitHub&style=plastic)
 A technical support ticket Android app designed to keep track of open issues, improve productivity and communication at the local library.
 
 ## Purpose
