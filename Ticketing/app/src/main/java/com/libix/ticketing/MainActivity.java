@@ -171,6 +171,16 @@ public class MainActivity extends AppCompatActivity implements OnTicketCloseClic
             }
         });
 
+        // OnClickListener for CounterActivity
+        final TextView counter = (TextView) findViewById(R.id.counter);
+        counter.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent counterIntent = new Intent(MainActivity.this, CounterActivity.class);
+                startActivity(counterIntent);
+            }
+        });
+
         // OnClickListener for NotesActivity
         final TextView notes = (TextView) findViewById(R.id.notes);
         notes.setOnClickListener(new View.OnClickListener(){
