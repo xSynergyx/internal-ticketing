@@ -42,7 +42,8 @@
         android:id="@+id/closed_tickets_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="16dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
