@@ -4,10 +4,10 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/xsynergyx/internal-ticketing?color=%2300&style=plastic)
 
 
-A technical support ticket Android app designed to keep track of open issues, improve productivity and communication at the local library.
+A technical support ticket Android app designed to keep track of open issues, assist productivity and improve communication at the local library.
 
 ## Purpose
-The main purpose of this project is to practice multiple skills while improving the workplace.
+The main purpose of this project is to challenge and expand my skills while improving the workplace.
 * Increase productivity and communication internally
 * Improve overall app development skills
 * Build upon Java knowledge 
