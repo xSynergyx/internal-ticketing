@@ -25,18 +25,20 @@
         app:layout_constraintTop_toBottomOf="@id/monthly_counter"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/submit_counter"
+        app:layout_constraintBottom_toTopOf="@+id/submit_counter_button"
         android:orientation="horizontal"
         android:id="@+id/update_counter">
 
 
         <Button
+            android:id="@+id/decrement_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/adjusted_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="N/A"
@@ -46,6 +48,7 @@
             android:layout_marginHorizontal="16dp"/>
 
         <Button
+            android:id="@+id/increment_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+"
@@ -54,7 +57,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/submit_counter"
+        android:id="@+id/submit_counter_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/update_counter"
