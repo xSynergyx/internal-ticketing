@@ -17,7 +17,10 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@id/update_counter"
         android:layout_marginTop="16dp"
-        android:text="Place Holder"/>
+        android:text="Monthly: "
+        android:textSize="64dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -38,7 +41,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/adjusted_counter"
+            android:id="@+id/daily_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="N/A"
