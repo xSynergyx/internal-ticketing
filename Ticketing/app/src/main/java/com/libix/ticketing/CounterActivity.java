@@ -15,9 +15,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +34,8 @@ public class CounterActivity extends AppCompatActivity {
     TextView monthlyCounterTextView;
     TextView dailyCounterTextView;
 
+    int countDelta = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,44 +44,55 @@ public class CounterActivity extends AppCompatActivity {
         decrementButton = findViewById(R.id.decrement_button);
         incrementButton = findViewById(R.id.increment_button);
         submitCountButton = findViewById(R.id.submit_counter_button);
-        resetButton = findViewById(R.id.reset_counter);
+        //resetButton = findViewById(R.id.reset_counter);
 
         monthlyCounterTextView = findViewById(R.id.monthly_counter);
         dailyCounterTextView = findViewById(R.id.daily_counter);
 
-        counterGetRequest();
+        counterGetRequest(false);
 
         decrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Clicked decrement", LENGTH_LONG).show();
+                int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
+                currentCount--;
+                countDelta--;
+
+                dailyCounterTextView.setText(Integer.toString(currentCount));
             }
         });
 
         incrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Clicked increment", LENGTH_LONG).show();
+                int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
+                currentCount++;
+                countDelta++;
+
+                dailyCounterTextView.setText(Integer.toString(currentCount));
             }
         });
 
         submitCountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                counterGetRequest();
-                Toast.makeText(getBaseContext(), "Clicked submit", LENGTH_LONG).show();
+                // Getting count update from server before updating it
+                counterGetRequest(true);
+                Toast.makeText(getBaseContext(), "Submitted new count for the day", LENGTH_LONG).show();
             }
         });
 
+        /*
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getBaseContext(), "Clicked reset", LENGTH_LONG).show();
             }
         });
+         */
     }
 
-    private void counterGetRequest(){
+    private void counterGetRequest(Boolean update){
         String url = Config.GETCOUNTERURL;
         RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -95,9 +110,11 @@ public class CounterActivity extends AppCompatActivity {
                                 try {
                                     String answers = res.get("questions_answered").toString();
                                     dailyCounterTextView.setText(answers);
+                                    if (update) counterUpdateRequest(false);
 
                                 } catch (JSONException e){
                                     e.printStackTrace();
+                                    // TODO: Add toast
                                     Log.d("CounterGetResponse", "Could not get counter from server");
                                 }
                             }
@@ -106,10 +123,10 @@ public class CounterActivity extends AppCompatActivity {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // TODO: Make a toast "sync failed" message
                             Log.d("CounterGetRequest", "Unable to receive response from server");
                             Log.d("CounterGetRequest", error.toString());
                             dailyCounterTextView.setText("error");
+                            counterUpdateRequest(true);
                         }
                     });
 
@@ -119,37 +136,49 @@ public class CounterActivity extends AppCompatActivity {
         }
     }
 
-    private void counterUpdateRequest(){
+    private void counterUpdateRequest(Boolean newDay){
+
         String url = Config.UPDATECOUNTERURL;
         RequestQueue queue = Volley.newRequestQueue(this);
-        JSONObject counterJson = new JSONObject();
+        JSONObject counterJsonObject = new JSONObject();
+        JSONArray counterJson = new JSONArray();
+        int newCount;
+
+        if (!newDay) {
+            newCount = Integer.parseInt(dailyCounterTextView.getText().toString()) + countDelta;
+        } else {
+            newCount = 0;
+        }
 
         try {
             Log.d("URLPostRequest", "Loading counter from DB");
-            counterJson.put("counter", 5);
+            counterJsonObject.put("counter", newCount);
+            counterJson.put(counterJsonObject);
 
-            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                    (Request.Method.POST, url, counterJson, new Response.Listener<JSONObject>() {
+            final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                    (Request.Method.POST, url, counterJson, new Response.Listener<JSONArray>() {
 
                         @Override
-                        public void onResponse(JSONObject res) {
+                        public void onResponse(JSONArray res) {
 
                             if (res != null) {
                                 Log.d("URLPostResponse", res.toString());
-                                //Do something
+                                dailyCounterTextView.setText(Integer.toString(newCount));
+                                countDelta = 0; // reset the increment and decrement clicks
                             }
                         }
                     }, new Response.ErrorListener(){
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // TODO: Make a toast "sync failed" message
-                            Log.d("URLGetRequest", "Unable to receive JSON response from server");
-                            Log.d("URLGetRequest", error.toString());
+                            Log.d("URLPostRequest", "Unable to receive JSON response from server");
+                            Log.d("URLPostRequest", error.toString());
+                            countDelta = 0; // reset it even if there's an error
+                            Toast.makeText(getBaseContext(), "Unable to connect to server", LENGTH_LONG).show();
                         }
                     });
 
-            queue.add(jsonObjectRequest);
+            queue.add(jsonArrayRequest);
 
         } catch (Exception e) {
             e.printStackTrace();
