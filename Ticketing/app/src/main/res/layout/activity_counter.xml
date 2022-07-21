@@ -17,7 +17,10 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@id/update_counter"
         android:layout_marginTop="16dp"
-        android:text="Place Holder"/>
+        android:text="Monthly: N/A"
+        android:textSize="64dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -38,7 +41,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/adjusted_counter"
+            android:id="@+id/daily_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="N/A"
@@ -63,9 +66,10 @@
         app:layout_constraintTop_toBottomOf="@+id/update_counter"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/reset_counter"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:text="Submit"/>
 
+    <!--
     <Button
         android:id="@+id/reset_counter"
         android:layout_width="wrap_content"
@@ -78,5 +82,6 @@
         android:textColor="@android:color/holo_red_dark"
         android:textStyle="bold"
         android:background="?android:attr/selectableItemBackground"/>
+        -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
