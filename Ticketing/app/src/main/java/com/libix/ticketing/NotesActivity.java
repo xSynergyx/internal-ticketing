@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class NotesActivity extends MainActivity {
+public class NotesActivity extends AppCompatActivity {
 
     public EditText newTicketEmail;
     public EditText newTicketSubject;
