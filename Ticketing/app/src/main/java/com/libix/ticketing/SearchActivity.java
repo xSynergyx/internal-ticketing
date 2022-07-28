@@ -1,5 +1,6 @@
 package com.libix.ticketing;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +24,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class SearchActivity extends MainActivity {
+public class SearchActivity extends AppCompatActivity {
 
     ClosedTicketAdapter closedTicketAdapter;
     RecyclerView closedTicketsRecyclerView;
