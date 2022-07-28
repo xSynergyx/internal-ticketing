@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
-        changeFragment(new MainFragment());
+        changeFragment(new MainFragment(), "MainFragment");
 
         //Action bar setup
         ActionBar actionBar = getSupportActionBar();
@@ -98,18 +98,21 @@ public class MainActivity extends AppCompatActivity {
          * Setting up OnClickListeners
          */
 
-        //TODO: Did I never set up a listener for main activity? If not make that button and then make it switch to the main fragment
-        //TODO: Load up the main fragment on creating the main activity
-        //TODO: See if it works with the methods still in MainActivity.java instead of MainFragment.java -----> If not, start the painful switch
+        // OnClickListener for OpenTicketsFragment
+        final TextView open = (TextView) findViewById(R.id.open);
+        open.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                changeFragment(new MainFragment(), "MainFragment");
+            }
+        });
 
-        // OnClickListener for SearchActivity
+        // OnClickListener for ClosedTicketsFragment
         final TextView search = (TextView) findViewById(R.id.search);
-
         search.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
-                startActivity(searchIntent);
+                changeFragment(new ClosedTicketsFragment(), "ClosedTicketsFragment");
             }
         });
 
@@ -206,11 +209,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void changeFragment(Fragment fragment){
+    private void changeFragment(Fragment fragment, String fragTag){
 
         FragmentManager fm = getSupportFragmentManager();
+
+        // Check to see if fragment is already created. If so replace the "new" fragment with the already-created one
+        if (fm.findFragmentByTag(fragTag) != null){
+            fragment = fm.findFragmentByTag(fragTag);
+        }
+
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.frame_layout, fragment);
+        ft.replace(R.id.frame_layout, fragment, fragTag);
+        ft.addToBackStack(null);
         ft.commit();
     }
 }

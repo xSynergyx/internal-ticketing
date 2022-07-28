@@ -16,7 +16,6 @@
             android:name=".CounterActivity"
             android:exported="false" />
         <activity android:name=".NotesActivity" />
-        <activity android:name=".SearchActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

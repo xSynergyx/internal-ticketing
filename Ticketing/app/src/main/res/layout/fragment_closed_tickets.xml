@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ClosedTicketsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+
+        <EditText
+            android:id="@+id/search_edit_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:layout_marginLeft="16dp"
+            android:hint="Search closed tickets"
+            android:inputType="textCapSentences"
+            android:layout_marginTop="24dp"/>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="24dp"
+            android:text="@string/search_button"
+            android:textStyle="bold"
+            android:background="@android:drawable/dialog_holo_light_frame" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/closed_tickets_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="16dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>
