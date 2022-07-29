@@ -116,13 +116,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // OnClickListener for CounterActivity
+        // OnClickListener for CounterFragment
         final TextView counter = (TextView) findViewById(R.id.counter);
         counter.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent counterIntent = new Intent(MainActivity.this, CounterActivity.class);
-                startActivity(counterIntent);
+                changeFragment(new CounterFragment(), "CounterFragment");
             }
         });
 
