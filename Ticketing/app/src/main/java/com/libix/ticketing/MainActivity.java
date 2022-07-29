@@ -125,13 +125,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // OnClickListener for NotesActivity
-        final TextView notes = (TextView) findViewById(R.id.notes);
-        notes.setOnClickListener(new View.OnClickListener(){
+        // OnClickListener for NewTicketFragment
+        final TextView new_ticket = (TextView) findViewById(R.id.new_ticket);
+        new_ticket.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent notesIntent = new Intent(MainActivity.this, NotesActivity.class);
-                startActivity(notesIntent);
+                changeFragment(new NewTicketFragment(), "NewTicketFragment");
             }
         });
 
