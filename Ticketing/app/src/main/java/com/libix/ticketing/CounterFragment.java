@@ -2,11 +2,14 @@ package com.libix.ticketing;
 
 import static android.widget.Toast.LENGTH_LONG;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,13 +26,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CounterActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class CounterFragment extends Fragment {
 
+    public CounterFragment() {
+        // Required empty public constructor
+    }
 
     Button decrementButton;
     Button incrementButton;
     Button submitCountButton;
     Button resetButton;
+    Button refreshButton;
 
     TextView monthlyCounterTextView;
     TextView dailyCounterTextView;
@@ -37,17 +47,26 @@ public class CounterActivity extends AppCompatActivity {
     int countDelta = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_counter);
+        if (getArguments() != null) {
+        }
+    }
 
-        decrementButton = findViewById(R.id.decrement_button);
-        incrementButton = findViewById(R.id.increment_button);
-        submitCountButton = findViewById(R.id.submit_counter_button);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_counter, container, false);
+
+        decrementButton = view.findViewById(R.id.decrement_button);
+        incrementButton = view.findViewById(R.id.increment_button);
+        submitCountButton = view.findViewById(R.id.submit_counter_button);
         //resetButton = findViewById(R.id.reset_counter);
+        refreshButton = view.findViewById(R.id.refresh_button);
 
-        monthlyCounterTextView = findViewById(R.id.monthly_counter);
-        dailyCounterTextView = findViewById(R.id.daily_counter);
+        monthlyCounterTextView = view.findViewById(R.id.monthly_counter);
+        dailyCounterTextView = view.findViewById(R.id.daily_counter);
 
         counterGetRequest(false);
 
@@ -78,7 +97,7 @@ public class CounterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Getting count update from server before updating it
                 counterGetRequest(true);
-                Toast.makeText(getBaseContext(), "Submitted new count for the day", LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Submitted new count for the day", LENGTH_LONG).show();
             }
         });
 
@@ -90,11 +109,22 @@ public class CounterActivity extends AppCompatActivity {
             }
         });
          */
+
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Refresh the daily count
+                counterGetRequest(false);
+                Toast.makeText(getContext(), "Refreshed the count", LENGTH_LONG).show();
+            }
+        });
+
+        return view;
     }
 
     private void counterGetRequest(Boolean update){
         String url = Config.GETCOUNTERURL;
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(getContext());
 
         try {
             Log.d("URLGetRequest", "Loading counter from DB");
@@ -139,7 +169,7 @@ public class CounterActivity extends AppCompatActivity {
     private void counterUpdateRequest(Boolean newDay){
 
         String url = Config.UPDATECOUNTERURL;
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(getContext());
         JSONObject counterJsonObject = new JSONObject();
         JSONArray counterJson = new JSONArray();
         int newCount;
@@ -174,7 +204,7 @@ public class CounterActivity extends AppCompatActivity {
                             Log.d("URLPostRequest", "Unable to receive JSON response from server");
                             Log.d("URLPostRequest", error.toString());
                             countDelta = 0; // reset it even if there's an error
-                            Toast.makeText(getBaseContext(), "Unable to connect to server", LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Unable to connect to server", LENGTH_LONG).show();
                         }
                     });
 

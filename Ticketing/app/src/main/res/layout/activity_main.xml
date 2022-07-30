@@ -8,119 +8,13 @@
     android:background="@drawable/background_gradient"
     android:weightSum="10">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         android:layout_weight="9.3">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:weightSum="10">
-
-            <Button
-                android:id="@+id/signIn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:gravity="center"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:text="Sign In"/>
-
-            <Button
-                android:id="@+id/clearCache"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:gravity="center"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:text="Sign Out"
-                android:enabled="false"/>
-
-            <Button
-                android:id="@+id/callGraphSilent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:text="Sync"
-                android:enabled="false"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <!--
-            <Button
-                android:id="@+id/callGraphInteractive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Get Graph Data Interactively"
-                android:enabled="false"/>
-                -->
-
-
-        </LinearLayout>
-
-        <TextView
-            android:text="Getting Graph Data..."
-            android:textColor="#3f3f3f"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/graphData"
-            android:visibility="invisible"/>
-
-
-        <!--
-        <TextView
-            android:id="@+id/current_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Account info goes here..." />
-            -->
-
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:fillViewport="false"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/txt_log"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Please sync your tickets"
-                android:textAlignment="center"
-                android:textSize="16sp"/>
-
-        </ScrollView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ticket_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:layout_marginBottom="16dp">
-
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-    </LinearLayout>
+    </FrameLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -159,7 +53,7 @@
 
 
         <TextView
-            android:id="@+id/notes"
+            android:id="@+id/new_ticket"
             style="@style/bottomButtons"
             android:text="@string/new_tix"/>
 

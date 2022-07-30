@@ -1,5 +1,6 @@
 # Internal Ticketing
 ![GitHub issues](https://img.shields.io/github/issues/xsynergyx/internal-ticketing?logo=GitHub&style=plastic)
+![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/xsynergyx/internal-ticketing?color=FF00&style=plastic)
 ![GitHub repo size](https://img.shields.io/github/repo-size/xsynergyx/internal-ticketing?color=%2300&style=plastic)
 ![GitHub last commit](https://img.shields.io/github/last-commit/xsynergyx/internal-ticketing?color=%2300&style=plastic)
 
