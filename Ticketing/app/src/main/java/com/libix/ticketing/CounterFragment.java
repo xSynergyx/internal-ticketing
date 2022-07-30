@@ -39,6 +39,7 @@ public class CounterFragment extends Fragment {
     Button incrementButton;
     Button submitCountButton;
     Button resetButton;
+    Button refreshButton;
 
     TextView monthlyCounterTextView;
     TextView dailyCounterTextView;
@@ -62,6 +63,7 @@ public class CounterFragment extends Fragment {
         incrementButton = view.findViewById(R.id.increment_button);
         submitCountButton = view.findViewById(R.id.submit_counter_button);
         //resetButton = findViewById(R.id.reset_counter);
+        refreshButton = view.findViewById(R.id.refresh_button);
 
         monthlyCounterTextView = view.findViewById(R.id.monthly_counter);
         dailyCounterTextView = view.findViewById(R.id.daily_counter);
@@ -107,6 +109,15 @@ public class CounterFragment extends Fragment {
             }
         });
          */
+
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Refresh the daily count
+                counterGetRequest(false);
+                Toast.makeText(getContext(), "Refreshed the count", LENGTH_LONG).show();
+            }
+        });
 
         return view;
     }
