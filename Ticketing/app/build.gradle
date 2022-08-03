@@ -76,10 +76,14 @@ dependencies {
 
     // Import the Firebase BoM
     // When using the BoM, don't specify versions in Firebase dependencies
-    implementation platform('com.google.firebase:firebase-bom:29.3.1')
+    implementation platform('com.google.firebase:firebase-bom:30.3.1')
 
     /* Firebase dependencies */
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+
     /* End firebase dependencies */
 }

@@ -1,5 +1,7 @@
 package com.libix.ticketing;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -19,6 +21,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
+import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -37,6 +47,8 @@ import android.widget.Toast;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.microsoft.graph.authentication.IAuthenticationProvider; //Imports the Graph sdk Auth interface
 import com.microsoft.graph.concurrency.ICallback;
@@ -67,7 +79,6 @@ import org.json.JSONObject;
 //TODO: Re-add options menu (check some nice styles). add notification on/off functionality there
 //TODO: Add shadow to ticket close buttons
 
-
 public class MainActivity extends AppCompatActivity {
 
 
@@ -81,6 +92,33 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+
+        /*
+         * Launching FirebaseUI
+         */
+        final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
+                new FirebaseAuthUIActivityResultContract(),
+                new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
+                    @Override
+                    public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
+                        onSignInResult(result);
+                    }
+                }
+        );
+
+        // Choose authentication providers
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build());
+
+        // Create and launch sign-in intent
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .setLogo(R.mipmap.ic_launcher)
+                .setTheme(R.style.AppTheme)
+                .build();
+        signInLauncher.launch(signInIntent);
 
         changeFragment(new MainFragment(), "MainFragment");
 
@@ -220,5 +258,33 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.frame_layout, fragment, fragTag);
         ft.addToBackStack(null);
         ft.commit();
+    }
+
+    //TODO: add debug key to google
+    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
+        IdpResponse response = result.getIdpResponse();
+        if (result.getResultCode() == RESULT_OK) {
+            // Successfully signed in
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            Toast.makeText(this, "Signed in", Toast.LENGTH_SHORT).show();
+            // ...
+        } else {
+            Log.d("FIREBASEUI", response.toString());
+            Toast.makeText(this, "Failed to sign in", Toast.LENGTH_SHORT).show();
+            // Sign in failed. If response is null the user canceled the
+            // sign-in flow using the back button. Otherwise check
+            // response.getError().getErrorCode() and handle the error.
+            // ...
+        }
+    }
+
+    private void signOutFirebaseUser(){
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(MainActivity.this, "Signed out", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

@@ -5,6 +5,7 @@
         <item name="colorPrimary">#009688</item>
         <item name="colorPrimaryDark">#00796B</item>
         <item name="colorAccent">#8BC34A</item> <!-- #80DEEA -->
+        <item name="android:windowBackground">@drawable/background_gradient</item>
     </style>
 
     <style name="bottomButtons">
