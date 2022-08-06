@@ -158,7 +158,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        //TODO: Why can't I set the onClickListener
         initializeUI(view);
 
         PublicClientApplication.createSingleAccountPublicClientApplication(getActivity().getApplicationContext(),
@@ -215,6 +214,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
     private void initializeUI(View view){
         signInButton = view.findViewById(R.id.signIn);
+        signInButton.setVisibility(View.VISIBLE);
         callGraphApiSilentButton = view.findViewById(R.id.callGraphSilent);
         //callGraphApiInteractiveButton = findViewById(R.id.callGraphInteractive);
         signOutButton = view.findViewById(R.id.clearCache);
@@ -541,17 +541,23 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     private void updateUI(@Nullable final IAccount account) {
         if (account != null) {
             signInButton.setEnabled(false);
+            signInButton.setVisibility(View.INVISIBLE);
             signOutButton.setEnabled(true);
+            signOutButton.setVisibility(View.VISIBLE);
             //callGraphApiInteractiveButton.setEnabled(true);
             callGraphApiSilentButton.setEnabled(true);
+            callGraphApiSilentButton.setVisibility(View.VISIBLE);
             //currentUserTextView.setText(account.getUsername());
         } else {
             signInButton.setEnabled(true);
+            signInButton.setVisibility(View.VISIBLE);
             signOutButton.setEnabled(false);
+            signOutButton.setVisibility(View.INVISIBLE);
             //callGraphApiInteractiveButton.setEnabled(false);
             callGraphApiSilentButton.setEnabled(false);
+            callGraphApiSilentButton.setVisibility(View.INVISIBLE);
             //currentUserTextView.setText("");
-            logTextView.setText("");
+            logTextView.setText("No Outlook account connected. Please connect the outlook account associated with the technical support tickets.");
         }
     }
 
@@ -629,7 +635,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
             @Override
             public void run() {
-                logTextView.setText(textToDisplay.toString());
+                logTextView.setText("Loading...");
             }
         });
         //logTextView.setText(textToDisplay.toString());

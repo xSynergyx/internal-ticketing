@@ -39,6 +39,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -72,8 +74,7 @@ import org.json.JSONObject;
  **/
 
 //TODO: In notes activity, clear out the EditText views after submitting a ticket
-//TODO: Change font style of title. Maybe try to center it too (or leave that for v2 refinement).
-//TODO: Add shadow to action bar
+//TODO: Change font style of title.
 //TODO: Add progress bar when syncing tickets
 //TODO: Animate buttons
 //TODO: Re-add options menu (check some nice styles). add notification on/off functionality there
@@ -93,41 +94,17 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
-        /*
-         * Launching FirebaseUI
-         */
-        final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
-                new FirebaseAuthUIActivityResultContract(),
-                new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
-                    @Override
-                    public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
-                        onSignInResult(result);
-                    }
-                }
-        );
-
-        // Choose authentication providers
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
-
-        // Create and launch sign-in intent
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setLogo(R.mipmap.ic_launcher)
-                .setTheme(R.style.AppTheme)
-                .build();
-        signInLauncher.launch(signInIntent);
+        launchFirebaseUI();
 
         changeFragment(new MainFragment(), "MainFragment");
 
         //Action bar setup
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Libix");
-        centerTitle();
+        //centerTitle();
+
         //Display logo
         actionBar.setIcon(R.mipmap.ic_launcher);
+        actionBar.setTitle("");
         actionBar.setElevation(4);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -174,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
     } // End of onCreate method
 
-    /*
+
     // Displays the action bar created in main.xml
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -190,10 +167,10 @@ public class MainActivity extends AppCompatActivity {
 
         switch(item.getItemId())
         {
-            case R.id.notifications:
-                Toast.makeText(this, "Notifications clicked", Toast.LENGTH_SHORT).show();
+            case R.id.settings:
+                Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show();
                 break;
-
+/*
             case R.id.account:
                 Toast.makeText(this, "Account clicked", Toast.LENGTH_SHORT).show();
                 break;
@@ -205,47 +182,19 @@ public class MainActivity extends AppCompatActivity {
             case R.id.update:
                 Toast.makeText(this, "Update clicked", Toast.LENGTH_SHORT).show();
                 break;
+ */
 
             case R.id.logout:
                 Toast.makeText(this, "Logout clicked", Toast.LENGTH_SHORT).show();
+                signOutFirebaseUser();
+                recreate();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
-     */
 
-    // Method for centering title without creating a custom action bar. Thanks THEPATEL on stackoverflow
-    private void centerTitle() {
-        ArrayList<View> textViews = new ArrayList<>();
-
-        getWindow().getDecorView().findViewsWithText(textViews, getTitle(), View.FIND_VIEWS_WITH_TEXT);
-
-        if(textViews.size() > 0) {
-            AppCompatTextView appCompatTextView = null;
-            if(textViews.size() == 1) {
-                appCompatTextView = (AppCompatTextView) textViews.get(0);
-            } else {
-                for(View v : textViews) {
-                    if(v.getParent() instanceof Toolbar) {
-                        appCompatTextView = (AppCompatTextView) v;
-                        break;
-                    }
-                }
-            }
-
-            if(appCompatTextView != null) {
-                ViewGroup.LayoutParams params = appCompatTextView.getLayoutParams();
-                params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                appCompatTextView.setLayoutParams(params);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    appCompatTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                }
-            }
-        }
-    }
-
-    private void changeFragment(Fragment fragment, String fragTag){
+    protected void changeFragment(Fragment fragment, String fragTag){
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -260,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    //TODO: add debug key to google
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
@@ -286,5 +234,32 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Signed out", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void launchFirebaseUI(){
+
+        final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
+                new FirebaseAuthUIActivityResultContract(),
+                new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
+                    @Override
+                    public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
+                        onSignInResult(result);
+                    }
+                }
+        );
+
+        // Choose authentication providers
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build());
+
+        // Create and launch sign-in intent
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .setLogo(R.mipmap.ic_launcher)
+                .setTheme(R.style.AppTheme)
+                .build();
+        signInLauncher.launch(signInIntent);
     }
 }

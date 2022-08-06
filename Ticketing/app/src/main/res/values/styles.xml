@@ -6,8 +6,14 @@
         <item name="colorPrimaryDark">#00796B</item>
         <item name="colorAccent">#8BC34A</item> <!-- #80DEEA -->
         <item name="android:windowBackground">@drawable/background_gradient</item>
+        <item name="android:actionOverflowButtonStyle">@style/overflowMenu</item>
     </style>
 
+    <style name="overflowMenu" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/overflow_menu</item>
+        <item name="android:background">?android:attr/actionBarItemBackground</item>
+        <item name="android:contentDescription">"Menu"</item>
+    </style>
     <style name="bottomButtons">
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">0dp</item>

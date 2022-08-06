@@ -5,12 +5,12 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Notifications"
-        android:id="@+id/notifications"
+    <item android:title="Settings"
+        android:id="@+id/settings"
         android:orderInCategory="100"
         app:showAsAction="never"
-        android:icon="@drawable/notifications"/>
-
+        android:icon="@drawable/settings"/>
+<!--
     <item android:title="Account"
         android:id="@+id/account"
         android:orderInCategory="100"
@@ -28,7 +28,7 @@
         android:orderInCategory="100"
         app:showAsAction="never"
         android:icon="@drawable/update"/>
-
+-->
     <item android:title="Logout"
         android:id="@+id/logout"
         android:orderInCategory="100"
