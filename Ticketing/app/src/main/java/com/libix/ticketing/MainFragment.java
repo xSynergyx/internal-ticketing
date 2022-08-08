@@ -1,10 +1,12 @@
 package com.libix.ticketing;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +36,7 @@ import com.microsoft.graph.core.ClientException;
 import com.microsoft.graph.http.IHttpRequest;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
 import com.microsoft.graph.models.extensions.Message;
+import com.microsoft.graph.models.extensions.Shared;
 import com.microsoft.graph.requests.extensions.GraphServiceClient;
 import com.microsoft.graph.requests.extensions.IMessageCollectionPage;
 import com.microsoft.identity.client.AuthenticationCallback;
@@ -158,7 +161,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        //TODO: Why can't I set the onClickListener
         initializeUI(view);
 
         PublicClientApplication.createSingleAccountPublicClientApplication(getActivity().getApplicationContext(),
@@ -180,7 +182,13 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         ticketsRecyclerView.setAdapter(myTicketAdapter);
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        FirebaseMessaging.getInstance().subscribeToTopic("all");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        Boolean notifBoolean = sharedPreferences.getBoolean("notifications", true);
+        if (notifBoolean) {
+            FirebaseMessaging.getInstance().subscribeToTopic("all");
+        } else {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("all");
+        }
 
         return view;
     }
@@ -215,6 +223,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
     private void initializeUI(View view){
         signInButton = view.findViewById(R.id.signIn);
+        signInButton.setVisibility(View.VISIBLE);
         callGraphApiSilentButton = view.findViewById(R.id.callGraphSilent);
         //callGraphApiInteractiveButton = findViewById(R.id.callGraphInteractive);
         signOutButton = view.findViewById(R.id.clearCache);
@@ -541,17 +550,23 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     private void updateUI(@Nullable final IAccount account) {
         if (account != null) {
             signInButton.setEnabled(false);
+            signInButton.setVisibility(View.INVISIBLE);
             signOutButton.setEnabled(true);
+            signOutButton.setVisibility(View.VISIBLE);
             //callGraphApiInteractiveButton.setEnabled(true);
             callGraphApiSilentButton.setEnabled(true);
+            callGraphApiSilentButton.setVisibility(View.VISIBLE);
             //currentUserTextView.setText(account.getUsername());
         } else {
             signInButton.setEnabled(true);
+            signInButton.setVisibility(View.VISIBLE);
             signOutButton.setEnabled(false);
+            signOutButton.setVisibility(View.INVISIBLE);
             //callGraphApiInteractiveButton.setEnabled(false);
             callGraphApiSilentButton.setEnabled(false);
+            callGraphApiSilentButton.setVisibility(View.INVISIBLE);
             //currentUserTextView.setText("");
-            logTextView.setText("");
+            logTextView.setText("No Outlook account connected. Please connect the outlook account associated with the technical support tickets.");
         }
     }
 
@@ -629,7 +644,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
             @Override
             public void run() {
-                logTextView.setText(textToDisplay.toString());
+                logTextView.setText("Loading...");
             }
         });
         //logTextView.setText(textToDisplay.toString());

@@ -51,6 +51,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.preference:preference:1.1.1'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -76,10 +77,14 @@ dependencies {
 
     // Import the Firebase BoM
     // When using the BoM, don't specify versions in Firebase dependencies
-    implementation platform('com.google.firebase:firebase-bom:29.3.1')
+    implementation platform('com.google.firebase:firebase-bom:30.3.1')
 
     /* Firebase dependencies */
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+
     /* End firebase dependencies */
 }
