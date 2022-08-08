@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
         {
             case R.id.settings:
                 Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show();
+                changeFragment(new SettingsFragment(), "SettingsFragment");
                 break;
 /*
             case R.id.account:

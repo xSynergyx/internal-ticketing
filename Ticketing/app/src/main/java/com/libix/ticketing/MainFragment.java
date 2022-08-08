@@ -1,10 +1,12 @@
 package com.libix.ticketing;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +36,7 @@ import com.microsoft.graph.core.ClientException;
 import com.microsoft.graph.http.IHttpRequest;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
 import com.microsoft.graph.models.extensions.Message;
+import com.microsoft.graph.models.extensions.Shared;
 import com.microsoft.graph.requests.extensions.GraphServiceClient;
 import com.microsoft.graph.requests.extensions.IMessageCollectionPage;
 import com.microsoft.identity.client.AuthenticationCallback;
@@ -179,7 +182,13 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         ticketsRecyclerView.setAdapter(myTicketAdapter);
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        FirebaseMessaging.getInstance().subscribeToTopic("all");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        Boolean notifBoolean = sharedPreferences.getBoolean("notifications", true);
+        if (notifBoolean) {
+            FirebaseMessaging.getInstance().subscribeToTopic("all");
+        } else {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("all");
+        }
 
         return view;
     }
