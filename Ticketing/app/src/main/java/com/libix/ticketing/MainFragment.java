@@ -145,6 +145,13 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         ticketStatusRequest(subject);
     }
 
+    public void onNotTicketClick(String subject, String graphId){
+
+        Toast.makeText(getContext(), "Non-ticket removed", Toast.LENGTH_SHORT).show();
+        nonTicketRequest(subject);
+        //TODO: Once API call to delete email works, call from here to delete non-tickets
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -393,7 +400,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // TODO: Make a toast "sync failed" message
                             Log.d("URLGetRequest", "Unable to receive JSON response from server");
                             Log.d("URLGetRequest", error.toString());
                         }
@@ -432,7 +438,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // TODO: Make a toast "sync failed" message
                             Log.d("URLDeleteRequest", "Unable to receive JSON response from server");
                             Log.d("URLDeleteRequest", error.toString());
                         }
@@ -469,9 +474,44 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // TODO: Make a toast "ticket update failed" message
                             Log.d("URLUpdateRequest", "Unable to receive JSON response from server");
                             Log.d("URLUpdateRequest", error.toString());
+                        }
+                    });
+
+            queue.add(jsonObjectRequest);
+            //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void nonTicketRequest(String subject){
+
+        String url = Config.DELETENONTICKETURL;
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        JSONObject subjectJson = new JSONObject();
+
+        try {
+            subjectJson.put("subject", subject);
+
+            Log.d("URLUpdateRequest", subjectJson.toString());
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, subjectJson, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject res) {
+                            if (res != null) {
+                                Log.d("URLNonTicketResponse", res.toString());
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("URLNonTicketRequest", "Unable to receive JSON response from server");
+                            Log.d("URLNonTicketRequest", error.toString());
                         }
                     });
 

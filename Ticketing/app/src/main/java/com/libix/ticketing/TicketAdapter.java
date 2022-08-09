@@ -22,12 +22,14 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
     Context context;
     private OnTicketCloseClick onTicketCloseClick;
     private OnTicketCloseClick onTicketStatusClick;
+    private OnTicketCloseClick onNotTicketClick;
 
     public TicketAdapter(Context context, ArrayList<TroubleTicket> tickets, OnTicketCloseClick onTicketCloseClick){
         this.context = context;
         this.tickets = tickets;
         this.onTicketCloseClick = onTicketCloseClick;
         this.onTicketStatusClick = onTicketCloseClick;
+        this.onNotTicketClick = onTicketCloseClick;
     }
     @NonNull
     @Override
@@ -76,6 +78,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         TextView descriptionView;
         Button closeButton;
         Button statusButton;
+        Button notTicketButton;
 
         LinearLayout ticketControls;
         LinearLayout solutionView;
@@ -90,6 +93,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             descriptionView = itemView.findViewById(R.id.ticket_description);
             closeButton = itemView.findViewById(R.id.close_button);
             statusButton = itemView.findViewById(R.id.update_status_button);
+            notTicketButton = itemView.findViewById(R.id.not_ticket_button);
 
             ticketControls = itemView.findViewById(R.id.ticket_controls_view);
             solutionView = itemView.findViewById(R.id.solution_view);
@@ -111,6 +115,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
                     ticketControls.setVisibility(View.INVISIBLE);
                     closeButton.setClickable(false);
                     statusButton.setClickable(false);
+                    notTicketButton.setClickable(false);
 
                     solutionView.setVisibility(View.VISIBLE);
                     solutionButton.setClickable(true);
@@ -160,12 +165,25 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
                     ticketControls.setVisibility(View.VISIBLE);
                     closeButton.setClickable(true);
                     statusButton.setClickable(true);
+                    notTicketButton.setClickable(true);
 
                     solutionView.setVisibility(View.INVISIBLE);
                     solutionButton.setClickable(false);
                     removeItem(position);
                 }
             }));
+
+            notTicketButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    String clickedSubject = tickets.get(position).subject;
+                    String clickedGraphId = tickets.get(position).graph_id;
+
+                    onNotTicketClick.onNotTicketClick(clickedSubject, clickedGraphId);
+                    removeItem(position);
+                }
+            });
 
         }
     }

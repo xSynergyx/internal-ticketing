@@ -29,7 +29,7 @@
             android:layout_height="35dp"
             android:layout_marginLeft="8dp"
             android:textColor="@android:color/black"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold|italic"
             android:ellipsize="end"
             android:maxLines="1"/>
@@ -41,7 +41,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="12dp"
             android:textColor="@android:color/holo_red_dark"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
 
@@ -59,12 +59,23 @@
                 android:id="@+id/ticket_description"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="4.4"
+                android:layout_weight="3.8"
                 android:textStyle="bold"
                 android:paddingRight="8dp"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/not_ticket_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:layout_weight="2.1"
+                android:text="Not Tix"
+                android:textStyle="bold"
+                android:textSize="10dp" />
 
             <Button
                 android:id="@+id/update_status_button"
@@ -73,19 +84,21 @@
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="4dp"
-                android:layout_weight="3.1"
+                android:layout_weight="2.2"
                 android:text="@string/update_status_button"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="10dp"/>
 
             <Button
                 android:id="@+id/close_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_weight="2.5"
+                android:layout_weight="1.9"
                 android:backgroundTint="@android:color/holo_red_dark"
                 android:text="@string/close_button"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="10dp" />
 
         </LinearLayout>
 
