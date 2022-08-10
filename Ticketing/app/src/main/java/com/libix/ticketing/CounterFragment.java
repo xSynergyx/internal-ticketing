@@ -122,7 +122,7 @@ public class CounterFragment extends Fragment {
         return view;
     }
 
-    private void counterGetRequest(Boolean update){
+    private void counterGetRequest(Boolean updateDB){
         String url = Config.GETCOUNTERURL;
         RequestQueue queue = Volley.newRequestQueue(getContext());
 
@@ -140,7 +140,11 @@ public class CounterFragment extends Fragment {
                                 try {
                                     String answers = res.get("questions_answered").toString();
                                     dailyCounterTextView.setText(answers);
-                                    if (update) counterUpdateRequest(false);
+                                    if (updateDB) {
+                                        counterUpdateRequest(false);
+                                    } else {
+                                        monthlyCounterGetRequest();
+                                    }
 
                                 } catch (JSONException e){
                                     e.printStackTrace();
@@ -195,6 +199,7 @@ public class CounterFragment extends Fragment {
                                 Log.d("URLPostResponse", res.toString());
                                 dailyCounterTextView.setText(Integer.toString(newCount));
                                 countDelta = 0; // reset the increment and decrement clicks
+                                monthlyCounterGetRequest(); // Update monthly count only after updating daily count
                             }
                         }
                     }, new Response.ErrorListener(){
@@ -210,6 +215,47 @@ public class CounterFragment extends Fragment {
 
             queue.add(jsonArrayRequest);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void monthlyCounterGetRequest(){
+        String url = Config.GETMONTHLYCOUNTURL;
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+
+        try {
+            Log.d("URLGetRequest", "Loading counter from DB");
+
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject res) {
+
+                            if (res != null) {
+                                Log.d("MonthlyCounterGetResponse", res.toString());
+                                try {
+                                    String monthlyCount = res.get("monthly_total").toString();
+                                    monthlyCounterTextView.setText("Monthly: " + monthlyCount);
+                                } catch (JSONException e){
+                                    e.printStackTrace();
+                                    monthlyCounterTextView.setText("Error");
+                                    Log.d("MonthlyCounterGetResponse", "Could not get monthly count from server");
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("CounterGetRequest", "Unable to receive response from server");
+                            Log.d("CounterGetRequest", error.toString());
+                            monthlyCounterTextView.setText("Error");
+                        }
+                    });
+
+            queue.add(jsonObjectRequest);
         } catch (Exception e) {
             e.printStackTrace();
         }
