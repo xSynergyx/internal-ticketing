@@ -119,7 +119,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
      * @param subject The subject of the ticket/email to be deleted
      */
     @Override
-    public void onTicketCloseClick(String subject, String graph_id, String solution){
+    public void onTicketCloseClick(String subject, String graphId, String solution){
         Log.d("Close", "Subject now in main activity");
         Log.d("Close", "Subject in MainActivity: " + subject);
 
@@ -136,7 +136,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         ticketDeleteRequest(subject, solution); // Delete from database
         //Log.d("CloseGraphID", "graph_id: " + graph_id);
 
-        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graph_id)); // Delete email from graphAPI
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId)); // Delete email from graphAPI
     }
 
     public void onTicketStatusClick(String subject){
@@ -149,7 +149,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
         Toast.makeText(getContext(), "Non-ticket removed", Toast.LENGTH_SHORT).show();
         nonTicketRequest(subject);
-        //TODO: Once API call to delete email works, call from here to delete non-tickets
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId));
     }
 
 
@@ -560,6 +560,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                         });
                 break;
             case "delete":
+                graph_id = graph_id.substring(1, graph_id.length()-1);
                 Toast.makeText(getContext(), "Deleting Email with API", Toast.LENGTH_LONG).show();
                 Log.d("DeleteAPI", "Graph_ID: " + graph_id);
 
@@ -577,6 +578,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                             @Override
                             public void failure(ClientException ex) {
                                 Log.d("DeleteAPIError", "Well, there's an error.");
+                                Log.d("DeleteAPIError", ex.toString());
                                 displayError(ex);
                             }
                         });
