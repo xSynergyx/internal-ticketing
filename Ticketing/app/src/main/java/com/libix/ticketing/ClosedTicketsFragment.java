@@ -53,7 +53,6 @@ public class ClosedTicketsFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_closed_tickets, container, false);
 
-
         closedTicketsRecyclerView = view.findViewById(R.id.closed_tickets_recycler_view);
         searchButton = view.findViewById(R.id.search_button);
         searchEditText = (EditText) view.findViewById(R.id.search_edit_text_view);
@@ -102,7 +101,6 @@ public class ClosedTicketsFragment extends Fragment {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            // TODO: Make a toast "sync failed" message
                             Log.d("URLSearchResponse", "Unable to receive JSON response from server");
                             Toast.makeText(getContext(), "No results found for \"" + searchText + "\"", Toast.LENGTH_LONG).show();
                             Log.d("URLSearchResponse", error.toString());

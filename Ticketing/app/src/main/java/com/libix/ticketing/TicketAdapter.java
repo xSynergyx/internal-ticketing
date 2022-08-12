@@ -55,7 +55,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
 
 
         if (tickets.get(position).status.equalsIgnoreCase("ongoing")) {
-            //Log.d("STATUSBUTTON", tickets.get(position).subject + " " + tickets.get(position).status);
             holder.statusButton.setVisibility(View.INVISIBLE);
             holder.statusButton.setClickable(false);
             holder.statusView.setTextColor(Color.parseColor("#3bb3db"));
@@ -114,7 +113,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
                     String clickedGraphId = tickets.get(position).graph_id;
                      */
 
-                    // Hide the close and status buttons and make them unclickable and display the solution button and edit textview
+                    // Hide the close, status and not-ticket buttons and make them unclickable. Then display the solution button and edit textview
                     ticketControls.setVisibility(View.INVISIBLE);
                     closeButton.setClickable(false);
                     statusButton.setClickable(false);
@@ -122,14 +121,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
 
                     solutionView.setVisibility(View.VISIBLE);
                     solutionButton.setClickable(true);
-
-                    /*
-                    Log.d("Close", clickedSubject);
-                    onTicketCloseClick.onTicketCloseClick(clickedSubject, clickedGraphId);
-                    Log.d("Close", "Subject sent");
-                    //removeItem(position);
-
-                     */
                 }
             });
 
@@ -144,8 +135,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
                     statusButton.setClickable(false);
                     statusView.setText("Ongoing");
                     statusView.setTextColor(Color.parseColor("#3bb3db"));
-                    //notifyItemChanged(position);
-
                 }
             });
 
@@ -201,11 +190,8 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
                         expandedDescription.setVisibility(View.GONE);
                         descriptionView.setText(ticketDescription);
                     }
-                    //expandedDescription.setText(ticketDescription);
                 }
             });
-            //TODO: Then create a visibility field for expanded text in the trouble ticket class
-
         }
     }
 

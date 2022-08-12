@@ -141,7 +141,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
     public void onTicketStatusClick(String subject){
 
-        Toast.makeText(getContext(), "Status updated for ticket: " + subject, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Status updated for ticket: " + subject, Toast.LENGTH_SHORT).show();
         ticketStatusRequest(subject);
     }
 
@@ -560,11 +560,9 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                         });
                 break;
             case "delete":
-                graph_id = graph_id.substring(1, graph_id.length()-1);
-                Toast.makeText(getContext(), "Deleting Email with API", Toast.LENGTH_LONG).show();
+                graph_id = graph_id.substring(1, graph_id.length()-1); // remove quotation marks
                 Log.d("DeleteAPI", "Graph_ID: " + graph_id);
 
-                // TODO: Find out why API delete call fails. So far failure doesn't crash the app
                 graphClient
                         .me()
                         .messages(graph_id)
@@ -577,7 +575,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
                             @Override
                             public void failure(ClientException ex) {
-                                Log.d("DeleteAPIError", "Well, there's an error.");
                                 Log.d("DeleteAPIError", ex.toString());
                                 displayError(ex);
                             }
@@ -640,8 +637,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 String subject = message.getAsJsonObject().get("subject").toString();
                 subject = removeQuotations(subject);
 
-
-                // TODO: Create a "recently deleted" table. So I can restore the ticket if needed.
                 // Ignoring replies to an email
                 if (subject.contains("Re:")){
                     continue;

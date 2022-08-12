@@ -77,7 +77,6 @@ import org.json.JSONObject;
 //TODO: Change font style of title.
 //TODO: Add progress bar when syncing tickets
 //TODO: Animate buttons
-//TODO: Re-add options menu (check some nice styles). add notification on/off functionality there
 //TODO: Add shadow to ticket close buttons
 
 public class MainActivity extends AppCompatActivity {
@@ -168,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId())
         {
             case R.id.settings:
-                Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show();
                 changeFragment(new SettingsFragment(), "SettingsFragment");
                 break;
 /*
@@ -184,9 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Update clicked", Toast.LENGTH_SHORT).show();
                 break;
  */
-
             case R.id.logout:
-                Toast.makeText(this, "Logout clicked", Toast.LENGTH_SHORT).show();
                 signOutFirebaseUser();
                 recreate();
                 break;
@@ -218,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Signed in", Toast.LENGTH_SHORT).show();
             // ...
         } else {
-            Log.d("FIREBASEUI", response.toString());
+            Log.d("FirebaseUI", response.toString());
             Toast.makeText(this, "Failed to sign in", Toast.LENGTH_SHORT).show();
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
