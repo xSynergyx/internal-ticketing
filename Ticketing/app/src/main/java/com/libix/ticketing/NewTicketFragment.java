@@ -57,5 +57,9 @@ public class NewTicketFragment extends Fragment {
 
         JavaMail javaMail = new JavaMail(getContext(), email, subject, message);
         javaMail.execute();
+
+        newTicketEmail.getText().clear();
+        newTicketSubject.getText().clear();
+        newTicketMessage.getText().clear();
     }
 }
