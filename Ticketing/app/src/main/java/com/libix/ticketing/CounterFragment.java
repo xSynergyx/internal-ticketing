@@ -38,7 +38,6 @@ public class CounterFragment extends Fragment {
     Button decrementButton;
     Button incrementButton;
     Button submitCountButton;
-    Button resetButton;
     Button refreshButton;
 
     TextView monthlyCounterTextView;
@@ -62,7 +61,6 @@ public class CounterFragment extends Fragment {
         decrementButton = view.findViewById(R.id.decrement_button);
         incrementButton = view.findViewById(R.id.increment_button);
         submitCountButton = view.findViewById(R.id.submit_counter_button);
-        //resetButton = findViewById(R.id.reset_counter);
         refreshButton = view.findViewById(R.id.refresh_button);
 
         monthlyCounterTextView = view.findViewById(R.id.monthly_counter);
@@ -97,25 +95,16 @@ public class CounterFragment extends Fragment {
             public void onClick(View v) {
                 // Getting count update from server before updating it
                 counterGetRequest(true);
-                Toast.makeText(getContext(), "Submitted new count for the day", LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Submitted new count for the today", Toast.LENGTH_SHORT).show();
             }
         });
-
-        /*
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "Clicked reset", LENGTH_LONG).show();
-            }
-        });
-         */
 
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Refresh the daily count
                 counterGetRequest(false);
-                Toast.makeText(getContext(), "Refreshed the count", LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Refreshed count", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -148,7 +137,7 @@ public class CounterFragment extends Fragment {
 
                                 } catch (JSONException e){
                                     e.printStackTrace();
-                                    // TODO: Add toast
+                                    Toast.makeText(getContext(), "Count sync failed", Toast.LENGTH_SHORT).show();
                                     Log.d("CounterGetResponse", "Could not get counter from server");
                                 }
                             }

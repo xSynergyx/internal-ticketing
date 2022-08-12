@@ -56,7 +56,6 @@ public class NewTicketFragment extends Fragment {
         String message = newTicketMessage.getText().toString();
 
         JavaMail javaMail = new JavaMail(getContext(), email, subject, message);
-
         javaMail.execute();
     }
 }
