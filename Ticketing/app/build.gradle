@@ -87,4 +87,7 @@ dependencies {
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 
     /* End firebase dependencies */
+
+    // EditText styling
+    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
 }
