@@ -49,4 +49,22 @@
         <item name="layout_constraintVertical_bias">1</item>
     </style>
 
+    <style name="Fabs">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">24dp</item>
+        <item name="android:backgroundTint">?attr/colorAccent</item>
+        <item name="borderWidth">0dp</item>
+    </style>
+
+    <style name="FragmentTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:textSize">42dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +40,7 @@ public class CounterFragment extends Fragment {
     Button decrementButton;
     Button incrementButton;
     Button incrementFiveButton;
-    Button submitCountButton;
+    FloatingActionButton submitCountButton;
     SwipeRefreshLayout swipeRefreshLayout;
 
     TextView monthlyCounterTextView;
