@@ -38,6 +38,7 @@ public class CounterFragment extends Fragment {
 
     Button decrementButton;
     Button incrementButton;
+    Button incrementFiveButton;
     Button submitCountButton;
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -61,6 +62,7 @@ public class CounterFragment extends Fragment {
 
         decrementButton = view.findViewById(R.id.decrement_button);
         incrementButton = view.findViewById(R.id.increment_button);
+        incrementFiveButton = view.findViewById(R.id.increment_five_button);
         submitCountButton = view.findViewById(R.id.submit_counter_button);
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_container);
 
@@ -68,6 +70,7 @@ public class CounterFragment extends Fragment {
         dailyCounterTextView = view.findViewById(R.id.daily_counter);
 
         counterGetRequest(false);
+        countDelta = 0;
 
         decrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +89,17 @@ public class CounterFragment extends Fragment {
                 int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
                 currentCount++;
                 countDelta++;
+
+                dailyCounterTextView.setText(Integer.toString(currentCount));
+            }
+        });
+
+        incrementFiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
+                currentCount += 5;
+                countDelta += 5;
 
                 dailyCounterTextView.setText(Integer.toString(currentCount));
             }
@@ -231,7 +245,7 @@ public class CounterFragment extends Fragment {
                                 Log.d("MonthlyCounterGetResponse", res.toString());
                                 try {
                                     String monthlyCount = res.get("monthly_total").toString();
-                                    monthlyCounterTextView.setText("Monthly: " + monthlyCount);
+                                    monthlyCounterTextView.setText(monthlyCount);
                                     swipeRefreshLayout.setRefreshing(false);
                                 } catch (JSONException e){
                                     e.printStackTrace();
