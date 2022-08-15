@@ -5,6 +5,7 @@ import static android.widget.Toast.LENGTH_LONG;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,8 +39,9 @@ public class CounterFragment extends Fragment {
 
     Button decrementButton;
     Button incrementButton;
-    Button submitCountButton;
-    Button refreshButton;
+    Button incrementFiveButton;
+    FloatingActionButton submitCountButton;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     TextView monthlyCounterTextView;
     TextView dailyCounterTextView;
@@ -60,13 +63,15 @@ public class CounterFragment extends Fragment {
 
         decrementButton = view.findViewById(R.id.decrement_button);
         incrementButton = view.findViewById(R.id.increment_button);
+        incrementFiveButton = view.findViewById(R.id.increment_five_button);
         submitCountButton = view.findViewById(R.id.submit_counter_button);
-        refreshButton = view.findViewById(R.id.refresh_button);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_container);
 
         monthlyCounterTextView = view.findViewById(R.id.monthly_counter);
         dailyCounterTextView = view.findViewById(R.id.daily_counter);
 
         counterGetRequest(false);
+        countDelta = 0;
 
         decrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +95,17 @@ public class CounterFragment extends Fragment {
             }
         });
 
+        incrementFiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
+                currentCount += 5;
+                countDelta += 5;
+
+                dailyCounterTextView.setText(Integer.toString(currentCount));
+            }
+        });
+
         submitCountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,14 +115,18 @@ public class CounterFragment extends Fragment {
             }
         });
 
-        refreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Refresh the daily count
-                counterGetRequest(false);
-                Toast.makeText(getContext(), "Refreshed count", Toast.LENGTH_SHORT).show();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.d("Swipe Refresh", "onRefresh called from SwipeRefreshLayout");
+
+                        counterGetRequest(false);
+                        countDelta = 0;
+                        Toast.makeText(getContext(), "Refreshed count", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
         return view;
     }
@@ -226,7 +246,8 @@ public class CounterFragment extends Fragment {
                                 Log.d("MonthlyCounterGetResponse", res.toString());
                                 try {
                                     String monthlyCount = res.get("monthly_total").toString();
-                                    monthlyCounterTextView.setText("Monthly: " + monthlyCount);
+                                    monthlyCounterTextView.setText(monthlyCount);
+                                    swipeRefreshLayout.setRefreshing(false);
                                 } catch (JSONException e){
                                     e.printStackTrace();
                                     monthlyCounterTextView.setText("Error");

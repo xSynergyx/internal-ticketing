@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context=".NewTicketFragment">
 
+    <TextView
+        android:id="@+id/new_ticket_title"
+        style="@style/FragmentTitle"
+        android:text="New Ticket"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/new_ticket_email"
         style="@style/NewFragmentEditText"
@@ -35,10 +42,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button"
-        app:backgroundTint="?attr/colorAccent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
+        style="@style/Fabs"
         android:contentDescription="@string/fab_content_desc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

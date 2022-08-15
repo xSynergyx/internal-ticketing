@@ -13,6 +13,7 @@
     <string name="search_button">Search</string>
 
     <string name="fab_content_desc">Send new support ticket</string>
+    <string name="fab_counter_content_desc">Submit new count for today</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- Preference Titles -->
