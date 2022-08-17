@@ -181,19 +181,33 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    String ticketDescription = tickets.get(position).body;
+                    showExpandedDescription(position);
+                }
+            });
 
-                    if (expandedDescription.getVisibility() == View.GONE) {
-                        expandedDescription.setVisibility(View.VISIBLE);
-                        descriptionView.setText("");
-                    } else {
-                        expandedDescription.setVisibility(View.GONE);
-                        descriptionView.setText(ticketDescription);
-                    }
+            expandedDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    showExpandedDescription(position);
                 }
             });
         }
+
+        private void showExpandedDescription(int position){
+            String ticketDescription = tickets.get(position).body;
+
+            if (expandedDescription.getVisibility() == View.GONE) {
+                expandedDescription.setVisibility(View.VISIBLE);
+                descriptionView.setText("");
+            } else {
+                expandedDescription.setVisibility(View.GONE);
+                descriptionView.setText(ticketDescription);
+            }
+        }
     }
+
+
 
     private void removeItem(int position) {
         tickets.remove(position);

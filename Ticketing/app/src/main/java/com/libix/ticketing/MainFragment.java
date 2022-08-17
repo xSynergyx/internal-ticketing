@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -288,6 +289,13 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 if (mSingleAccountApp == null){
                     return;
                 }
+                getActivity().runOnUiThread(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        logTextView.setText("Syncing...");
+                    }
+                });
                 mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get", ""));
             }
         });
@@ -681,7 +689,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
             @Override
             public void run() {
-                logTextView.setText("Loading...");
+                logTextView.setText("Fetched data from server");
             }
         });
         //logTextView.setText(textToDisplay.toString());

@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="5dp"
-            android:paddingBottom="5dp"
+            android:paddingBottom="2dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:weightSum="10">
@@ -51,24 +51,24 @@
                 android:enabled="false"/>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <!--
-            <Button
-                android:id="@+id/callGraphInteractive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Get Graph Data Interactively"
-                android:enabled="false"/>
-                -->
+        <!--
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
 
-        </LinearLayout>
+                    <Button
+                        android:id="@+id/callGraphInteractive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Get Graph Data Interactively"
+                        android:enabled="false"/>
+
+
+
+        </LinearLayout>-->
 
         <TextView
             android:text="Getting Graph Data..."
