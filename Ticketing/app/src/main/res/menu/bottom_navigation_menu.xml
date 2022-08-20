@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/main_fragment_bottom_nav"
+        android:enabled="true"
+        android:icon="@drawable/open_tickets_icon"
+        android:title="@string/open" />
+
+    <item
+        android:id="@+id/closed_tickets_fragment_bottom_nav"
+        android:enabled="true"
+        android:icon="@drawable/closed_tickets_icon"
+        android:title="@string/closed" />
+
+    <item
+        android:id="@+id/counter_fragment_bottom_nav"
+        android:enabled="true"
+        android:icon="@drawable/counter_icon"
+        android:title="@string/counter" />
+
+    <item
+        android:id="@+id/new_ticket_fragment_bottom_nav"
+        android:enabled="true"
+        android:icon="@drawable/new_ticket_icon"
+        android:title="@string/new_tix" />
+
+</menu>

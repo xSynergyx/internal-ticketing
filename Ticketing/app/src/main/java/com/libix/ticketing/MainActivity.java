@@ -27,6 +27,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -81,6 +82,9 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    FragmentManager fm = getSupportFragmentManager();
+    BottomNavigationView bottomNavigationView;
+    int backStackCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         launchFirebaseUI();
 
         changeFragment(new MainFragment(), "MainFragment");
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         //Action bar setup
         ActionBar actionBar = getSupportActionBar();
@@ -108,43 +113,48 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        /*
-         * Setting up OnClickListeners
-         */
-
-        // OnClickListener for OpenTicketsFragment
-        final TextView open = (TextView) findViewById(R.id.open);
-        open.setOnClickListener(new View.OnClickListener(){
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view){
-                changeFragment(new MainFragment(), "MainFragment");
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                Log.d("Bottom Navigation", Integer.toString(id));
+
+                switch (id){
+                    case R.id.main_fragment_bottom_nav:
+                        changeFragment(new MainFragment(), "MainFragment");
+                        break;
+                    case R.id.closed_tickets_fragment_bottom_nav:
+                        changeFragment(new ClosedTicketsFragment(), "ClosedTicketsFragment");
+                        break;
+                    case R.id.counter_fragment_bottom_nav:
+                        changeFragment(new CounterFragment(), "CounterFragment");
+                        break;
+                    case R.id.new_ticket_fragment_bottom_nav:
+                        changeFragment(new NewTicketFragment(), "NewTicketFragment");
+                        break;
+                }
+                backStackCount++;
+                return true;
             }
         });
 
-        // OnClickListener for ClosedTicketsFragment
-        final TextView search = (TextView) findViewById(R.id.search);
-        search.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                changeFragment(new ClosedTicketsFragment(), "ClosedTicketsFragment");
-            }
-        });
+        // Update selected item in bottom nav bar on back button press
+        backStackCount = getSupportFragmentManager().getBackStackEntryCount();
 
-        // OnClickListener for CounterFragment
-        final TextView counter = (TextView) findViewById(R.id.counter);
-        counter.setOnClickListener(new View.OnClickListener(){
+        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
-            public void onClick(View view){
-                changeFragment(new CounterFragment(), "CounterFragment");
-            }
-        });
+            public void onBackStackChanged() {
+                // Check if back stack count decreased first
+                if( fm.getBackStackEntryCount() <= backStackCount){
+                    backStackCount--;
+                    Fragment currentFrag =  fm.findFragmentById(R.id.frame_layout);
 
-        // OnClickListener for NewTicketFragment
-        final TextView new_ticket = (TextView) findViewById(R.id.new_ticket);
-        new_ticket.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                changeFragment(new NewTicketFragment(), "NewTicketFragment");
+                    if (currentFrag instanceof MainFragment){ bottomNavigationView.getMenu().getItem(0).setChecked(true); }
+                    else if (currentFrag instanceof ClosedTicketsFragment){ bottomNavigationView.getMenu().getItem(1).setChecked(true); }
+                    else if (currentFrag instanceof CounterFragment) { bottomNavigationView.getMenu().getItem(2).setChecked(true); }
+                    else if (currentFrag instanceof NewTicketFragment) { bottomNavigationView.getMenu().getItem(3).setChecked(true); }
+                    Log.d("CurrentFragment", currentFrag.toString());
+                }
             }
         });
 
@@ -192,8 +202,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void changeFragment(Fragment fragment, String fragTag){
-
-        FragmentManager fm = getSupportFragmentManager();
 
         // Check to see if fragment is already created. If so replace the "new" fragment with the already-created one
         if (fm.findFragmentByTag(fragTag) != null){

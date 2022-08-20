@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,6 +110,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     TextView currentUserTextView;
     RecyclerView ticketsRecyclerView;
     TicketAdapter myTicketAdapter;
+    ProgressBar progressBar;
 
     ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>(); // This one is used to load tickets from the server database
     ArrayList<TroubleTicket> graphDataArrayList = new ArrayList<>(); // This one is used to update the database with the information from the GraphAPI call
@@ -237,6 +239,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         signOutButton = view.findViewById(R.id.clearCache);
         logTextView = view.findViewById(R.id.txt_log);
         //currentUserTextView = findViewById(R.id.current_user);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         //Sign in user
         signInButton.setOnClickListener(new View.OnClickListener(){
@@ -296,6 +299,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                         logTextView.setText("Syncing...");
                     }
                 });
+                progressBar.setVisibility(View.VISIBLE);
                 mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get", ""));
             }
         });
@@ -740,6 +744,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             }
             Log.d("TicketArrList", ticketArrayList.toString());
             myTicketAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
         }
     }
 }

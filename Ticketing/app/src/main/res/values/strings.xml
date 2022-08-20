@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Libix</string>
 
-    <string name="open">Open Tix</string>
-    <string name="closed">Closed Tix</string>
+    <string name="open">Open Tickets</string>
+    <string name="closed">Closed Tickets</string>
     <string name="counter">Counter</string>
-    <string name="new_tix">New Tix</string>
+    <string name="new_tix">New Ticket</string>
 
     <!-- Buttons -->
     <string name="close_button">Close</string>
