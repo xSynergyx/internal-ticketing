@@ -14,6 +14,7 @@
         android:visibility="gone"/>
 
     <LinearLayout
+        android:layout_marginTop="4dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -34,7 +35,7 @@
                 android:id="@+id/signIn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_weight="7"
                 android:gravity="center"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:text="Connect"/>
@@ -43,19 +44,18 @@
                 android:id="@+id/clearCache"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:gravity="center"
+                android:layout_weight="1.5"
                 android:background="@android:drawable/dialog_holo_light_frame"
-                android:text="Sign Out"
+                android:drawableLeft="@drawable/sign_out_icon"
                 android:enabled="false"/>
 
             <Button
                 android:id="@+id/callGraphSilent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="1.5"
                 android:background="@android:drawable/dialog_holo_light_frame"
-                android:text="Sync"
+                android:drawableLeft="@drawable/sync_icon"
                 android:enabled="false"/>
 
         </LinearLayout>

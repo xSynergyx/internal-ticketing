@@ -1,5 +1,7 @@
 package com.libix.ticketing;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -255,20 +257,36 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSingleAccountApp == null){
-                    return;
-                }
-                mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
-                    @Override
-                    public void onSignOut() {
-                        updateUI(null);
-                        performOperationOnSignOut();
-                    }
-                    @Override
-                    public void onError(@NonNull MsalException exception){
-                        displayError(exception);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage(getResources().getString(R.string.sign_out_text));
+                builder.setTitle(getResources().getString(R.string.sign_out_title));
+                builder.setCancelable(false);
+                builder.setNegativeButton(getResources().getString(R.string.sign_out_cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
                     }
                 });
+                builder.setPositiveButton(getResources().getString(R.string.sign_out_positive), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mSingleAccountApp == null){
+                            return;
+                        }
+                        mSingleAccountApp.signOut(new ISingleAccountPublicClientApplication.SignOutCallback() {
+                            @Override
+                            public void onSignOut() {
+                                updateUI(null);
+                                performOperationOnSignOut();
+                                ticketArrayList.clear();
+                            }
+                            @Override
+                            public void onError(@NonNull MsalException exception){
+                                displayError(exception);
+                            }
+                        });
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 

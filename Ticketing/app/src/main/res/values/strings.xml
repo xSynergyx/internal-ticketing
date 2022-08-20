@@ -33,4 +33,10 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!-- Sign Out Alert -->
+    <string name="sign_out_title">Disconnect</string>
+    <string name="sign_out_text">Are you sure you would like to disconnect the ticketing account?</string>
+    <string name ="sign_out_positive">Disconnect</string>
+    <string name ="sign_out_cancel">Cancel</string>
 </resources>
