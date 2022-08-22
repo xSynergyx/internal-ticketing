@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -113,6 +116,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     RecyclerView ticketsRecyclerView;
     TicketAdapter myTicketAdapter;
     ProgressBar progressBar;
+    Animation scaleUp, scaleDown;
 
     ArrayList<TroubleTicket> ticketArrayList = new ArrayList<TroubleTicket>(); // This one is used to load tickets from the server database
     ArrayList<TroubleTicket> graphDataArrayList = new ArrayList<>(); // This one is used to update the database with the information from the GraphAPI call
@@ -242,6 +246,10 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         logTextView = view.findViewById(R.id.txt_log);
         //currentUserTextView = findViewById(R.id.current_user);
         progressBar = view.findViewById(R.id.progress_bar);
+        scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
+        scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
+
+
 
         //Sign in user
         signInButton.setOnClickListener(new View.OnClickListener(){
@@ -257,6 +265,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                scaleAnimations(signOutButton);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(getResources().getString(R.string.sign_out_text));
                 builder.setTitle(getResources().getString(R.string.sign_out_title));
@@ -307,6 +316,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         callGraphApiSilentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                scaleAnimations(callGraphApiSilentButton);
                 if (mSingleAccountApp == null){
                     return;
                 }
@@ -764,5 +774,10 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             myTicketAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
         }
+    }
+
+    private void scaleAnimations (Button button){
+        button.startAnimation(scaleUp);
+        button.startAnimation(scaleDown);
     }
 }
