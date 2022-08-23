@@ -46,7 +46,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         // Reset the buttons visibility and text color back to default
         holder.statusButton.setVisibility(View.VISIBLE);
         holder.statusButton.setClickable(true);
-        holder.statusView.setTextColor(Color.parseColor("#ffcc0000")); //TODO: Make a "textColor" var
+        holder.statusView.setTextColor(Color.parseColor("#000f96")); //TODO: Make a "textColor" var
 
         holder.subjectView.setText(tickets.get(position).subject);
         holder.statusView.setText(tickets.get(position).status);

@@ -179,6 +179,10 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        openTicketsCountGetRequest();
+        ongoingTicketsCountGetRequest();
+
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -598,6 +602,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         }
     }
 
+    //TODO: Add open and ongoing tickets to a bundle and save in onsavedinstancestate, or figure out another way to save it
     private void ongoingTicketsCountGetRequest(){
         String url = Config.GETONGOINGTICKETSCOUNTURL;
         RequestQueue queue = Volley.newRequestQueue(getContext());
