@@ -32,14 +32,60 @@
             android:layout_marginRight="8dp"
             android:weightSum="10">
 
-            <Button
-                android:id="@+id/signIn"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="7"
-                android:gravity="center"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:text="Connect"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="7">
+
+                <Button
+                    android:id="@+id/signIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:text="Connect"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Open "
+                    android:textSize="28dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/open_tickets_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text=""
+                    android:textSize="28dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:paddingRight="16dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Ongoing "
+                    android:textSize="28dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/ongoing_tickets_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text=""
+                    android:textSize="28dp"
+                    android:textStyle="bold"
+                    android:textColor="#3bb3db" />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/clearCache"

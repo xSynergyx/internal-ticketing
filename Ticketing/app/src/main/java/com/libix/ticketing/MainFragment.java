@@ -58,6 +58,7 @@ import com.microsoft.identity.client.exception.MsalException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -113,6 +114,10 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     Button callGraphApiSilentButton;
     TextView logTextView;
     TextView currentUserTextView;
+    TextView openTicketsCountTextView;
+    TextView ongoingTicketsCountTextView;
+    String openTicketsCount;
+    String ongoingTicketsCount;
     RecyclerView ticketsRecyclerView;
     TicketAdapter myTicketAdapter;
     ProgressBar progressBar;
@@ -248,6 +253,8 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         progressBar = view.findViewById(R.id.progress_bar);
         scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
+        openTicketsCountTextView = view.findViewById(R.id.open_tickets_count);
+        ongoingTicketsCountTextView = view.findViewById(R.id.ongoing_tickets_count);
 
 
 
@@ -298,19 +305,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 alert.show();
             }
         });
-
-        /*
-        //Interactive
-        callGraphApiInteractiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSingleAccountApp == null) {
-                    return;
-                }
-                mSingleAccountApp.acquireToken(MainActivity.this, SCOPES, getAuthInteractiveCallback());
-            }
-        });
-         */
 
         //Silent
         callGraphApiSilentButton.setOnClickListener(new View.OnClickListener() {
@@ -562,6 +556,90 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         }
     }
 
+    private void openTicketsCountGetRequest(){
+        String url = Config.GETOPENTICKETSCOUNTURL;
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+
+        try {
+            Log.d("URLGetRequest", "Loading counter from DB");
+
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject res) {
+
+                            if (res != null) {
+                                Log.d("OpenTicketsCounterGetResponse", res.toString());
+                                try {
+                                    openTicketsCount = res.get("count").toString();
+                                    Log.d("OpenTicketsCounterGetResponse", openTicketsCount);
+                                    openTicketsCountTextView.setText(openTicketsCount);
+                                } catch (JSONException e){
+                                    e.printStackTrace();
+                                    openTicketsCountTextView.setText("N/A");
+                                    Log.d("OpenTicketCounterGetResponse", "Could not get monthly count from server");
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("CounterGetRequest", "Unable to receive response from server");
+                            Log.d("CounterGetRequest", error.toString());
+                            openTicketsCountTextView.setText("N/A");
+                        }
+                    });
+
+            queue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ongoingTicketsCountGetRequest(){
+        String url = Config.GETONGOINGTICKETSCOUNTURL;
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+
+        try {
+            Log.d("URLGetRequest", "Loading counter from DB");
+
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject res) {
+
+                            if (res != null) {
+                                Log.d("OngoingTicketsCounterGetResponse", res.toString());
+                                try {
+                                    ongoingTicketsCount = res.get("count").toString();
+                                    Log.d("OngoingTicketsCounterGetResponse", ongoingTicketsCount);
+                                    ongoingTicketsCountTextView.setText(ongoingTicketsCount);
+                                } catch (JSONException e){
+                                    e.printStackTrace();
+                                    ongoingTicketsCountTextView.setText("N/A");
+                                    Log.d("OngoingTicketCounterGetResponse", "Could not get monthly count from server");
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("CounterGetRequest", "Unable to receive response from server");
+                            Log.d("CounterGetRequest", error.toString());
+                            openTicketsCountTextView.setText("N/A");
+                        }
+                    });
+
+            queue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // TODO: Consider using method overloading?
     private void callGraphAPI(IAuthenticationResult authenticationResult, String caseString, String graph_id) {
 
@@ -629,7 +707,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     private void updateUI(@Nullable final IAccount account) {
         if (account != null) {
             signInButton.setEnabled(false);
-            signInButton.setVisibility(View.INVISIBLE);
+            signInButton.setVisibility(View.GONE);
             signOutButton.setEnabled(true);
             signOutButton.setVisibility(View.VISIBLE);
             //callGraphApiInteractiveButton.setEnabled(true);
@@ -645,7 +723,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             callGraphApiSilentButton.setEnabled(false);
             callGraphApiSilentButton.setVisibility(View.INVISIBLE);
             //currentUserTextView.setText("");
-            logTextView.setText("No Outlook account connected. Please connect the outlook account associated with the technical support tickets.");
+            logTextView.setText(R.string.outlook_disconnected);
         }
     }
 
@@ -714,6 +792,8 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         Log.d("JSON", json);
         Log.d("URLRequest", "About to send url request to DO droplet server");
         ticketPostRequest(json);
+        openTicketsCountGetRequest();
+        ongoingTicketsCountGetRequest();
 
         //logTextView.setText(graphResponse.toString());
 

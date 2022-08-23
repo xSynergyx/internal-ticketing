@@ -39,4 +39,7 @@
     <string name="sign_out_text">Are you sure you would like to disconnect the ticketing account?</string>
     <string name ="sign_out_positive">Disconnect</string>
     <string name ="sign_out_cancel">Cancel</string>
+
+    <!-- Outlook Not Connected -->
+    <string name="outlook_disconnected">No Outlook account connected. Please connect the outlook account associated with the technical support tickets.</string>
 </resources>
