@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Libix</string>
 
-    <string name="open">Open Tix</string>
-    <string name="closed">Closed Tix</string>
+    <string name="open">Open Tickets</string>
+    <string name="closed">Closed Tickets</string>
     <string name="counter">Counter</string>
-    <string name="new_tix">New Tix</string>
+    <string name="new_tix">New Ticket</string>
 
     <!-- Buttons -->
     <string name="close_button">Close</string>
@@ -33,4 +33,13 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!-- Sign Out Alert -->
+    <string name="sign_out_title">Disconnect</string>
+    <string name="sign_out_text">Are you sure you would like to disconnect the ticketing account?</string>
+    <string name ="sign_out_positive">Disconnect</string>
+    <string name ="sign_out_cancel">Cancel</string>
+
+    <!-- Outlook Not Connected -->
+    <string name="outlook_disconnected">No Outlook account connected. Please connect the outlook account associated with the technical support tickets.</string>
 </resources>

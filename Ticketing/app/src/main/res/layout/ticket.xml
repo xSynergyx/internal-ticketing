@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp">
 
     <!--
     <TextView
@@ -16,17 +17,17 @@
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginHorizontal="8dp"
+        android:layout_height="wrap_content"
         android:padding="4dp"
+        android:clipToPadding="false"
         android:background="@drawable/ticket_border"
+        android:elevation="8dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/ticket_subject"
             android:layout_width="280dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="8dp"
             android:textColor="@android:color/black"
             android:textSize="22sp"
             android:textStyle="bold|italic"
@@ -39,7 +40,7 @@
             android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="12dp"
-            android:textColor="@android:color/holo_red_dark"
+            android:textColor="#000f96"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -49,8 +50,6 @@
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:layout_below="@id/ticket_status"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:orientation="horizontal"
             android:weightSum="10">
 
@@ -58,7 +57,7 @@
                 android:id="@+id/ticket_description"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3.8"
+                android:layout_weight="5.5"
                 android:textStyle="bold"
                 android:paddingRight="8dp"
                 android:ellipsize="end"
@@ -70,34 +69,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:layout_weight="2.1"
-                android:text="Not Tix"
-                android:textStyle="bold"
-                android:textSize="10dp" />
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_weight="1.5"
+                android:drawableBottom="@drawable/not_ticket_icon" />
 
             <Button
                 android:id="@+id/update_status_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/dialog_holo_light_frame"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_marginTop="16dp"
-                android:layout_marginRight="4dp"
-                android:layout_weight="2.2"
-                android:text="@string/update_status_button"
-                android:textStyle="bold"
-                android:textSize="10dp"/>
+                android:layout_weight="1.5"
+                android:drawableBottom="@drawable/ongoing_icon"/>
 
             <Button
                 android:id="@+id/close_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_weight="1.9"
-                android:backgroundTint="@android:color/holo_red_dark"
-                android:text="@string/close_button"
-                android:textStyle="bold"
-                android:textSize="10dp" />
+                android:layout_weight="1.5"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:drawableBottom="@drawable/close_icon" />
 
         </LinearLayout>
 
@@ -106,8 +98,6 @@
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:layout_below="@id/ticket_status"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:orientation="horizontal"
             android:weightSum="10"
             android:visibility="invisible">
@@ -130,19 +120,20 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/expanded_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No details"
+            android:textSize="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@id/solution_view"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/expanded_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No details"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-        android:visibility="gone" />
+
 
     <TextView
         android:id="@+id/spacing"

@@ -46,7 +46,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
         // Reset the buttons visibility and text color back to default
         holder.statusButton.setVisibility(View.VISIBLE);
         holder.statusButton.setClickable(true);
-        holder.statusView.setTextColor(Color.parseColor("#ffcc0000")); //TODO: Make a "textColor" var
+        holder.statusView.setTextColor(Color.parseColor("#000f96")); //TODO: Make a "textColor" var
 
         holder.subjectView.setText(tickets.get(position).subject);
         holder.statusView.setText(tickets.get(position).status);
@@ -181,19 +181,33 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    String ticketDescription = tickets.get(position).body;
+                    showExpandedDescription(position);
+                }
+            });
 
-                    if (expandedDescription.getVisibility() == View.GONE) {
-                        expandedDescription.setVisibility(View.VISIBLE);
-                        descriptionView.setText("");
-                    } else {
-                        expandedDescription.setVisibility(View.GONE);
-                        descriptionView.setText(ticketDescription);
-                    }
+            expandedDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    showExpandedDescription(position);
                 }
             });
         }
+
+        private void showExpandedDescription(int position){
+            String ticketDescription = tickets.get(position).body;
+
+            if (expandedDescription.getVisibility() == View.GONE) {
+                expandedDescription.setVisibility(View.VISIBLE);
+                descriptionView.setText("");
+            } else {
+                expandedDescription.setVisibility(View.GONE);
+                descriptionView.setText(ticketDescription);
+            }
+        }
     }
+
+
 
     private void removeItem(int position) {
         tickets.remove(position);
