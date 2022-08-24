@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapte
         return new ClosedTicketAdapter.ClosedTicketViewHolder(view);
     }
 
+    //TODO: Make closed tickets expandable (to get the full description and solution). Maybe rearrange it and change the colors
     @Override
     public void onBindViewHolder(@NonNull ClosedTicketAdapter.ClosedTicketViewHolder holder, int position) {
 
@@ -37,12 +39,13 @@ public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapte
         holder.statusView.setText(tickets.get(position).status);
         holder.descriptionView.setText(tickets.get(position).body);
         holder.solutionView.setText(tickets.get(position).solution);
+        holder.expandedDescriptionText.setText(tickets.get(position).body);
 
 
 
         // Make ticket status green if they're closed
         if (tickets.get(position).status.equalsIgnoreCase("closed")) {
-            holder.statusView.setTextColor(Color.parseColor("#0ac917"));
+            holder.statusView.setTextColor(Color.parseColor("#00963c"));
         }
 
     }
@@ -62,6 +65,8 @@ public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapte
         TextView statusView;
         TextView descriptionView;
         TextView solutionView;
+        LinearLayout expandedDescriptionView;
+        TextView expandedDescriptionText;
 
         public ClosedTicketViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,6 +75,38 @@ public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapte
             statusView = itemView.findViewById(R.id.closed_ticket_status);
             descriptionView = itemView.findViewById(R.id.closed_ticket_description);
             solutionView = itemView.findViewById(R.id.closed_ticket_solution);
+            expandedDescriptionText = itemView.findViewById(R.id.closed_ticket_expanded_description_text);
+            expandedDescriptionView = itemView.findViewById(R.id.closed_ticket_expanded_description_view);
+
+            descriptionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    showExpandedDescription(position);
+                }
+            });
+
+            expandedDescriptionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    showExpandedDescription(position);
+                }
+            });
+        }
+
+        private void showExpandedDescription(int position){
+            String ticketDescription = tickets.get(position).body;
+
+            if (expandedDescriptionView.getVisibility() == View.GONE) {
+                expandedDescriptionView.setVisibility(View.VISIBLE);
+                descriptionView.setText("");
+            } else {
+                expandedDescriptionView.setVisibility(View.GONE);
+                descriptionView.setText(ticketDescription);
+            }
         }
     }
+
+
 }

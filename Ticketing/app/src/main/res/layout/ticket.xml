@@ -28,11 +28,11 @@
             android:id="@+id/ticket_subject"
             android:layout_width="280dp"
             android:layout_height="35dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@android:color/black"
             android:textSize="22sp"
-            android:textStyle="bold|italic"
-            android:ellipsize="end"
-            android:maxLines="1"/>
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/ticket_status"
@@ -125,7 +125,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="No details"
-            android:textSize="16dp"
+            android:textSize="20dp"
+            android:textColor="@android:color/black"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="8dp"
             android:layout_below="@id/solution_view"
