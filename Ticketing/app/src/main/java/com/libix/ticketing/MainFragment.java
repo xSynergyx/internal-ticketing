@@ -666,6 +666,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             case "get":
                 graphClient
                         .me()
+                        .mailFolders("Inbox")
                         .messages()
                         .buildRequest()
                         .select("id, subject, body, from")
@@ -741,13 +742,31 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 logTextView.setText(exception.toString());
             }
         });
-        //logTextView.setText(exception.toString());
+    }
+
+    private void removeProgressBar(){
+
+        getActivity().runOnUiThread(new Runnable(){
+
+            @Override
+            public void run(){
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void displayGraphResult(@NonNull final JsonObject graphResponse) {
 
         final ArrayList<String> textToDisplay = new ArrayList();
         JsonArray myJsonArray = graphResponse.getAsJsonArray("value");
+
+        // If no tickets received from server, display no tickets message
+        if (myJsonArray.toString().equals("[]")) {
+            Log.d("NOTICKETSJSON", myJsonArray.toString());
+            removeProgressBar();
+            logTextView.setText("No tickets. Congrats!");
+            return;
+        }
 
         // Clearing the both Array Lists before putting in new tickets (avoid duplicate tickets)
         ticketArrayList.clear();
