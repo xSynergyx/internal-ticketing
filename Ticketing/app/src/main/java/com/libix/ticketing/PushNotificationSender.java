@@ -1,5 +1,5 @@
 package com.libix.ticketing;
-
+/*
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -23,18 +23,20 @@ public class PushNotificationSender  {
     String userFcmToken;
     String title;
     String body;
+    String key;
     Context mContext;
     Activity mActivity;
 
 
     private RequestQueue requestQueue;
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
-    private final String fcmServerKey = Config.FCMSERVERKEY;
+    //private final String fcmServerKey = Config.FCMSERVERKEY;
 
-    public PushNotificationSender(String userFcmToken, String title, String body, Context mContext, Activity mActivity) {
+    public PushNotificationSender(String userFcmToken, String title, String body, String key, Context mContext, Activity mActivity) {
         this.userFcmToken = userFcmToken;
         this.title = title;
         this.body = body;
+        this.key = key;
         this.mContext = mContext;
         this.mActivity = mActivity;
     }
@@ -61,13 +63,15 @@ public class PushNotificationSender  {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("PushNotificationError", "Error sending push notification");
+                    Log.d("PushNotificationError", error.toString());
+                    Log.d("PushNotificationError", key);
                 }
             }) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> header = new HashMap<>();
                     header.put("content-type", "application/json");
-                    header.put("authorization", "key=" + fcmServerKey);
+                    header.put("authorization", "key=" + key);
                     return header;
                 }
             };
@@ -77,3 +81,4 @@ public class PushNotificationSender  {
         }
     }
 }
+*/

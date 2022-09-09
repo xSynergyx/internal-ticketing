@@ -137,18 +137,20 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         Log.d("Close", "Subject now in main activity");
         Log.d("Close", "Subject in MainActivity: " + subject);
 
+        /*
         Log.d("Notifications", "About to send notification");
         String title = "Ticket: \"" + subject + "\" has been closed";
+        String key = keyGetRequest();
         PushNotificationSender notificationSender = new PushNotificationSender("/topics/all",
                 title,
                 solution,
+                key,
                 getActivity().getApplicationContext(),
                 getActivity()
         );
-        notificationSender.sendNotifications();
+        notificationSender.sendNotifications();*/
 
         ticketDeleteRequest(subject, solution); // Delete from database
-        //Log.d("CloseGraphID", "graph_id: " + graph_id);
 
         mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId)); // Delete email from graphAPI
     }
@@ -602,7 +604,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         }
     }
 
-    //TODO: Add open and ongoing tickets to a bundle and save in onsavedinstancestate, or figure out another way to save it
     private void ongoingTicketsCountGetRequest(){
         String url = Config.GETONGOINGTICKETSCOUNTURL;
         RequestQueue queue = Volley.newRequestQueue(getContext());
@@ -644,6 +645,46 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             e.printStackTrace();
         }
     }
+/*
+    private String keyGetRequest(){
+        String url = Config.GETKEY;
+        final String[] key = new String[1];
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+
+        try {
+            Log.d("URLGetKeyRequest", "Getting key");
+
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject res) {
+
+                            if (res != null) {
+                                try {
+                                    key[0] = res.get("key").toString();
+                                } catch (JSONException e){
+                                    e.printStackTrace();
+                                    Log.d("GetKeyResponse", "Could not get key from server");
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("KeyGetRequest", "Unable to receive response from server");
+                            Log.d("KeyGetRequest", error.toString());
+                        }
+                    });
+
+            queue.add(jsonObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return key[0];
+    }*/
 
     // TODO: Consider using method overloading?
     private void callGraphAPI(IAuthenticationResult authenticationResult, String caseString, String graph_id) {
