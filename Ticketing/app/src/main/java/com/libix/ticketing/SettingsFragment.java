@@ -27,8 +27,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             FirebaseMessaging.getInstance().subscribeToTopic("all");
             Toast.makeText(getContext(), "Subscribed to notifications", Toast.LENGTH_SHORT).show();
         } else if (key.equals("notifications")){
-            Toast.makeText(getContext(), "Unsubscribed from notifications", Toast.LENGTH_SHORT).show();
             FirebaseMessaging.getInstance().unsubscribeFromTopic("all");
+            Toast.makeText(getContext(), "Unsubscribed from notifications", Toast.LENGTH_SHORT).show();
         }
     }
 }
