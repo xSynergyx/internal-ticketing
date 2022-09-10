@@ -34,7 +34,7 @@
 
                 <data
                     android:host="com.libix.ticketing"
-                    android:path="/eJ0vi3stExIoGkuiRzoG7yuBqWA%3D"
+                    android:path="/eJ0vi3stExIoGkuiRzoG7yuBqWA="
                     android:scheme="msauth" /> <!-- Signature hash (not URL encoded) -->
             </intent-filter>
         </activity>

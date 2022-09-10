@@ -76,33 +76,40 @@ public class CounterFragment extends Fragment {
         decrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
-                currentCount--;
-                countDelta--;
+                if (!(dailyCounterTextView.getText().equals("error"))) {
+                    int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
+                    currentCount--;
+                    countDelta--;
 
-                dailyCounterTextView.setText(Integer.toString(currentCount));
+                    dailyCounterTextView.setText(Integer.toString(currentCount));
+                }
+
             }
         });
 
         incrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
-                currentCount++;
-                countDelta++;
+                if (!(dailyCounterTextView.getText().equals("error"))) {
+                    int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
+                    currentCount++;
+                    countDelta++;
 
-                dailyCounterTextView.setText(Integer.toString(currentCount));
+                    dailyCounterTextView.setText(Integer.toString(currentCount));
+                }
             }
         });
 
         incrementFiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
-                currentCount += 5;
-                countDelta += 5;
+                if (!(dailyCounterTextView.getText().equals("error"))) {
+                    int currentCount = Integer.parseInt(dailyCounterTextView.getText().toString());
+                    currentCount += 5;
+                    countDelta += 5;
 
-                dailyCounterTextView.setText(Integer.toString(currentCount));
+                    dailyCounterTextView.setText(Integer.toString(currentCount));
+                }
             }
         });
 
