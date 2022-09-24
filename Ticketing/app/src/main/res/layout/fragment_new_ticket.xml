@@ -10,14 +10,14 @@
     <TextView
         android:id="@+id/new_ticket_title"
         style="@style/FragmentTitle"
-        android:text="New Ticket"
+        android:text="@string/new_ticket_fragment_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/new_ticket_email"
         style="@style/NewFragmentEditText"
-        android:hint="Email"
+        android:hint="@string/new_ticket_email_hint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/new_ticket_subject"
         style="@style/NewFragmentEditText"
-        android:hint="Subject"
+        android:hint="@string/new_ticket_subject_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_ticket_email" />
@@ -35,7 +35,7 @@
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/new_ticket_message"
         style="@style/NewFragmentEditText"
-        android:hint="Message"
+        android:hint="@string/new_ticket_message_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_ticket_subject" />

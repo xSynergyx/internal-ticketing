@@ -1,5 +1,7 @@
 package com.libix.ticketing;
 
+import androidx.annotation.NonNull;
+
 public class TroubleTicket extends Ticket {
 
     protected String graph_id;
@@ -11,6 +13,7 @@ public class TroubleTicket extends Ticket {
         this.solution = solution;
     }
 
+    @NonNull
     @Override
     public String toString(){
         return("\nI'm a Trouble Ticket. \nThis is the subject: " + subject + "\nFrom Address: " + from_address + "\nStatus: " + status);

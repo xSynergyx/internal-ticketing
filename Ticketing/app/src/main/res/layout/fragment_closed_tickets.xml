@@ -23,8 +23,9 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="24dp"
-            android:hint="Search closed tickets"
-            android:inputType="textCapSentences" />
+            android:hint="@string/search_hint"
+            android:inputType="textCapSentences"
+            android:importantForAutofill="no" />
 
     </LinearLayout>
 
@@ -32,7 +33,7 @@
         android:id="@+id/closed_tickets_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">

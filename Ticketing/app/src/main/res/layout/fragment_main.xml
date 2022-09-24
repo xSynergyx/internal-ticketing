@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainFragment">
 
     <ProgressBar
@@ -44,15 +43,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:drawable/dialog_holo_light_frame"
-                    android:text="Connect"
+                    android:text="@string/connect_microsoft_button"
                     android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="Open "
-                    android:textSize="28dp"
+                    android:layout_marginEnd="6dp"
+                    android:text="@string/open_tickets_count_label"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black" />
 
@@ -62,17 +62,19 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text=""
-                    android:textSize="28dp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="#000f96"
-                    android:paddingRight="16dp" />
+                    android:paddingEnd="16dp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="Ongoing "
-                    android:textSize="28dp"
+                    android:layout_marginEnd="6dp"
+                    android:text="@string/ongoing_tickets_count_label"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black" />
 
@@ -82,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text=""
-                    android:textSize="28dp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="#3bb3db" />
 
@@ -95,7 +97,8 @@
                 android:layout_weight="1.5"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:drawableLeft="@drawable/sign_out_icon"
-                android:enabled="false"/>
+                android:enabled="false"
+                tools:ignore="RtlHardcoded" />
 
             <Button
                 android:id="@+id/callGraphSilent"
@@ -104,47 +107,10 @@
                 android:layout_weight="1.5"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:drawableLeft="@drawable/sync_icon"
-                android:enabled="false"/>
+                android:enabled="false"
+                tools:ignore="RtlHardcoded" />
 
         </LinearLayout>
-        <!--
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-
-                    <Button
-                        android:id="@+id/callGraphInteractive"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Get Graph Data Interactively"
-                        android:enabled="false"/>
-
-
-
-        </LinearLayout>-->
-
-        <TextView
-            android:text="Getting Graph Data..."
-            android:textColor="#3f3f3f"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/graphData"
-            android:visibility="gone"/>
-
-
-        <!--
-        <TextView
-            android:id="@+id/current_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Account info goes here..." />
-            -->
-
 
         <ScrollView
             android:layout_width="match_parent"
@@ -157,9 +123,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Please sync your tickets"
+                android:text="@string/sync_message"
                 android:textAlignment="center"
-                android:textSize="20dp"/>
+                android:textSize="20sp"/>
 
         </ScrollView>
 

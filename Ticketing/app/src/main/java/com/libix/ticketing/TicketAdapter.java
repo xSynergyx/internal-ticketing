@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketViewHolder> {
 
-    ArrayList <TroubleTicket> tickets = new ArrayList<TroubleTicket>();
+    ArrayList <TroubleTicket> tickets;
     Context context;
     private OnTicketCloseClick onTicketCloseClick;
     private OnTicketCloseClick onTicketStatusClick;
@@ -104,93 +104,75 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
 
 
 
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /*
-                    int position = getAdapterPosition();
-                    String clickedSubject = tickets.get(position).subject;
-                    String clickedGraphId = tickets.get(position).graph_id;
-                     */
+            closeButton.setOnClickListener(v -> {
+                /*
+                int position = getAdapterPosition();
+                String clickedSubject = tickets.get(position).subject;
+                String clickedGraphId = tickets.get(position).graph_id;
+                 */
 
-                    // Hide the close, status and not-ticket buttons and make them unclickable. Then display the solution button and edit textview
-                    ticketControls.setVisibility(View.INVISIBLE);
-                    closeButton.setClickable(false);
-                    statusButton.setClickable(false);
-                    notTicketButton.setClickable(false);
+                // Hide the close, status and not-ticket buttons and make them unclickable. Then display the solution button and edit textview
+                ticketControls.setVisibility(View.INVISIBLE);
+                closeButton.setClickable(false);
+                statusButton.setClickable(false);
+                notTicketButton.setClickable(false);
 
-                    solutionView.setVisibility(View.VISIBLE);
-                    solutionButton.setClickable(true);
-                }
+                solutionView.setVisibility(View.VISIBLE);
+                solutionButton.setClickable(true);
             });
 
-            statusButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    String clickedSubject = tickets.get(position).subject;
+            statusButton.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                String clickedSubject = tickets.get(position).subject;
 
-                    onTicketStatusClick.onTicketStatusClick(clickedSubject);
-                    statusButton.setVisibility(View.INVISIBLE);
-                    statusButton.setClickable(false);
-                    statusView.setText("Ongoing");
-                    statusView.setTextColor(Color.parseColor("#3bb3db"));
-                }
+                onTicketStatusClick.onTicketStatusClick(clickedSubject);
+                statusButton.setVisibility(View.INVISIBLE);
+                statusButton.setClickable(false);
+                statusView.setText(R.string.resolving_text);
+                statusView.setTextColor(Color.parseColor("#3bb3db"));
             });
 
-            solutionButton.setOnClickListener((new View.OnClickListener() {
-                @Override
-                public void onClick(View v){
-                    int position = getAdapterPosition();
-                    String clickedSubject = tickets.get(position).subject;
-                    String clickedGraphId = tickets.get(position).graph_id;
+            solutionButton.setOnClickListener((v -> {
+                int position = getAdapterPosition();
+                String clickedSubject = tickets.get(position).subject;
+                String clickedGraphId = tickets.get(position).graph_id;
 
-                    String solutionText = solutionEditText.getText().toString().trim();
-                    solutionEditText.getText().clear();
-                    Log.d("SOLUTION VIEW", "Solution view was clicked\n Here's the solution text: " + solutionText);
+                String solutionText = solutionEditText.getText().toString().trim();
+                solutionEditText.getText().clear();
+                Log.d("SOLUTION VIEW", "Solution view was clicked\n Here's the solution text: " + solutionText);
 
-                    Log.d("Close", clickedSubject);
-                    onTicketCloseClick.onTicketCloseClick(clickedSubject, clickedGraphId, solutionText);
-                    Log.d("Close", "Subject sent");
+                Log.d("Close", clickedSubject);
+                onTicketCloseClick.onTicketCloseClick(clickedSubject, clickedGraphId, solutionText);
+                Log.d("Close", "Subject sent");
 
-                    //Resetting the item in this list in case sync is called after deleting/closing a ticket
-                    ticketControls.setVisibility(View.VISIBLE);
-                    closeButton.setClickable(true);
-                    statusButton.setClickable(true);
-                    notTicketButton.setClickable(true);
+                //Resetting the item in this list in case sync is called after deleting/closing a ticket
+                ticketControls.setVisibility(View.VISIBLE);
+                closeButton.setClickable(true);
+                statusButton.setClickable(true);
+                notTicketButton.setClickable(true);
 
-                    solutionView.setVisibility(View.INVISIBLE);
-                    solutionButton.setClickable(false);
-                    removeItem(position);
-                }
+                solutionView.setVisibility(View.INVISIBLE);
+                solutionButton.setClickable(false);
+                removeItem(position);
             }));
 
-            notTicketButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    String clickedSubject = tickets.get(position).subject;
-                    String clickedGraphId = tickets.get(position).graph_id;
+            notTicketButton.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                String clickedSubject = tickets.get(position).subject;
+                String clickedGraphId = tickets.get(position).graph_id;
 
-                    onNotTicketClick.onNotTicketClick(clickedSubject, clickedGraphId);
-                    removeItem(position);
-                }
+                onNotTicketClick.onNotTicketClick(clickedSubject, clickedGraphId);
+                removeItem(position);
             });
 
-            descriptionView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    showExpandedDescription(position);
-                }
+            descriptionView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                showExpandedDescription(position);
             });
 
-            expandedDescription.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    showExpandedDescription(position);
-                }
+            expandedDescription.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                showExpandedDescription(position);
             });
         }
 

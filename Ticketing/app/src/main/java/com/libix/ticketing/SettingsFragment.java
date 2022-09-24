@@ -8,7 +8,6 @@ import android.widget.Toast;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.microsoft.graph.models.extensions.Shared;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
