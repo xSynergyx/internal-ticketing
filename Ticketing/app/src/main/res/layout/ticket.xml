@@ -36,7 +36,7 @@
 
         <TextView
             android:id="@+id/ticket_status"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="12dp"
