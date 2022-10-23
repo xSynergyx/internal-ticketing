@@ -7,11 +7,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -563,8 +565,15 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
                 // Add the body
                 String body = message.getAsJsonObject().get("body").getAsJsonObject().get("content").toString();
+                //TODO: the below is better but still has too many newlines. See what I can do about that
+                String body2 = HtmlCompat.fromHtml(body, HtmlCompat.FROM_HTML_MODE_LEGACY).toString().trim();
+                //body2 = body2.replaceAll("\n\n\n")
                 body = removeHtmlTags(body);
                 body = removeQuotations(body);
+
+
+                Log.d("HTML", body);
+                Log.d("HTML2", body2);
 
                 // Add sender address
                 String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();

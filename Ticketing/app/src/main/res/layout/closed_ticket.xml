@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/closed_ticket_subject"
-            android:layout_width="280dp"
+            android:layout_width="260dp"
             android:layout_height="35dp"
             android:layout_marginStart="8dp"
             android:ellipsize="end"
@@ -43,7 +43,7 @@
             android:layout_width="100dp"
             android:layout_height="35dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@android:color/holo_red_dark"
             android:textSize="24sp"
             android:textStyle="bold" />
