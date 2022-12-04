@@ -11,6 +11,8 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Objects;
+
 public class PushNotificationService extends FirebaseMessagingService {
 
     private static final String TAG = PushNotificationService.class.getSimpleName();
@@ -24,7 +26,7 @@ public class PushNotificationService extends FirebaseMessagingService {
      * C) User clears app data
      */
     @Override
-    public void onNewToken(String token) {
+    public void onNewToken(@NonNull String token) {
         Log.d(TAG, "Refreshed token: " + token);
 
         // If you want to send messages to this application instance or
@@ -35,12 +37,12 @@ public class PushNotificationService extends FirebaseMessagingService {
 
     public void sendRegistrationToServer(String token){
         // code to send registration to server
-        Log.d("sendRegistrationMethod", "About to send token to server");
+        Log.d("sendRegistrationMethod", "About to send token to server " + token);
     }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        String title = remoteMessage.getNotification().getTitle();
+        String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
         String body = remoteMessage.getNotification().getBody();
         final String CHANNEL_ID = "HEADS_UP_NOTIFICATION";
         NotificationChannel deleteTixChannel = new NotificationChannel(

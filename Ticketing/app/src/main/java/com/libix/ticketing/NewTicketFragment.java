@@ -20,7 +20,6 @@ public class NewTicketFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public EditText newTicketEmail;
     public EditText newTicketSubject;
     public EditText newTicketMessage;
 
@@ -35,30 +34,23 @@ public class NewTicketFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_ticket, container, false);
 
-        newTicketEmail = (EditText) view.findViewById(R.id.new_ticket_email);
-        newTicketSubject = (EditText) view.findViewById(R.id.new_ticket_subject);
-        newTicketMessage = (EditText) view.findViewById(R.id.new_ticket_message);
+        newTicketSubject = view.findViewById(R.id.new_ticket_subject);
+        newTicketMessage = view.findViewById(R.id.new_ticket_message);
 
         FloatingActionButton fab = view.findViewById(R.id.floating_action_button);
-        fab.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                sendMail();
-            }
-        });
+        fab.setOnClickListener(view1 -> sendMail());
 
         return view;
     }
 
     private void sendMail(){
-        String email = newTicketEmail.getText().toString().trim();
+        String email = Config.EMAIL;
         String subject = newTicketSubject.getText().toString().trim();
         String message = newTicketMessage.getText().toString();
 
         JavaMail javaMail = new JavaMail(getContext(), email, subject, message);
         javaMail.execute();
 
-        newTicketEmail.getText().clear();
         newTicketSubject.getText().clear();
         newTicketMessage.getText().clear();
     }

@@ -6,6 +6,47 @@
     <string name="counter">Counter</string>
     <string name="new_tix">New Ticket</string>
 
+    <!-- Open Tickets -->
+    <string name="resolving_text">Ongoing</string>
+    <string name="solution_hint">Enter the solution</string>
+
+    <!-- Closed Tickets -->
+    <string name="closed_trouble_ticket_description">Ticket Details</string>
+    <string name="closed_trouble_ticket_solution">Solution</string>
+    <string name="ticket_default_solution">No details</string>
+
+    <!-- Main Fragment -->
+    <string name="synchronizing_tickets">Syncing…</string>
+    <string name="fetched_data">Fetched data from server</string>
+    <string name="no_tech_support_tickets">No tickets. Congrats!</string>
+    <string name="open_tickets_count_label">Open </string>
+    <string name="ongoing_tickets_count_label">Ongoing </string>
+    <string name="sync_message">Please sync your tickets</string>
+    <string name="connect_microsoft_button">Connect</string>
+
+
+    <!-- Closed Tickets Fragment -->
+    <string name="search_hint">Search closed tickets</string>
+
+    <!-- Counter Fragment -->
+    <string name="counter_fragment_title">Counter</string>
+    <string name="error">Error</string>
+    <string name="daily_counter_title">Daily</string>
+    <string name="monthly_counter_title">Monthly</string>
+    <string name="add_one">+1</string>
+    <string name="subtract_one">-1</string>
+    <string name="add_five">+5</string>
+
+    <!-- New Ticket Fragment -->
+    <string name="new_ticket_fragment_title">New Ticket</string>
+    <string name="new_ticket_email_hint">Email</string>
+    <string name="new_ticket_subject_hint">Subject</string>
+    <string name="new_ticket_message_hint">Message</string>
+
+    <!-- Menu -->
+    <string name="menu_logout">Logout</string>
+    <string name="menu_settings">Settings</string>
+
     <!-- Buttons -->
     <string name="close_button">Close</string>
     <string name="update_status_button">Solving</string>
@@ -14,8 +55,7 @@
 
     <string name="fab_content_desc">Send new support ticket</string>
     <string name="fab_counter_content_desc">Submit new count for today</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <!-- Preference Titles -->
     <string name="notifications_header">Notifications</string>
     <string name="messages_header">Messages</string>

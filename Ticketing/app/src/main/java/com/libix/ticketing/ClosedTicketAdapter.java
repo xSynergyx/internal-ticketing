@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapter.ClosedTicketViewHolder> {
 
-    ArrayList<TroubleTicket> tickets = new ArrayList<TroubleTicket>();
+    ArrayList<TroubleTicket> tickets;
     Context context;
 
     public ClosedTicketAdapter(Context context, ArrayList<TroubleTicket> tickets){
@@ -31,7 +31,6 @@ public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapte
         return new ClosedTicketAdapter.ClosedTicketViewHolder(view);
     }
 
-    //TODO: Make closed tickets expandable (to get the full description and solution). Maybe rearrange it and change the colors
     @Override
     public void onBindViewHolder(@NonNull ClosedTicketAdapter.ClosedTicketViewHolder holder, int position) {
 
@@ -41,13 +40,10 @@ public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapte
         holder.solutionView.setText(tickets.get(position).solution);
         holder.expandedDescriptionText.setText(tickets.get(position).body);
 
-
-
         // Make ticket status green if they're closed
         if (tickets.get(position).status.equalsIgnoreCase("closed")) {
             holder.statusView.setTextColor(Color.parseColor("#00963c"));
         }
-
     }
 
     @Override
@@ -78,20 +74,14 @@ public class ClosedTicketAdapter extends RecyclerView.Adapter<ClosedTicketAdapte
             expandedDescriptionText = itemView.findViewById(R.id.closed_ticket_expanded_description_text);
             expandedDescriptionView = itemView.findViewById(R.id.closed_ticket_expanded_description_view);
 
-            descriptionView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    showExpandedDescription(position);
-                }
+            descriptionView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                showExpandedDescription(position);
             });
 
-            expandedDescriptionView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    showExpandedDescription(position);
-                }
+            expandedDescriptionView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                showExpandedDescription(position);
             });
         }
 
