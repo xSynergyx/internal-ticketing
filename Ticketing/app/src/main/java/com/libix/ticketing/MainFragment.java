@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Html;
 import android.util.Log;
@@ -58,6 +59,8 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
+
+//TODO: Added swipe refresh layout to recyclerview. Fix up the logic in here so I can remove the button
 public class MainFragment extends Fragment implements OnTicketCloseClick {
 
     public MainFragment() {
@@ -75,6 +78,8 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     Button signInButton;
     Button signOutButton;
     Button callGraphApiSilentButton;
+=======
+>>>>>>> Stashed changes
     TextView logTextView;
     TextView openTicketsCountTextView;
     TextView ongoingTicketsCountTextView;
@@ -170,6 +175,22 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         } else {
             FirebaseMessaging.getInstance().unsubscribeFromTopic("all");
         }
+
+        swipeRefreshLayout.setOnRefreshListener(
+                () -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    Log.d("Swipe Refresh", "onRefresh called from SwipeRefreshLayout");
+
+
+                    if (mSingleAccountApp == null){
+                        return;
+                    }
+                    requireActivity().runOnUiThread(() -> logTextView.setText(R.string.synchronizing_tickets));
+                    progressBar.setVisibility(View.VISIBLE);
+                    mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get", ""));
+                    Toast.makeText(getContext(), "Refreshed tickets", Toast.LENGTH_SHORT).show();
+                }
+        );
 
         return view;
     }

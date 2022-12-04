@@ -30,7 +30,8 @@
         android:hint="@string/new_ticket_subject_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_ticket_email" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/new_ticket_message"
