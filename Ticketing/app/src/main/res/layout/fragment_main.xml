@@ -99,17 +99,7 @@
                 android:drawableLeft="@drawable/sign_out_icon"
                 android:enabled="false"
                 tools:ignore="RtlHardcoded" />
-
-            <Button
-                android:id="@+id/callGraphSilent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.5"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:drawableLeft="@drawable/sync_icon"
-                android:enabled="false"
-                tools:ignore="RtlHardcoded" />
-
+            
         </LinearLayout>
 
         <ScrollView
