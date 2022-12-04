@@ -15,19 +15,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/new_ticket_email"
-        style="@style/NewFragmentEditText"
-        android:hint="@string/new_ticket_email_hint"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.2"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/new_ticket_subject"
         style="@style/NewFragmentEditText"
         android:hint="@string/new_ticket_subject_hint"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -77,9 +77,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     /* UI & Debugging Variables */
     Button signInButton;
     Button signOutButton;
-    Button callGraphApiSilentButton;
-=======
->>>>>>> Stashed changes
     TextView logTextView;
     TextView openTicketsCountTextView;
     TextView ongoingTicketsCountTextView;
@@ -91,6 +88,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     Animation scaleUp, scaleDown;
     final int maxTickets = 50;
     RequestQueue myQueue;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     ArrayList<TroubleTicket> ticketArrayList = new ArrayList<>(); // This one is used to load tickets from the server database
     ArrayList<TroubleTicket> graphDataArrayList = new ArrayList<>(); // This one is used to update the database with the information from the GraphAPI call
@@ -168,6 +166,8 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         ticketsRecyclerView.setAdapter(myTicketAdapter);
         ticketsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        swipeRefreshLayout = view.findViewById(R.id.main_fragment_swipe_container);
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         boolean notificationBoolean = sharedPreferences.getBoolean("notifications", true);
         if (notificationBoolean) {
@@ -181,14 +181,12 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                     swipeRefreshLayout.setRefreshing(false);
                     Log.d("Swipe Refresh", "onRefresh called from SwipeRefreshLayout");
 
-
                     if (mSingleAccountApp == null){
                         return;
                     }
                     requireActivity().runOnUiThread(() -> logTextView.setText(R.string.synchronizing_tickets));
                     progressBar.setVisibility(View.VISIBLE);
                     mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get", ""));
-                    Toast.makeText(getContext(), "Refreshed tickets", Toast.LENGTH_SHORT).show();
                 }
         );
 
@@ -226,7 +224,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     private void initializeUI(View view){
         signInButton = view.findViewById(R.id.signIn);
         signInButton.setVisibility(View.VISIBLE);
-        callGraphApiSilentButton = view.findViewById(R.id.callGraphSilent);
         signOutButton = view.findViewById(R.id.clearCache);
         logTextView = view.findViewById(R.id.txt_log);
         progressBar = view.findViewById(R.id.progress_bar);
@@ -272,17 +269,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             });
             AlertDialog alert = builder.create();
             alert.show();
-        });
-
-        //Silent
-        callGraphApiSilentButton.setOnClickListener(v -> {
-            scaleAnimations(callGraphApiSilentButton);
-            if (mSingleAccountApp == null){
-                return;
-            }
-            requireActivity().runOnUiThread(() -> logTextView.setText(R.string.synchronizing_tickets));
-            progressBar.setVisibility(View.VISIBLE);
-            mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("get", ""));
         });
     }
 
@@ -530,15 +516,11 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             signInButton.setVisibility(View.GONE);
             signOutButton.setEnabled(true);
             signOutButton.setVisibility(View.VISIBLE);
-            callGraphApiSilentButton.setEnabled(true);
-            callGraphApiSilentButton.setVisibility(View.VISIBLE);
         } else {
             signInButton.setEnabled(true);
             signInButton.setVisibility(View.VISIBLE);
             signOutButton.setEnabled(false);
             signOutButton.setVisibility(View.INVISIBLE);
-            callGraphApiSilentButton.setEnabled(false);
-            callGraphApiSilentButton.setVisibility(View.INVISIBLE);
             logTextView.setText(R.string.outlook_disconnected);
         }
     }
@@ -586,15 +568,13 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
                 // Add the body
                 String body = message.getAsJsonObject().get("body").getAsJsonObject().get("content").toString();
-                //TODO: the below is better but still has too many newlines. See what I can do about that
-                String body2 = HtmlCompat.fromHtml(body, HtmlCompat.FROM_HTML_MODE_LEGACY).toString().trim();
-                //body2 = body2.replaceAll("\n\n\n")
+                // Remove html entities, like &nbsp
+                body = HtmlCompat.fromHtml(body, HtmlCompat.FROM_HTML_MODE_COMPACT).toString().trim();
+                // Remove extra carriage returns (\r) and line feeds (\n) in beginning of string
                 body = removeHtmlTags(body);
                 body = removeQuotations(body);
 
-
                 Log.d("HTML", body);
-                Log.d("HTML2", body2);
 
                 // Add sender address
                 String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();

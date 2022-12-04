@@ -65,7 +65,7 @@
                     android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="#000f96"
-                    android:paddingEnd="16dp"
+                    android:paddingEnd="32dp"
                     tools:ignore="RtlSymmetry" />
 
                 <TextView
