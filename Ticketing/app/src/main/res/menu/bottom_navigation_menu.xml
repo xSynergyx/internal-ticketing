@@ -25,4 +25,10 @@
         android:icon="@drawable/new_ticket_icon"
         android:title="@string/new_tix" />
 
+    <item
+        android:id="@+id/profile_fragment_bottom_nav"
+        android:enabled="true"
+        android:icon="@drawable/profile_icon"
+        android:title="@string/profile" />
+
 </menu>

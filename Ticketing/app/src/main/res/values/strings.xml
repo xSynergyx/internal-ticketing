@@ -43,6 +43,9 @@
     <string name="new_ticket_subject_hint">Subject</string>
     <string name="new_ticket_message_hint">Message</string>
 
+    <!-- Profile Fragment -->
+    <string name="profile">Profile</string>
+
     <!-- Menu -->
     <string name="menu_logout">Logout</string>
     <string name="menu_settings">Settings</string>
@@ -77,9 +80,11 @@
     <!-- Sign Out Alert -->
     <string name="sign_out_title">Disconnect</string>
     <string name="sign_out_text">Are you sure you would like to disconnect the ticketing account?</string>
-    <string name ="sign_out_positive">Disconnect</string>
-    <string name ="sign_out_cancel">Cancel</string>
+    <string name="sign_out_positive">Disconnect</string>
+    <string name="sign_out_cancel">Cancel</string>
 
     <!-- Outlook Not Connected -->
     <string name="outlook_disconnected">No Outlook account connected. Please connect the outlook account associated with the technical support tickets.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

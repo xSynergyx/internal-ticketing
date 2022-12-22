@@ -13,6 +13,8 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.new_ticket_fragment_bottom_nav:
                     changeFragment(new NewTicketFragment(), "NewTicketFragment");
                     break;
+                case R.id.profile_fragment_bottom_nav:
+                    changeFragment(new ProfileFragment(), "ProfileFragment");
             }
             backStackCount++;
             return true;
@@ -152,15 +156,13 @@ public class MainActivity extends AppCompatActivity {
         if (result.getResultCode() == RESULT_OK) {
             // Successfully signed in
             //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            Toast.makeText(this, "Signed in", Toast.LENGTH_SHORT).show();
-            // ...
+            //String email = user.getEmail();
         } else {
             Log.d("FirebaseUI", Objects.requireNonNull(response).toString());
             Toast.makeText(this, "Failed to sign in", Toast.LENGTH_SHORT).show();
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.
-            // ...
         }
     }
 

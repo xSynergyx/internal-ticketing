@@ -140,8 +140,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                              Bundle savedInstanceState) {
 
         myQueue = Volley.newRequestQueue(requireContext());
-        openTicketsCountGetRequest();
-        ongoingTicketsCountGetRequest();
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
@@ -176,6 +174,9 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             FirebaseMessaging.getInstance().unsubscribeFromTopic("all");
         }
 
+        openTicketsCountGetRequest();
+        ongoingTicketsCountGetRequest();
+
         swipeRefreshLayout.setOnRefreshListener(
                 () -> {
                     swipeRefreshLayout.setRefreshing(false);
@@ -191,6 +192,11 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         );
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     // When app comes to the foreground, load existing account to determine if user is signed in
@@ -329,6 +335,9 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                     Log.d("URLResponse", res.toString());
                     // Calling the database to update the tickets ArrayList
                     ticketGetRequest();
+                    // Also getting new counts since db has been updated by this point
+                    openTicketsCountGetRequest();
+                    ongoingTicketsCountGetRequest();
                 }
             }, (VolleyError error) -> Log.d("URLAddTicketRequest", "Unable to receive JSON response from server. Error: " + error.toString())));
         } catch (JSONException e) {
@@ -592,8 +601,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         Log.d("JSON", json);
         Log.d("URLRequest", "About to send url request to DO droplet server");
         ticketPostRequest(json);
-        openTicketsCountGetRequest();
-        ongoingTicketsCountGetRequest();
 
         requireActivity().runOnUiThread(() -> logTextView.setText(R.string.fetched_data));
     }
