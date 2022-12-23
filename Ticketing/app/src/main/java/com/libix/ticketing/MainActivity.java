@@ -133,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
                 signOutFirebaseUser();
                 recreate();
                 break;
+            case R.id.statistics:
+                changeFragment(new StatisticsFragment(), "StatisticsFragment");
+                break;
         }
 
         return super.onOptionsItemSelected(item);

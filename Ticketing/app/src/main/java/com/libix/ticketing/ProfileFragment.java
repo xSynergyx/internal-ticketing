@@ -55,7 +55,7 @@ public class ProfileFragment extends Fragment {
         emailTextView.setText(email);
     }
 
-    //TODO: finish this method
+    //TODO: finish this method to get user profile from db
     private void profileGetRequest(){
         try {
             Log.d("ticketGetRequest", "Loading tickets from DB");
