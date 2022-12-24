@@ -130,7 +130,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
     public void onNotTicketClick(String subject, String graphId){
 
-        Toast.makeText(getContext(), "Non-ticket removed", Toast.LENGTH_SHORT).show();
         nonTicketRequest(subject);
         mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId));
     }

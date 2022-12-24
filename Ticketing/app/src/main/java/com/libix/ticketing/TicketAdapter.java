@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
@@ -169,11 +170,31 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
 
             notTicketButton.setOnClickListener(v -> {
                 int position = getAdapterPosition();
+                final boolean[] undo = {false};
+                TroubleTicket tempTicket = tickets.get(position);
                 String clickedSubject = tickets.get(position).subject;
                 String clickedGraphId = tickets.get(position).graph_id;
 
-                onNotTicketClick.onNotTicketClick(clickedSubject, clickedGraphId);
                 removeItem(position);
+
+                // Snackbar allows user's to undo deletion
+                Snackbar.make(itemView, "Non-ticket removed", Snackbar.LENGTH_SHORT)
+                        .addCallback(new Snackbar.Callback() {
+                            // If Undo has not been clicked by the time Snackbar disappears, delete ticket from database
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                super.onDismissed(snackbar, event);
+
+                                if (!undo[0]) {
+                                    //Delete ticket from DB
+                                    onNotTicketClick.onNotTicketClick(clickedSubject, clickedGraphId);
+                                } else {
+                                    // Add item back to recycler view
+                                    addItem(position, tempTicket);
+                                }
+                            }
+                        })
+                        .setAction("Undo", view -> undo[0] = true).show();
             });
 
             descriptionView.setOnClickListener(v -> {
@@ -203,6 +224,12 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
     private void removeItem(int position) {
         tickets.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, tickets.size());
+    }
+
+    private void addItem (int position, TroubleTicket tempTicket) {
+        tickets.add(position, tempTicket);
+        notifyItemInserted(position);
         notifyItemRangeChanged(position, tickets.size());
     }
 }
