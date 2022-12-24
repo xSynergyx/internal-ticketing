@@ -1,6 +1,7 @@
 package com.libix.ticketing;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -117,6 +121,13 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
                 statusButton.setClickable(false);
                 notTicketButton.setClickable(false);
 
+                //Add signature to solution text if it is set.
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(itemView.getContext());
+                String userSignature = sharedPreferences.getString("signature", "");
+                if (!userSignature.isEmpty()) {
+                    solutionEditText.setText(("\n\n" + userSignature));
+                }
+
                 solutionView.setVisibility(View.VISIBLE);
                 solutionButton.setClickable(true);
             });
@@ -188,8 +199,6 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.TicketView
             }
         }
     }
-
-
 
     private void removeItem(int position) {
         tickets.remove(position);
