@@ -49,10 +49,10 @@ public class ProfileFragment extends Fragment {
 
     public void getProfile(@NonNull View view){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String email = user.getDisplayName();
+        String name = user.getDisplayName();
 
-        TextView emailTextView = view.findViewById(R.id.profile_name);
-        emailTextView.setText(email);
+        TextView nameTextView = view.findViewById(R.id.profile_name);
+        nameTextView.setText(name);
     }
 
     //TODO: finish this method to get user profile from db

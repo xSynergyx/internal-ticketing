@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">Libix</string>
 
+    <!-- Bottom Nav Bar -->
     <string name="open">Open Tickets</string>
     <string name="closed">Closed Tickets</string>
     <string name="counter">Counter</string>
     <string name="new_tix">New Ticket</string>
+    <string name="profile">Profile</string>
 
     <!-- Open Tickets -->
     <string name="resolving_text">Ongoing</string>
@@ -44,7 +46,7 @@
     <string name="new_ticket_message_hint">Message</string>
 
     <!-- Profile Fragment -->
-    <string name="profile">Profile</string>
+    <string name="tickets_closed_title">Tickets Closed</string>
 
     <!-- Menu -->
     <string name="menu_logout">Logout</string>
@@ -67,6 +69,7 @@
 
     <!-- Notification Preferences -->
     <string name="notifications_title">Enable push notifications</string>
+
     <!-- Messages Preferences -->
     <string name="signature_title">Email signature</string>
     <string name="reply_title">Default reply action</string>
