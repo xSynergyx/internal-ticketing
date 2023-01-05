@@ -70,7 +70,7 @@ dependencies {
     implementation 'com.microsoft.identity.client:msal:2.+'
     implementation 'com.microsoft.graph:microsoft-graph:1.5.+'
 
-    // Volley for MSGraphRequestWrapper
+    // Volley for MSGraphRequestWrapper (and sending http requests in general)
     implementation 'com.android.volley:volley:1.2.1'
 
     // Support multidex as 'the requested classes cannot fit in a single file'

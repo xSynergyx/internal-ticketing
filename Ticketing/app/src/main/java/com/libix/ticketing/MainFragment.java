@@ -30,6 +30,8 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -361,10 +363,12 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
     protected void ticketDeleteRequest(String subject, String solution){
 
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         JSONObject subjectJson = new JSONObject();
         try {
             subjectJson.put("subject", subject);
             subjectJson.put("solution", solution);
+            subjectJson.put("email", email);
 
             myQueue.add(VolleyUtils.jsonObjectPostRequest(Config.DELETETICKETURL, subjectJson, (JSONObject res) -> {
                 if (res != null) {

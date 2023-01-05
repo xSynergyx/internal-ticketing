@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Libix</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <!-- Bottom Nav Bar -->
     <string name="open">Open Tickets</string>
     <string name="closed">Closed Tickets</string>
@@ -89,9 +92,11 @@
 
     <!-- Outlook Not Connected -->
     <string name="outlook_disconnected">No Outlook account connected. Please connect the outlook account associated with the technical support tickets.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    
+
+    <!-- Edit Profile Fragment -->
+    <string name="edit_user_first_name">First Name</string>
+    <string name="edit_user_last_name">Last Name</string>
+
     <!-- Months -->
     <string-array name="months">
         <item>Jan</item>

@@ -117,16 +117,20 @@ public class StatisticsFragment extends Fragment {
     }
 
     public void getStats(int year, int month){
+        String stringMonth = "";
 
-        getMonthlyTicketsClosed(year, month);
-        getMonthlyPatronHelp(year, month);
+        if (month <= 9) {
+            stringMonth = "0" + month;
+        }
+
+        getMonthlyTicketsClosed(year, stringMonth);
+        getMonthlyPatronHelp(year, stringMonth);
     }
 
-    private void getMonthlyTicketsClosed(int year, int month){
+    private void getMonthlyTicketsClosed(int year, String month){
         JSONObject yearMonthJson = new JSONObject();
 
         //Snackbar.make(view,"Updated stats", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-        Log.d("MonthlyClosedTicketsGetResponse", "HM");
         try {
             yearMonthJson.put("month", year + "-" + month);
             myQueue.add(VolleyUtils.jsonObjectPostRequest(Config.GETMONTHLYCLOSEDTICKETSURL, yearMonthJson, (JSONObject res) -> {
@@ -149,10 +153,9 @@ public class StatisticsFragment extends Fragment {
         }
     }
 
-    private void getMonthlyPatronHelp(int year, int month){
+    private void getMonthlyPatronHelp(int year, String month){
         JSONObject yearMonthJson = new JSONObject();
 
-        Log.d("MonthlyPatronHelpGetResponse", "HM");
         try {
             yearMonthJson.put("month", year + "-" + month);
             myQueue.add(VolleyUtils.jsonObjectPostRequest(Config.GETMONTHLYPATRONHELPURL, yearMonthJson, (JSONObject res) -> {

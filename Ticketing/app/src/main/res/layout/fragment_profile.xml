@@ -63,6 +63,26 @@
         app:layout_constraintTop_toBottomOf="@+id/profile_image"
         tools:text="John Doe" />
 
+    <Button
+        android:id="@+id/profile_upload_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        app:layout_constraintBottom_toTopOf="@+id/profile_closed_tickets_rv"
+        app:layout_constraintEnd_toEndOf="@+id/profile_tickets_closed"
+        app:layout_constraintStart_toStartOf="@+id/profile_tickets_closed"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+    <TextView
+        android:id="@+id/profile_textview_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/profile_image"
+        app:layout_constraintEnd_toStartOf="@+id/profile_tickets_closed"
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="test" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profile_closed_tickets_rv"
         android:layout_width="match_parent"

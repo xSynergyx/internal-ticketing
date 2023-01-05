@@ -1,6 +1,9 @@
 package com.libix.ticketing;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable {
 
     protected String email;
     protected String firstName;
@@ -14,6 +17,26 @@ public class User {
         this.lastName = lastName;
         this.tickets_closed = tickets_closed;
     }
+
+    // Read from parcel
+    protected User(Parcel in) {
+        email = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
+        tickets_closed = in.readInt();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getEmail() {
         return email;
@@ -45,5 +68,19 @@ public class User {
 
     public void setTicketsClosed(int tickets_closed) {
         this.tickets_closed = tickets_closed;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    // Write to parcel (It's in the method name)
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(email);
+        parcel.writeString(firstName);
+        parcel.writeString(lastName);
+        parcel.writeInt(tickets_closed);
     }
 }
