@@ -10,6 +10,12 @@
         android:orderInCategory="100"
         app:showAsAction="never"
         android:icon="@drawable/settings"/>
+
+    <item android:title="@string/menu_statistics"
+        android:id="@+id/statistics"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:icon="@drawable/settings"/>
 <!--
     <item android:title="Account"
         android:id="@+id/account"

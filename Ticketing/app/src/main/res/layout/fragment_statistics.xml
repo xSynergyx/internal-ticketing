@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".StatisticsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <NumberPicker
+            android:id="@+id/month_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/year_picker"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statistics_closed_tickets"
+            app:layout_constraintVertical_bias="0.2" />
+
+        <NumberPicker
+            android:id="@+id/year_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/month_picker"
+            app:layout_constraintTop_toBottomOf="@+id/statistics_patron_help"
+            app:layout_constraintVertical_bias="0.2" />
+
+        <TextView
+            android:id="@+id/statistics_closed_ticket_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tickets Closed"
+            android:textSize="18sp"
+            app:layout_constraintVertical_bias="0.2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/statistics_patron_help_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/statistics_patron_help_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Patron Help"
+            android:textSize="18sp"
+            app:layout_constraintVertical_bias="0.2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/statistics_closed_ticket_title"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/statistics_closed_tickets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:textSize="48sp"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/statistics_closed_ticket_title"
+            app:layout_constraintStart_toStartOf="@+id/statistics_closed_ticket_title"
+            app:layout_constraintTop_toBottomOf="@+id/statistics_closed_ticket_title"
+            tools:text="22" />
+
+        <TextView
+            android:id="@+id/statistics_patron_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:textColor="?attr/colorAccent"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/statistics_patron_help_title"
+            app:layout_constraintStart_toStartOf="@+id/statistics_patron_help_title"
+            app:layout_constraintTop_toBottomOf="@+id/statistics_patron_help_title"
+            tools:text="428" />
+
+        <!--
+        com.google.android.material.button.MaterialButton
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        -->
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/get_statistics_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:paddingVertical="14dp"
+            android:textSize="18sp"
+            android:text="Get Stats"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/month_picker" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -30,6 +30,8 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -37,11 +39,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.graph.concurrency.ICallback;
 import com.microsoft.graph.core.ClientException;
+import com.microsoft.graph.models.extensions.EmailAddress;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
 import com.microsoft.graph.models.extensions.Message;
+import com.microsoft.graph.models.extensions.Recipient;
 import com.microsoft.graph.requests.extensions.GraphServiceClient;
 import com.microsoft.graph.requests.extensions.IMessageCollectionPage;
 import com.microsoft.identity.client.AuthenticationCallback;
+import com.microsoft.identity.client.AuthenticationResult;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
 import com.microsoft.identity.client.IPublicClientApplication;
@@ -55,6 +60,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,7 +73,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         // Required empty public constructor
     }
 
-    private final static String[] SCOPES = {"Mail.ReadWrite"};
+    private final static String[] SCOPES = {"Mail.ReadWrite", "Mail.Send"};
     /* Azure AD v2 Configs */
     final static String AUTHORITY = "https://login.microsoftonline.com/common";
     private ISingleAccountPublicClientApplication mSingleAccountApp;
@@ -115,11 +121,12 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 getActivity().getApplicationContext(),
                 getActivity()
         );
-        notificationSender.sendNotifications();*/
+        notificationSender.sendNotifications();
+        */
 
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSendMailCallback(graphId, solution));
         ticketDeleteRequest(subject, solution); // Delete from database
-
-        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId)); // Delete email from graphAPI
+        //Making the call to delete from inbox (using MS Graph API) in solutionReply method
     }
 
     public void onTicketStatusClick(String subject){
@@ -130,7 +137,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
     public void onNotTicketClick(String subject, String graphId){
 
-        Toast.makeText(getContext(), "Non-ticket removed", Toast.LENGTH_SHORT).show();
         nonTicketRequest(subject);
         mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId));
     }
@@ -140,8 +146,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                              Bundle savedInstanceState) {
 
         myQueue = Volley.newRequestQueue(requireContext());
-        openTicketsCountGetRequest();
-        ongoingTicketsCountGetRequest();
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
@@ -176,6 +180,9 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             FirebaseMessaging.getInstance().unsubscribeFromTopic("all");
         }
 
+        openTicketsCountGetRequest();
+        ongoingTicketsCountGetRequest();
+
         swipeRefreshLayout.setOnRefreshListener(
                 () -> {
                     swipeRefreshLayout.setRefreshing(false);
@@ -191,6 +198,11 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         );
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     // When app comes to the foreground, load existing account to determine if user is signed in
@@ -313,6 +325,21 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         };
     }
 
+
+    private SilentAuthenticationCallback getAuthSendMailCallback(String graphId, String solution) {
+        return new SilentAuthenticationCallback() {
+            @Override
+            public void onSuccess(IAuthenticationResult authenticationResult) {
+                Log.d(TAG, "Successfully authenticated for sending mail");
+                solutionReply(authenticationResult, graphId, solution);
+            }
+            @Override
+            public void onError(MsalException exception) {
+                Log.d(TAG, "Authentication for sending mail failed: " + exception.toString());
+            }
+        };
+    }
+
     /**
      * Sends a POST request to the server in order to add tickets to the open-tickets table
      *
@@ -329,6 +356,9 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                     Log.d("URLResponse", res.toString());
                     // Calling the database to update the tickets ArrayList
                     ticketGetRequest();
+                    // Also getting new counts since db has been updated by this point
+                    openTicketsCountGetRequest();
+                    ongoingTicketsCountGetRequest();
                 }
             }, (VolleyError error) -> Log.d("URLAddTicketRequest", "Unable to receive JSON response from server. Error: " + error.toString())));
         } catch (JSONException e) {
@@ -353,10 +383,12 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
     protected void ticketDeleteRequest(String subject, String solution){
 
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         JSONObject subjectJson = new JSONObject();
         try {
             subjectJson.put("subject", subject);
             subjectJson.put("solution", solution);
+            subjectJson.put("email", email);
 
             myQueue.add(VolleyUtils.jsonObjectPostRequest(Config.DELETETICKETURL, subjectJson, (JSONObject res) -> {
                 if (res != null) {
@@ -558,10 +590,12 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 String subject = message.getAsJsonObject().get("subject").toString();
                 subject = removeQuotations(subject);
 
+                /*
                 // Ignoring replies to an email
-                if (subject.contains("Re:")){
+                if (subject.contains("RE:")){
                     continue;
                 }
+                 */
 
                 // Add the graphId
                 String graphId = message.getAsJsonObject().get("id").toString();
@@ -580,6 +614,11 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();
                 from = removeQuotations(from);
 
+                // Skip the solution emails sent from ticketing account to staff that opened the ticket
+                if (subject.contains("RE:") && from.equals(Config.EMAIL)) {
+                    continue;
+                }
+
                 TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, "Open", graphId, "");
 
                 //Add troubleTicket to ArrayList for loading on to RecyclerView and converting to json
@@ -592,8 +631,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         Log.d("JSON", json);
         Log.d("URLRequest", "About to send url request to DO droplet server");
         ticketPostRequest(json);
-        openTicketsCountGetRequest();
-        ongoingTicketsCountGetRequest();
 
         requireActivity().runOnUiThread(() -> logTextView.setText(R.string.fetched_data));
     }
@@ -650,5 +687,32 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     private void scaleAnimations (Button button){
         button.startAnimation(scaleUp);
         button.startAnimation(scaleDown);
+    }
+
+    public void solutionReply(IAuthenticationResult authenticationResult, String graphId, String solution) {
+
+        String accessToken = authenticationResult.getAccessToken();
+
+        IGraphServiceClient graphClient =
+                GraphServiceClient
+                        .builder()
+                        .authenticationProvider(request -> {
+                            Log.d(TAG, "Authenticating reply request," + request.getRequestUrl());
+                            request.addHeader("Authorization", "Bearer " + accessToken);
+                            request.addHeader("Content-Type", "application/json");
+                        })
+                        .buildClient();
+
+        // Remove quotation marks from graphId before sending reply request to Microsoft Graph API
+        String trimmedGraphId = graphId.substring(1, graphId.length()-1);
+
+        graphClient.me().messages(trimmedGraphId)
+                .replyAll(solution)
+                .buildRequest()
+                .post();
+
+        //TODO: Push to profile and merge to main
+        //      Then create new branch and work on styling updates. Finally, send app update to google play
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId)); // Delete email from graphAPI
     }
 }

@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">Libix</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Bottom Nav Bar -->
     <string name="open">Open Tickets</string>
     <string name="closed">Closed Tickets</string>
     <string name="counter">Counter</string>
     <string name="new_tix">New Ticket</string>
+    <string name="profile">Profile</string>
 
     <!-- Open Tickets -->
     <string name="resolving_text">Ongoing</string>
@@ -43,9 +48,13 @@
     <string name="new_ticket_subject_hint">Subject</string>
     <string name="new_ticket_message_hint">Message</string>
 
+    <!-- Profile Fragment -->
+    <string name="tickets_closed_title">Tickets Closed</string>
+
     <!-- Menu -->
     <string name="menu_logout">Logout</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_statistics">Stats</string>
 
     <!-- Buttons -->
     <string name="close_button">Close</string>
@@ -63,8 +72,9 @@
 
     <!-- Notification Preferences -->
     <string name="notifications_title">Enable push notifications</string>
+
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
+    <string name="signature_title">Email signature</string>
     <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
@@ -77,9 +87,29 @@
     <!-- Sign Out Alert -->
     <string name="sign_out_title">Disconnect</string>
     <string name="sign_out_text">Are you sure you would like to disconnect the ticketing account?</string>
-    <string name ="sign_out_positive">Disconnect</string>
-    <string name ="sign_out_cancel">Cancel</string>
+    <string name="sign_out_positive">Disconnect</string>
+    <string name="sign_out_cancel">Cancel</string>
 
     <!-- Outlook Not Connected -->
     <string name="outlook_disconnected">No Outlook account connected. Please connect the outlook account associated with the technical support tickets.</string>
+
+    <!-- Edit Profile Fragment -->
+    <string name="edit_user_first_name">First Name</string>
+    <string name="edit_user_last_name">Last Name</string>
+
+    <!-- Months -->
+    <string-array name="months">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
 </resources>
