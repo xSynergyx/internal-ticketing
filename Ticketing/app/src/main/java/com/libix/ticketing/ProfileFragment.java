@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,6 +18,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -42,6 +45,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +55,9 @@ public class ProfileFragment extends Fragment {
     TextView nameTextView;
     TextView ticketsClosedTextView;
     User currentUser;
+    RecyclerView profileTicketsRecyclerView;
+    ClosedTicketAdapter profileTicketsAdapter;
+    ArrayList<TroubleTicket> profileTicketsArrayList = new ArrayList<>();
 
     final String USER = "USER";
 
@@ -76,6 +83,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        profileTicketsRecyclerView = view.findViewById(R.id.profile_closed_tickets_rv);
+        profileTicketsAdapter = new ClosedTicketAdapter(getContext(), profileTicketsArrayList);
+        profileTicketsRecyclerView.setAdapter(profileTicketsAdapter);
+        profileTicketsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         nameTextView = view.findViewById(R.id.profile_name);
         ticketsClosedTextView = view.findViewById(R.id.profile_tickets_closed);
@@ -110,6 +122,10 @@ public class ProfileFragment extends Fragment {
         ticketsClosedTextView.setText(Integer.toString(user.getInt("tickets_closed")));
 
         currentUser = new User(email, firstName, lastName, ticketsClosed);
+
+        // After successfully loading user's info, get the tickets closed by this user
+        profileTicketsArrayList.clear();
+        closedTicketGetRequest();
     }
 
     // Get user details from DB
@@ -169,6 +185,55 @@ public class ProfileFragment extends Fragment {
             }));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    // TODO: add closed_by to TroubleTicket or create new class called ClosedTicket with closed_by (so i can display who closed the ticket)
+    private void closedTicketGetRequest(){
+
+        JSONArray searchTermJsonArray = new JSONArray();
+        JSONObject searchTextObj = new JSONObject();
+        try {
+            searchTextObj.put("email", currentUser.email);
+            searchTermJsonArray.put(searchTextObj);
+            Log.d("ProfileTicketsPostRequest", "Loading closed tickets from DB");
+
+            myQueue.add(VolleyUtils.jsonArrayPostRequest(Config.GETPROFILETICKETS, searchTermJsonArray, (JSONArray res) -> {
+                if (res != null) {
+                    Log.d("ProfileTicketsPostResponse", res.toString());
+                    jsonArrayToArrayList(res);
+                }
+            }, (VolleyError error) -> {
+                Log.d("ProfileTicketsPostResponse", "Unable to receive JSON response from server. Error: " + error.toString());
+                Toast.makeText(getContext(), "No tickets found for \"" + currentUser.email + "\"", Toast.LENGTH_LONG).show();
+            }));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void jsonArrayToArrayList(JSONArray jsonArr){
+
+        if (jsonArr != null) {
+            for (int i = 0; i<jsonArr.length(); i++){
+                try {
+                    JSONObject ticket = jsonArr.getJSONObject(i);
+                    String subject = ticket.get("subject").toString();
+                    String body = ticket.get("body").toString();
+                    String from = ticket.get("from_address").toString();
+                    String status = ticket.get("status").toString();
+                    String graphId = ticket.get("graph_id").toString();
+                    String solutionText = ticket.get("solution").toString();
+                    TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, status, graphId, solutionText);
+                    profileTicketsArrayList.add(troubleTicket);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("JsonToArrayList", "Conversion error");
+                }
+            }
+            Log.d("TicketArrList", profileTicketsArrayList.toString());
+            profileTicketsAdapter.notifyDataSetChanged();
         }
     }
 

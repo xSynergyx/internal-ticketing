@@ -39,11 +39,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.graph.concurrency.ICallback;
 import com.microsoft.graph.core.ClientException;
+import com.microsoft.graph.models.extensions.EmailAddress;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
 import com.microsoft.graph.models.extensions.Message;
+import com.microsoft.graph.models.extensions.Recipient;
 import com.microsoft.graph.requests.extensions.GraphServiceClient;
 import com.microsoft.graph.requests.extensions.IMessageCollectionPage;
 import com.microsoft.identity.client.AuthenticationCallback;
+import com.microsoft.identity.client.AuthenticationResult;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
 import com.microsoft.identity.client.IPublicClientApplication;
@@ -57,6 +60,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,7 +73,7 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         // Required empty public constructor
     }
 
-    private final static String[] SCOPES = {"Mail.ReadWrite"};
+    private final static String[] SCOPES = {"Mail.ReadWrite", "Mail.Send"};
     /* Azure AD v2 Configs */
     final static String AUTHORITY = "https://login.microsoftonline.com/common";
     private ISingleAccountPublicClientApplication mSingleAccountApp;
@@ -117,11 +121,12 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 getActivity().getApplicationContext(),
                 getActivity()
         );
-        notificationSender.sendNotifications();*/
+        notificationSender.sendNotifications();
+        */
 
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSendMailCallback(graphId, solution));
         ticketDeleteRequest(subject, solution); // Delete from database
-
-        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId)); // Delete email from graphAPI
+        //Making the call to delete from inbox (using MS Graph API) in solutionReply method
     }
 
     public void onTicketStatusClick(String subject){
@@ -316,6 +321,21 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
             public void onError(MsalException exception) {
                 Log.d(TAG, "Authentication failed: " + exception.toString());
                 displayError(exception);
+            }
+        };
+    }
+
+
+    private SilentAuthenticationCallback getAuthSendMailCallback(String graphId, String solution) {
+        return new SilentAuthenticationCallback() {
+            @Override
+            public void onSuccess(IAuthenticationResult authenticationResult) {
+                Log.d(TAG, "Successfully authenticated for sending mail");
+                solutionReply(authenticationResult, graphId, solution);
+            }
+            @Override
+            public void onError(MsalException exception) {
+                Log.d(TAG, "Authentication for sending mail failed: " + exception.toString());
             }
         };
     }
@@ -570,10 +590,12 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 String subject = message.getAsJsonObject().get("subject").toString();
                 subject = removeQuotations(subject);
 
+                /*
                 // Ignoring replies to an email
-                if (subject.contains("Re:")){
+                if (subject.contains("RE:")){
                     continue;
                 }
+                 */
 
                 // Add the graphId
                 String graphId = message.getAsJsonObject().get("id").toString();
@@ -591,6 +613,11 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 // Add sender address
                 String from = message.getAsJsonObject().get("from").getAsJsonObject().get("emailAddress").getAsJsonObject().get("address").toString();
                 from = removeQuotations(from);
+
+                // Skip the solution emails sent from ticketing account to staff that opened the ticket
+                if (subject.contains("RE:") && from.equals(Config.EMAIL)) {
+                    continue;
+                }
 
                 TroubleTicket troubleTicket = new TroubleTicket(subject, body, from, "Open", graphId, "");
 
@@ -660,5 +687,32 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
     private void scaleAnimations (Button button){
         button.startAnimation(scaleUp);
         button.startAnimation(scaleDown);
+    }
+
+    public void solutionReply(IAuthenticationResult authenticationResult, String graphId, String solution) {
+
+        String accessToken = authenticationResult.getAccessToken();
+
+        IGraphServiceClient graphClient =
+                GraphServiceClient
+                        .builder()
+                        .authenticationProvider(request -> {
+                            Log.d(TAG, "Authenticating reply request," + request.getRequestUrl());
+                            request.addHeader("Authorization", "Bearer " + accessToken);
+                            request.addHeader("Content-Type", "application/json");
+                        })
+                        .buildClient();
+
+        // Remove quotation marks from graphId before sending reply request to Microsoft Graph API
+        String trimmedGraphId = graphId.substring(1, graphId.length()-1);
+
+        graphClient.me().messages(trimmedGraphId)
+                .replyAll(solution)
+                .buildRequest()
+                .post();
+
+        //TODO: Push to profile and merge to main
+        //      Then create new branch and work on styling updates. Finally, send app update to google play
+        mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId)); // Delete email from graphAPI
     }
 }

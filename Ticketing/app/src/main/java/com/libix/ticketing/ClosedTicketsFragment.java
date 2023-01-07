@@ -31,6 +31,8 @@ import java.util.ArrayList;
  */
 public class ClosedTicketsFragment extends Fragment {
 
+    //TODO: Change closed closed-tickets layout (Use cardview within a constraint view)
+    //      Add the user that closed it (name, not email) (handle null values)
     public ClosedTicketsFragment() {
         // Required empty public constructor
     }
