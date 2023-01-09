@@ -68,6 +68,7 @@ public class ClosedTicketsFragment extends Fragment {
             closedTicketsArrayList.clear();
             String searchText = searchEditText.getText().toString().trim();
             searchEditText.getText().clear();
+            searchEditText.clearFocus();
             closedTicketGetRequest(searchText);
         });
 

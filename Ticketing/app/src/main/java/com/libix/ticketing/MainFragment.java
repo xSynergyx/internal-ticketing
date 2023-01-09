@@ -590,12 +590,10 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 String subject = message.getAsJsonObject().get("subject").toString();
                 subject = removeQuotations(subject);
 
-                /*
                 // Ignoring replies to an email
-                if (subject.contains("RE:")){
+                if (subject.contains("Re:")){
                     continue;
                 }
-                 */
 
                 // Add the graphId
                 String graphId = message.getAsJsonObject().get("id").toString();
@@ -711,8 +709,6 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
                 .buildRequest()
                 .post();
 
-        //TODO: Push to profile and merge to main
-        //      Then create new branch and work on styling updates. Finally, send app update to google play
         mSingleAccountApp.acquireTokenSilentAsync(SCOPES, AUTHORITY, getAuthSilentCallback("delete", graphId)); // Delete email from graphAPI
     }
 }

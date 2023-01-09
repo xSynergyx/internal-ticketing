@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">#00796B</item>
         <item name="colorSecondary">#005a96</item>
         <item name="colorAccent">#00963c</item> <!-- #80DEEA -->
-        <item name="colorSurface">#e0f2f1</item> <!-- For material button -->
+        <!-- <item name="colorSurface">#e0f2f1</item> For material button -->
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:actionOverflowButtonStyle">@style/overflowMenu</item>
     </style>
