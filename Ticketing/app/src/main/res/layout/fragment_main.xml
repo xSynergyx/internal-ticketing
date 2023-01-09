@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".MainFragment">
 
@@ -36,7 +37,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:layout_weight="8.5">
+                android:layout_weight="7">
 
                 <Button
                     android:id="@+id/signIn"
@@ -52,7 +53,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="6dp"
                     android:text="@string/open_tickets_count_label"
-                    android:textSize="28sp"
+                    android:textSize="26sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black" />
 
@@ -62,10 +63,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text=""
-                    android:textSize="28sp"
+                    android:textSize="26sp"
                     android:textStyle="bold"
                     android:textColor="#000f96"
-                    android:paddingEnd="32dp"
+                    android:paddingEnd="26dp"
                     tools:ignore="RtlSymmetry" />
 
                 <TextView
@@ -90,14 +91,21 @@
 
             </LinearLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.Icon"
                 android:id="@+id/clearCache"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:drawableLeft="@drawable/sign_out_icon"
+                android:layout_weight="3"
+                android:layout_marginEnd="1dp"
+                android:backgroundTint="@android:color/white"
+                android:text="Ticket"
+                android:textSize="12sp"
+                android:textColor="?attr/colorPrimary"
                 android:enabled="false"
+                app:icon="@drawable/sign_out_icon"
+                app:iconGravity="textEnd"
+                app:iconTint="?attr/colorPrimary"
                 tools:ignore="RtlHardcoded" />
             
         </LinearLayout>

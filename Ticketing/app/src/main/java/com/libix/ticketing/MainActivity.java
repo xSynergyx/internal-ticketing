@@ -2,8 +2,8 @@ package com.libix.ticketing;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,8 +19,6 @@ import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.UpdateAvailability;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import android.content.Intent;
 import android.content.IntentSender;
@@ -50,11 +48,32 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.main);
+        toolbar.setOnMenuItemClickListener(item -> {
+            switch(item.getItemId())
+            {
+                case R.id.settings:
+                    changeFragment(new SettingsFragment(), "SettingsFragment");
+                    break;
+                case R.id.logout:
+                    signOutFirebaseUser();
+                    recreate();
+                    break;
+                case R.id.statistics:
+                    changeFragment(new StatisticsFragment(), "StatisticsFragment");
+                    break;
+            }
+            backStackCount++;
+            return true;
+        });
+
         launchFirebaseUI();
 
         changeFragment(new MainFragment(), "MainFragment");
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        /*
         //Action bar setup
         ActionBar actionBar = getSupportActionBar();
 
@@ -66,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayUseLogoEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
+         */
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -123,37 +143,6 @@ public class MainActivity extends AppCompatActivity {
                 checkUpdate();
             }
         }
-    }
-
-
-    // Displays the action bar created in main.xml
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.main, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    // Specifies what each item in the action bar does when clicked
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch(item.getItemId())
-        {
-            case R.id.settings:
-                changeFragment(new SettingsFragment(), "SettingsFragment");
-                break;
-            case R.id.logout:
-                signOutFirebaseUser();
-                recreate();
-                break;
-            case R.id.statistics:
-                changeFragment(new StatisticsFragment(), "StatisticsFragment");
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     protected void changeFragment(Fragment fragment, String fragTag){

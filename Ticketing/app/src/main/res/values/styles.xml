@@ -1,12 +1,12 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#009688</item>
         <item name="colorPrimaryDark">#00796B</item>
         <item name="colorSecondary">#005a96</item>
         <item name="colorAccent">#00963c</item> <!-- #80DEEA -->
-        <item name="colorSurface">#e0f2f1</item> <!-- For material button -->
+        <!-- <item name="colorSurface">#e0f2f1</item> For material button -->
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:actionOverflowButtonStyle">@style/overflowMenu</item>
     </style>

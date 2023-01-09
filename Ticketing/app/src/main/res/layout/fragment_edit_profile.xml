@@ -30,11 +30,11 @@
             android:layout_height="35dp"
             android:background="@null"
             android:clickable="true"
+            android:src="@drawable/ic_edit_image"
             app:layout_constraintHorizontal_bias="1.05"
             app:layout_constraintStart_toStartOf="@id/edit_user_image_iv"
             app:layout_constraintEnd_toEndOf="@id/edit_user_image_iv"
-            app:layout_constraintTop_toTopOf="@id/edit_user_image_iv"
-            app:srcCompat="@drawable/ic_edit_image" />
+            app:layout_constraintTop_toTopOf="@id/edit_user_image_iv" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_user_first_name_layout_et"

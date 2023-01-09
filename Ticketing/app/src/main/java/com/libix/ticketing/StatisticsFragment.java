@@ -121,6 +121,8 @@ public class StatisticsFragment extends Fragment {
 
         if (month <= 9) {
             stringMonth = "0" + month;
+        } else {
+            stringMonth = String.valueOf(month);
         }
 
         getMonthlyTicketsClosed(year, stringMonth);

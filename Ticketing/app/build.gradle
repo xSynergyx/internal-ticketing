@@ -28,8 +28,8 @@ android {
         applicationId "com.libix.ticketing"
         minSdkVersion 26  // Increased from 16 to 19 for firebase analytics; Increased from 19 to 26 for notification channels
         targetSdkVersion 32
-        versionCode 12
-        versionName "2.1.0"
+        versionCode 14
+        versionName "2.1.6"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

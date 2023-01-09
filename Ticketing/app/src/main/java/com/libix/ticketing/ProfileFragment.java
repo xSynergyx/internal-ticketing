@@ -36,6 +36,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -48,6 +49,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
@@ -205,7 +207,7 @@ public class ProfileFragment extends Fragment {
                 }
             }, (VolleyError error) -> {
                 Log.d("ProfileTicketsPostResponse", "Unable to receive JSON response from server. Error: " + error.toString());
-                Toast.makeText(getContext(), "No tickets found for \"" + currentUser.email + "\"", Toast.LENGTH_LONG).show();
+                Snackbar.make(requireView(), "No tickets found for \"" + currentUser.firstName + "\"", Snackbar.LENGTH_SHORT).show();
             }));
         } catch (Exception e) {
             e.printStackTrace();
