@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -39,14 +37,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.graph.concurrency.ICallback;
 import com.microsoft.graph.core.ClientException;
-import com.microsoft.graph.models.extensions.EmailAddress;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
 import com.microsoft.graph.models.extensions.Message;
-import com.microsoft.graph.models.extensions.Recipient;
 import com.microsoft.graph.requests.extensions.GraphServiceClient;
 import com.microsoft.graph.requests.extensions.IMessageCollectionPage;
 import com.microsoft.identity.client.AuthenticationCallback;
-import com.microsoft.identity.client.AuthenticationResult;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
 import com.microsoft.identity.client.IPublicClientApplication;
@@ -60,13 +55,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 
-//TODO: Added swipe refresh layout to recyclerview. Fix up the logic in here so I can remove the button
 public class MainFragment extends Fragment implements OnTicketCloseClick {
 
     public MainFragment() {
@@ -656,6 +649,12 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
         return text;
     }
 
+    private String newLineToHtmlBreak(String text){
+
+        text = text.replaceAll("\n", "<br>");
+        return text;
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private void jsonArrayToArrayList(JSONArray jsonArr){
 
@@ -703,6 +702,8 @@ public class MainFragment extends Fragment implements OnTicketCloseClick {
 
         // Remove quotation marks from graphId before sending reply request to Microsoft Graph API
         String trimmedGraphId = graphId.substring(1, graphId.length()-1);
+
+        solution = newLineToHtmlBreak(solution);
 
         graphClient.me().messages(trimmedGraphId)
                 .replyAll(solution)
